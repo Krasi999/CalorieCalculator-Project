@@ -1,5 +1,6 @@
 using DataLayer;
 using DataLayer.Data;
+using DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalorieCalculator.API;
@@ -13,6 +14,7 @@ public class Program
         // add controllers
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddScoped<IRepository, Repository>();
 
         // register DbContext
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -22,8 +24,12 @@ public class Program
         var app = builder.Build();
 
         // run new sql migrations
-        var migrationRunner = new MigrationRunner(connectionString!);
-        await migrationRunner.RunMigrationsAsync();
+        using (var scope = app.Services.CreateScope())
+        {
+            var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+            var migrationRunner = new MigrationRunner(repository);
+            await migrationRunner.RunMigrationsAsync();
+        }
 
         app.UseAuthorization();
         app.MapControllers();
