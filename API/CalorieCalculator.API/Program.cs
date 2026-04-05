@@ -2,6 +2,7 @@ using DataLayer;
 using DataLayer.Data;
 using DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
+using Services;
 
 namespace CalorieCalculator.API;
 
@@ -15,6 +16,10 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddScoped<IRepository, Repository>();
+
+        // add mediator
+        builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(IServices).Assembly));
+        builder.Services.AddScoped<IServices, ServiceManager>();
 
         // register DbContext
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
