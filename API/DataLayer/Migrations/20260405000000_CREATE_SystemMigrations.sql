@@ -1,0 +1,5 @@
+﻿CREATE TABLE IF NOT EXISTS "SystemMigrations" (
+	"MigrationID" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+	"FileName" VARCHAR (255) NOT NULL UNIQUE,
+	"CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

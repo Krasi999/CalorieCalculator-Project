@@ -6,22 +6,23 @@ namespace CalorieCalculator.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController : ControllerBase
+public class DbConnectionController : ControllerBase
 {
     private readonly AppDbContext _db;
 
-    public TestController(AppDbContext db)
+    public DbConnectionController(AppDbContext db)
     {
         _db = db;
     }
 
-    [HttpGet("connection")]
+    [HttpGet("db-connection")]
     public async Task<IActionResult> TestConnection()
     {
         try
         {
             await _db.Database.OpenConnectionAsync();
             await _db.Database.CloseConnectionAsync();
+
             return Ok(new { connected = true });
         }
         catch (Exception ex)
