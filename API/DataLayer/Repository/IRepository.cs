@@ -15,7 +15,11 @@ public interface IRepository
 
     IQueryable<T> Set<T>() where T : class;
 
+    IQueryable<T> Set<T>(params string[] includes) where T : class;
+
     IQueryable<T> SetNoTracking<T>() where T : class;
+
+    IQueryable<T> SetNoTracking<T>(params string[] includes) where T : class;
 
     IQueryable<T> Query<T>() where T : class;
 

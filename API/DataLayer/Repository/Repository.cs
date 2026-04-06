@@ -46,9 +46,33 @@ public class Repository : IRepository
         return _context.Set<T>().AsTracking();
     }
 
+    public IQueryable<T> Set<T>(params string[] includes) where T : class
+    {
+        IQueryable<T> query = _context.Set<T>().AsTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        return query;
+    }
+
     public IQueryable<T> SetNoTracking<T>() where T : class
     {
         return _context.Set<T>().AsNoTracking();
+    }
+
+    public IQueryable<T> SetNoTracking<T>(params string[] includes) where T : class
+    {
+        IQueryable<T> query = _context.Set<T>().AsNoTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        return query;
     }
 
     public IQueryable<T> Query<T>() where T : class
