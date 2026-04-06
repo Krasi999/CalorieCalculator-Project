@@ -19,19 +19,9 @@ public class Repository : IRepository
         await _context.Set<T>().AddAsync(entity);
     }
 
-    public async Task AddRange<T>(IEnumerable<T> entities) where T : class
-    {
-        await _context.Set<T>().AddRangeAsync(entities);
-    }
-
     public void Update<T>(T entity) where T : class
     {
         _context.Set<T>().Update(entity);
-    }
-
-    public void UpdateRange<T>(IEnumerable<T> entities) where T : class
-    {
-        _context.Set<T>().UpdateRange(entities);
     }
 
     public void Delete<T>(T entity) where T : class
@@ -39,9 +29,16 @@ public class Repository : IRepository
         _context.Set<T>().Remove(entity);
     }
 
-    public void DeleteRange<T>(IEnumerable<T> entities) where T : class
+    public void Save<T>(T entity, bool exists) where T : class
     {
-        _context.Set<T>().RemoveRange(entities);
+        if (exists)
+        {
+            _context.Update(entity);
+        }
+        else
+        {
+            _context.Add(entity);
+        }
     }
 
     public IQueryable<T> Set<T>() where T : class

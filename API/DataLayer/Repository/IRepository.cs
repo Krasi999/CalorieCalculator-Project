@@ -7,15 +7,11 @@ public interface IRepository
 {
     Task Add<T>(T entity) where T : class;
 
-    Task AddRange<T>(IEnumerable<T> entities) where T : class;
-
     void Update<T>(T entity) where T : class;
-
-    void UpdateRange<T>(IEnumerable<T> entities) where T : class;
 
     void Delete<T>(T entity) where T : class;
 
-    void DeleteRange<T>(IEnumerable<T> entities) where T : class;
+    void Save<T>(T entity, bool exists) where T : class;
 
     IQueryable<T> Set<T>() where T : class;
 
