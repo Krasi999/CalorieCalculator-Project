@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CalorieCalculator.Service;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace CalorieCalculator
 {
@@ -15,11 +17,42 @@ namespace CalorieCalculator
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-    		builder.Logging.AddDebug();
-#endif
+            builder.Services.AddSingleton<ApiService>();
+
+            RegisterViewModels(builder.Services);
+            RegisterPages(builder.Services);
+
+            builder.Logging.AddDebug();
 
             return builder.Build();
+        }
+
+        private static void RegisterViewModels(IServiceCollection services)
+        {
+            var viewModels = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.IsClass
+                    && !t.IsAbstract
+                    && t.Name.EndsWith("ViewModel"));
+
+            foreach (var viewModel in viewModels)
+            {
+                services.AddTransient(viewModel);
+            }
+        }
+
+        private static void RegisterPages(IServiceCollection services)
+        {
+            var pages = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.IsClass
+                    && !t.IsAbstract
+                    && t.IsSubclassOf(typeof(ContentPage)));
+
+            foreach (var page in pages)
+            {
+                services.AddTransient(page);
+            }
         }
     }
 }
