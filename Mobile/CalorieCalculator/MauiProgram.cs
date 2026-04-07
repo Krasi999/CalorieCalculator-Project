@@ -22,6 +22,9 @@ namespace CalorieCalculator
             RegisterViewModels(builder.Services);
             RegisterPages(builder.Services);
 
+            builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<AuthApiService>();
+
             builder.Logging.AddDebug();
 
             return builder.Build();

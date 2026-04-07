@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
@@ -61,14 +61,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.14.40264" />
+		<PackageReference Include="Plugin.Fingerprint" Version="2.1.5" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Models\" />
-	  <Folder Include="ViewModels\" />
 	  <Folder Include="Views\" />
 	</ItemGroup>
 
