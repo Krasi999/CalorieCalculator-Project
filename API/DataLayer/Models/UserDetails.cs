@@ -20,6 +20,10 @@ public class UserDetails
     public decimal? HeightFt { get; private set; }
     public decimal? WeightKg { get; private set; }
     public decimal? WeightLbs { get; private set; }
+    
+    public GoalType CurrentGoal { get; private set; }
+    public decimal? TargetWeightKg { get; private set; }
+    public decimal? TargetWeightLbs { get; private set; }
 
     public ActivityLevel ActivityLevel { get; private set; }
 
@@ -34,24 +38,28 @@ public class UserDetails
     // ──────────────────────────────────────────────
 
     public void Create(
-        Guid userId,
-        string nickname,
-        Gender gender,
-        DateTime dateOfBirth,
-        decimal? heightCm,
-        decimal? heightFt,
-        decimal? weightKg,
-        decimal? weightLbs,
-        ActivityLevel activityLevel)
+    Guid userId,
+    string nickname,
+    Gender gender,
+    DateTime dateOfBirth,
+    decimal? heightCm,
+    decimal? heightFt,
+    decimal? weightKg,
+    decimal? weightLbs,
+    ActivityLevel activityLevel,
+    GoalType currentGoal,        // ← ново
+    decimal? targetWeightKg,     // ← ново
+    decimal? targetWeightLbs)    // ← ново
     {
         UserId = userId;
         Nickname = nickname.Trim();
         Gender = gender;
         DateOfBirth = dateOfBirth;
         ActivityLevel = activityLevel;
+        CurrentGoal = currentGoal;
         CreatedAt = DateTime.UtcNow;
 
-        // Ако дадеш cm → изчислява ft автоматично и обратно    
+        // Ръст
         if (heightCm.HasValue)
         {
             HeightCm = heightCm;
@@ -63,7 +71,7 @@ public class UserDetails
             HeightCm = Math.Round(heightFt.Value * 30.48m, 2);
         }
 
-        // Ако дадеш kg → изчислява lbs автоматично и обратно
+        // Тегло
         if (weightKg.HasValue)
         {
             WeightKg = weightKg;
@@ -74,24 +82,41 @@ public class UserDetails
             WeightLbs = weightLbs;
             WeightKg = Math.Round(weightLbs.Value / 2.20462m, 2);
         }
+
+        // Желано тегло
+        if (targetWeightKg.HasValue)
+        {
+            TargetWeightKg = targetWeightKg;
+            TargetWeightLbs = Math.Round(targetWeightKg.Value * 2.20462m, 2);
+        }
+        else if (targetWeightLbs.HasValue)
+        {
+            TargetWeightLbs = targetWeightLbs;
+            TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
+        }
     }
 
     public void Update(
-        string nickname,
-        Gender gender,
-        DateTime dateOfBirth,
-        decimal? heightCm,
-        decimal? heightFt,
-        decimal? weightKg,
-        decimal? weightLbs,
-        ActivityLevel activityLevel)
+    string nickname,
+    Gender gender,
+    DateTime dateOfBirth,
+    decimal? heightCm,
+    decimal? heightFt,
+    decimal? weightKg,
+    decimal? weightLbs,
+    ActivityLevel activityLevel,
+    GoalType currentGoal,
+    decimal? targetWeightKg,
+    decimal? targetWeightLbs)
     {
         Nickname = nickname.Trim();
         Gender = gender;
         DateOfBirth = dateOfBirth;
         ActivityLevel = activityLevel;
+        CurrentGoal = currentGoal;
         UpdatedAt = DateTime.UtcNow;
 
+        // Ръст
         if (heightCm.HasValue)
         {
             HeightCm = heightCm;
@@ -103,6 +128,7 @@ public class UserDetails
             HeightCm = Math.Round(heightFt.Value * 30.48m, 2);
         }
 
+        // Тегло
         if (weightKg.HasValue)
         {
             WeightKg = weightKg;
@@ -112,6 +138,18 @@ public class UserDetails
         {
             WeightLbs = weightLbs;
             WeightKg = Math.Round(weightLbs.Value / 2.20462m, 2);
+        }
+
+        // Желано тегло
+        if (targetWeightKg.HasValue)
+        {
+            TargetWeightKg = targetWeightKg;
+            TargetWeightLbs = Math.Round(targetWeightKg.Value * 2.20462m, 2);
+        }
+        else if (targetWeightLbs.HasValue)
+        {
+            TargetWeightLbs = targetWeightLbs;
+            TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
         }
     }
 
@@ -152,3 +190,4 @@ public class UserDetails
         return Math.Round(bmr.Value * multiplier, 2);
     }
 }
+
