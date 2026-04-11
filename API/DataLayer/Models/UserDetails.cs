@@ -51,7 +51,7 @@ public class UserDetails
         ActivityLevel = activityLevel;
         CreatedAt = DateTime.UtcNow;
 
-        // Ако дадеш cm → изчислява ft автоматично и обратно
+        // Ако дадеш cm → изчислява ft автоматично и обратно    
         if (heightCm.HasValue)
         {
             HeightCm = heightCm;
