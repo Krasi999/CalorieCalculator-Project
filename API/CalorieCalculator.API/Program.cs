@@ -17,6 +17,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddScoped<IRepository, Repository>();
 
+        builder.Services.AddScoped<IUserDetailsRepository, UserDetailsRepository>();
+
         // add mediator
         builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(IServices).Assembly));
         builder.Services.AddScoped<IServices, ServiceManager>();
