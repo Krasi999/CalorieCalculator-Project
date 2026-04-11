@@ -14,4 +14,8 @@ public class CreateUserDetailsCommand : IRequest<Guid>
     public decimal? WeightKg { get; set; }
     public decimal? WeightLbs { get; set; }
     public ActivityLevel ActivityLevel { get; set; }
+
+    public GoalType CurrentGoal { get; set; }
+    public decimal? TargetWeightKg { get; set; }
+    public decimal? TargetWeightLbs { get; set; }
 }
