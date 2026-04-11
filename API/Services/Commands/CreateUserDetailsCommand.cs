@@ -1,0 +1,17 @@
+﻿using DataLayer.Enums;
+using MediatR;
+
+namespace Services.Commands;
+
+public class CreateUserDetailsCommand : IRequest<Guid>
+{
+    public Guid UserId { get; set; }
+    public string Nickname { get; set; } = string.Empty;
+    public Gender Gender { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public decimal? HeightCm { get; set; }
+    public decimal? HeightFt { get; set; }
+    public decimal? WeightKg { get; set; }
+    public decimal? WeightLbs { get; set; }
+    public ActivityLevel ActivityLevel { get; set; }
+}
