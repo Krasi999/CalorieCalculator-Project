@@ -13,4 +13,6 @@ public class AppDbContext : DbContext
     public DbSet<FoodCategory> FoodCategories { get; set; }
     public DbSet<FoodProduct> FoodProducts { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserDetails> UserDetails { get; set; }
+    public DbSet<UserGoal> UserGoals { get; set; }
 }
