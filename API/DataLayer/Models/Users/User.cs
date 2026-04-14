@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Models;
+namespace DataLayer.Models.Users;
 
 [Table("Users")]
 public class User
@@ -12,6 +12,8 @@ public class User
     public string Email { get; private set; } = string.Empty;
 
     public string PasswordHash { get; private set; } = string.Empty;
+
+    public string Salt { get; private set; }
 
     public DateTime ActivationDate { get; private set; } = DateTime.UtcNow;
 
@@ -25,14 +27,11 @@ public class User
 
     public DateTime? UpdatedAt { get; private set; }
 
-    // ──────────────────────────────────────────────
-    // Методи за мутация (същия pattern като FoodProduct.Update())
-    // ──────────────────────────────────────────────
-
-    public void Create(string email, string passwordHash)
+    public void Update(string email, string passwordHash, string salt)
     {
         Email = email.ToLowerInvariant().Trim();
         PasswordHash = passwordHash;
+        Salt = salt;
         ActivationDate = DateTime.UtcNow;
         LastPasswordLogin = DateTime.UtcNow;
         IsActive = true;
@@ -57,7 +56,6 @@ public class User
         UpdatedAt = DateTime.UtcNow;
     }
 
-    // 72-часова проверка — изчислява се в модела, не в бизнес логиката
     public bool RequiresPasswordReauth()
     {
         if (LastPasswordLogin == null) return true;

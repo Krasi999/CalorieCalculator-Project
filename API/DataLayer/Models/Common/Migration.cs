@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Models;
+namespace DataLayer.Models.Common;
 
 [Table("SystemMigrations")]
 public class Migration

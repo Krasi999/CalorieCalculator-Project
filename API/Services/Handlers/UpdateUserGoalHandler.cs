@@ -1,6 +1,6 @@
 ﻿using DataLayer.Repository;
 using MediatR;
-using Services.Commands;
+using Services.Commands.User;
 
 namespace Services.Handlers;
 

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
-namespace DataLayer.Models;
+namespace DataLayer.Models.FoodDTOs;
 
 [Table("FoodProducts")]
 public class FoodProduct

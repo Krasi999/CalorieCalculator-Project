@@ -1,6 +1,6 @@
 ﻿namespace DataLayer.Enums
 {
-    public enum GoalType : byte
+    public enum GoalType
     {
         WeightLoss = 1,
         Maintenance = 2,

@@ -1,6 +1,6 @@
 ﻿namespace DataLayer.Enums
 {
-    public enum ActivityLevel : byte
+    public enum ActivityLevel
     {
         Sedentary = 1,
         LightlyActive = 2,

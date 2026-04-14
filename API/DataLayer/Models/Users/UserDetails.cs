@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using DataLayer.Enums;
 
-namespace DataLayer.Models;
+namespace DataLayer.Models.Users;
 
 [Table("UserDetails")]
 public class UserDetails
@@ -165,8 +165,8 @@ public class UserDetails
 
         return Gender switch
         {
-            Gender.Male => (10 * WeightKg.Value) + (6.25m * HeightCm.Value) - (5 * GetAge()) + 5,
-            Gender.Female => (10 * WeightKg.Value) + (6.25m * HeightCm.Value) - (5 * GetAge()) - 161,
+            Gender.Male => 10 * WeightKg.Value + 6.25m * HeightCm.Value - 5 * GetAge() + 5,
+            Gender.Female => 10 * WeightKg.Value + 6.25m * HeightCm.Value - 5 * GetAge() - 161,
             _ => null
         };
     }

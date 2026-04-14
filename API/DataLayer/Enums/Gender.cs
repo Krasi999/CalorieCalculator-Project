@@ -1,6 +1,6 @@
 ﻿namespace DataLayer.Enums
 {
-    public enum Gender : byte
+    public enum Gender
     {
         Male = 1,
         Female = 2

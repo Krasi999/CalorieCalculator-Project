@@ -1,9 +1,7 @@
 ﻿using DataLayer.Enums;
 using MediatR;
 
-namespace Services.Commands;
-
-public class FoodProductCreateCommand : IRequest<Unit>
+public class FoodProductCommand : IRequest<Unit>
 {
     public int? ProductID { get; set; }
 

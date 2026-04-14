@@ -1,6 +1,7 @@
 ﻿using DataLayer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Services;
 
 namespace CalorieCalculator.API.Controllers;
 

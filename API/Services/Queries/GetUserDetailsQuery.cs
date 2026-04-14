@@ -1,4 +1,4 @@
-﻿using DataLayer.Models;
+﻿using DataLayer.Models.Users;
 using MediatR;
 
 namespace Services.Queries;

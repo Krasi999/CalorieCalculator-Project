@@ -1,9 +1,9 @@
 ﻿using DataLayer.Enums;
 using MediatR;
 
-namespace Services.Commands;
+namespace Services.Commands.User;
 
-public class CreateUserDetailsCommand : IRequest<Guid>
+public class UpdateUserDetailsCommand : IRequest<bool>
 {
     public Guid UserId { get; set; }
     public string Nickname { get; set; } = string.Empty;

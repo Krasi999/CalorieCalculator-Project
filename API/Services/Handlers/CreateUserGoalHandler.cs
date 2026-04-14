@@ -1,7 +1,7 @@
-﻿using DataLayer.Models;
+﻿using DataLayer.Models.Users;
 using DataLayer.Repository;
 using MediatR;
-using Services.Commands;
+using Services.Commands.User;
 
 namespace Services.Handlers;
 

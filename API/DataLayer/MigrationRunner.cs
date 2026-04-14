@@ -1,4 +1,4 @@
-﻿using DataLayer.Models;
+﻿using DataLayer.Models.Common;
 using DataLayer.Repository;
 using Npgsql;
 using System.Reflection;
