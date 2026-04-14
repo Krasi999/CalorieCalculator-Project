@@ -8,93 +8,38 @@ namespace DataLayer.Models.Users;
 public class UserDetails
 {
     [Key]
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid ID { get; private set; } = Guid.NewGuid();
 
-    public Guid UserId { get; private set; }
+    public Guid UserID { get; private set; }
 
     public string Nickname { get; private set; } = string.Empty;
+
     public Gender Gender { get; private set; }
+
     public DateTime DateOfBirth { get; private set; }
 
     public decimal? HeightCm { get; private set; }
+
     public decimal? HeightFt { get; private set; }
+
     public decimal? WeightKg { get; private set; }
+
     public decimal? WeightLbs { get; private set; }
     
     public GoalType CurrentGoal { get; private set; }
+
     public decimal? TargetWeightKg { get; private set; }
+
     public decimal? TargetWeightLbs { get; private set; }
 
     public ActivityLevel ActivityLevel { get; private set; }
 
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+
     public DateTime? UpdatedAt { get; private set; }
 
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(UserID))]
     public User User { get; private set; } = null!;
-
-    // ──────────────────────────────────────────────
-    // Методи за мутация
-    // ──────────────────────────────────────────────
-
-    public void Create(
-    Guid userId,
-    string nickname,
-    Gender gender,
-    DateTime dateOfBirth,
-    decimal? heightCm,
-    decimal? heightFt,
-    decimal? weightKg,
-    decimal? weightLbs,
-    ActivityLevel activityLevel,
-    GoalType currentGoal,        // ← ново
-    decimal? targetWeightKg,     // ← ново
-    decimal? targetWeightLbs)    // ← ново
-    {
-        UserId = userId;
-        Nickname = nickname.Trim();
-        Gender = gender;
-        DateOfBirth = dateOfBirth;
-        ActivityLevel = activityLevel;
-        CurrentGoal = currentGoal;
-        CreatedAt = DateTime.UtcNow;
-
-        // Ръст
-        if (heightCm.HasValue)
-        {
-            HeightCm = heightCm;
-            HeightFt = Math.Round(heightCm.Value / 30.48m, 2);
-        }
-        else if (heightFt.HasValue)
-        {
-            HeightFt = heightFt;
-            HeightCm = Math.Round(heightFt.Value * 30.48m, 2);
-        }
-
-        // Тегло
-        if (weightKg.HasValue)
-        {
-            WeightKg = weightKg;
-            WeightLbs = Math.Round(weightKg.Value * 2.20462m, 2);
-        }
-        else if (weightLbs.HasValue)
-        {
-            WeightLbs = weightLbs;
-            WeightKg = Math.Round(weightLbs.Value / 2.20462m, 2);
-        }
-
-        // Желано тегло
-        if (targetWeightKg.HasValue)
-        {
-            TargetWeightKg = targetWeightKg;
-            TargetWeightLbs = Math.Round(targetWeightKg.Value * 2.20462m, 2);
-        }
-        else if (targetWeightLbs.HasValue)
-        {
-            TargetWeightLbs = targetWeightLbs;
-            TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
-        }
-    }
 
     public void Update(
     string nickname,
@@ -151,6 +96,11 @@ public class UserDetails
             TargetWeightLbs = targetWeightLbs;
             TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
         }
+    }
+
+    public void MapToUser(Guid userID)
+    {
+        UserID = userID;
     }
 
     // Изчислява възрастта за BMR формулата

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Services.Commands.User;
-using Services.Queries;
 
 namespace CalorieCalculator.API.Controllers;
 
@@ -27,12 +26,12 @@ public class UserDetailsController : ControllerBase
             return NotFound(new { message = "Profile not found." });
 
         return Ok(result);
-    }*/
+    }
 
     // POST api/userdetails
     [HttpPost]
     public async Task<IActionResult> CreateUserDetails(
-        [FromBody] CreateUserDetailsCommand command)
+        [FromBody] UserDetailsCommand command)
     {
         var id = await _mediator.Send(command);
         return Ok(new { id });
@@ -46,7 +45,7 @@ public class UserDetailsController : ControllerBase
         var success = await _mediator.Send(command);
         return Ok(new { success });
     }
-    /*
+    
     // GET api/userdetails/{userId}/goal
     [HttpGet("{userId:guid}/goal")]
     public async Task<IActionResult> GetUserGoal(Guid userId)
@@ -58,12 +57,12 @@ public class UserDetailsController : ControllerBase
             return NotFound(new { message = "Няма активна цел." });
 
         return Ok(result);
-    }*/
+    }
 
     // POST api/userdetails/goal
     [HttpPost("goal")]
     public async Task<IActionResult> CreateUserGoal(
-        [FromBody] CreateUserGoalCommand command)
+        [FromBody] UserGoalCommand command)
     {
         var id = await _mediator.Send(command);
         return Ok(new { id });
@@ -76,5 +75,5 @@ public class UserDetailsController : ControllerBase
     {
         var success = await _mediator.Send(command);
         return Ok(new { success });
-    }
+    }*/
 }

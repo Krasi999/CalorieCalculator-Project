@@ -10,7 +10,7 @@ public class UserGoal
     [Key]
     public Guid Id { get; private set; } = Guid.NewGuid();
 
-    public Guid UserId { get; private set; }
+    public Guid UserID { get; private set; }
 
     public GoalType GoalType { get; private set; }
 
@@ -24,43 +24,8 @@ public class UserGoal
 
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(UserID))]
     public User User { get; private set; } = null!;
-
-    // ──────────────────────────────────────────────
-    // Методи за мутация
-    // ──────────────────────────────────────────────
-
-    public void Create(
-        Guid userId,
-        GoalType goalType,
-        decimal? targetWeightKg,
-        decimal? targetWeightLbs,
-        DateTime startDate,
-        DateTime endDate)
-    {
-        if (endDate <= startDate)
-            throw new ArgumentException(
-                "Крайната дата трябва да е след началната.");
-
-        UserId = userId;
-        GoalType = goalType;
-        StartDate = startDate;
-        EndDate = endDate;
-        IsActive = true;
-        CreatedAt = DateTime.UtcNow;
-
-        if (targetWeightKg.HasValue)
-        {
-            TargetWeightKg = targetWeightKg;
-            TargetWeightLbs = Math.Round(targetWeightKg.Value * 2.20462m, 2);
-        }
-        else if (targetWeightLbs.HasValue)
-        {
-            TargetWeightLbs = targetWeightLbs;
-            TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
-        }
-    }
 
     public void Deactivate() => IsActive = false;
 
@@ -89,6 +54,11 @@ public class UserGoal
             TargetWeightLbs = targetWeightLbs;
             TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
         }
+    }
+
+    public void MapToUser(Guid userID)
+    {
+        UserID = userID;
     }
 
     // Препоръчителен калориен прием спрямо цел

@@ -1,11 +1,15 @@
-﻿ALTER TABLE "Users" ALTER COLUMN "Id" DROP IDENTITY IF EXISTS;
-ALTER TABLE "Users" DROP CONSTRAINT IF EXISTS "Users_pkey" CASCADE;
+﻿CREATE TABLE IF NOT EXISTS "Users" (
 
-ALTER TABLE "Users" 
-    ALTER COLUMN "Id" TYPE UUID USING gen_random_uuid();
+    "Id"                  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "Email"               VARCHAR(255) NOT NULL UNIQUE,
+    "PasswordHash"        VARCHAR(512) NOT NULL,
+    "ActivationDate"      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "LastPasswordLogin"   TIMESTAMP    NULL,
+    "IsBiometricEnabled"  BOOLEAN      NOT NULL DEFAULT FALSE,
+    "IsActive"            BOOLEAN      NOT NULL DEFAULT TRUE,
+    "CreatedAt"           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "UpdatedAt"           TIMESTAMP    NULL
+);
 
-ALTER TABLE "Users" ALTER COLUMN "Id" SET DEFAULT gen_random_uuid();
-ALTER TABLE "Users" ADD PRIMARY KEY ("Id");
-
-DROP INDEX IF EXISTS "User_Id";
-CREATE UNIQUE INDEX IF NOT EXISTS "IX_Users_Email" ON "Users" ("Email");
+CREATE UNIQUE INDEX IF NOT EXISTS "User_Id" ON "Users" ("Id");
+	
