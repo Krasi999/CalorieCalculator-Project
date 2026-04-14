@@ -1,6 +1,6 @@
 ﻿using DataLayer.Models.Common;
 using DataLayer.Models.FoodDTOs;
-using DataLayer.Models.User;
+using DataLayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Data;

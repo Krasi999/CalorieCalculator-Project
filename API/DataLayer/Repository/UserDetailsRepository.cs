@@ -1,5 +1,6 @@
 ﻿using DataLayer.Data;
 using DataLayer.Models;
+using DataLayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Repository;

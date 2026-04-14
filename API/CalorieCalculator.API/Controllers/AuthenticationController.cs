@@ -41,6 +41,7 @@ public class AuthenticationController : ControllerBase
         return Ok();
     }
 
+    /* TODO да се добави подобна логика при желание за активиране на биометрия от потребителя
     [HttpPatch("biometric")]
     public async Task<IActionResult> SetBiometric([FromBody] UserSetBiometricCommand command)
     {
@@ -48,4 +49,5 @@ public class AuthenticationController : ControllerBase
 
         return success ? Ok() : NotFound();
     }
+    */
 }
