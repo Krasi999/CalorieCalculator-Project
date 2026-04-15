@@ -20,14 +20,9 @@ public class HandlerUserGoal :
     {
         var userGoal = request.ID != null
             ? _services.Repository.Set<UserGoal>().First(record => record.UserID == request.ID)
-            : new UserGoal();
+            : new UserGoal(request.UserID);
 
         using var transaction = await _services.Repository.BeginTransaction();
-
-        if (request.ID == null)
-        {
-            userGoal.MapToUser(request.UserID);
-        }
 
         userGoal.Update(
             request.GoalType,

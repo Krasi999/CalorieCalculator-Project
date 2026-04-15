@@ -7,6 +7,13 @@ namespace DataLayer.Models.Users;
 [Table("UserGoals")]
 public class UserGoal
 {
+    public UserGoal() { }
+
+    public UserGoal(Guid userID)
+    {
+        UserID = userID;
+    }
+
     [Key]
     public Guid Id { get; private set; } = Guid.NewGuid();
 
@@ -54,11 +61,6 @@ public class UserGoal
             TargetWeightLbs = targetWeightLbs;
             TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
         }
-    }
-
-    public void MapToUser(Guid userID)
-    {
-        UserID = userID;
     }
 
     // Препоръчителен калориен прием спрямо цел

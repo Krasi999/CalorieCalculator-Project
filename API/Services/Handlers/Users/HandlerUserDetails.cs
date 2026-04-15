@@ -19,14 +19,9 @@ public class HandlerUserDetails :
     {
         var userDetails = request.ID != null
             ? _services.Repository.Set<UserDetails>().First(record => record.UserID == request.ID)
-            : new UserDetails();
+            : new UserDetails(request.UserID);
 
         using var transaction = await _services.Repository.BeginTransaction();
-
-        if (request.ID == null)
-        {
-            userDetails.MapToUser(request.UserID);
-        }
 
         userDetails.Update(
             request.Nickname,

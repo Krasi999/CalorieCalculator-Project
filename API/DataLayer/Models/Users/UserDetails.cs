@@ -7,6 +7,13 @@ namespace DataLayer.Models.Users;
 [Table("UserDetails")]
 public class UserDetails
 {
+    public UserDetails() { }
+
+    public UserDetails(Guid userID)
+    {
+        UserID = userID;
+    }
+
     [Key]
     public Guid ID { get; private set; } = Guid.NewGuid();
 
@@ -96,11 +103,6 @@ public class UserDetails
             TargetWeightLbs = targetWeightLbs;
             TargetWeightKg = Math.Round(targetWeightLbs.Value / 2.20462m, 2);
         }
-    }
-
-    public void MapToUser(Guid userID)
-    {
-        UserID = userID;
     }
 
     // Изчислява възрастта за BMR формулата
