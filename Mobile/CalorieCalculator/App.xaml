@@ -17,6 +17,9 @@
             <converters:InvertBoolConverter x:Key="InvertBoolConverter" />
             <converters:BoolToIconConverter x:Key="BoolToIconConverter" />
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:BoolToStepColorConverter x:Key="BoolToStepColorConverter" />
+            <converters:BoolToStepInactiveConverter x:Key="BoolToStepInactiveConverter" />
+            <converters:BoolToTimerColorConverter x:Key="BoolToTimerColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
