@@ -23,7 +23,7 @@ public class AuthApiService
         try
         {
             var result = await _api.PostAsync<RegisterResultDto>(
-                "api/auth/register",
+                "api/Authentication/signin",
                 new RegisterRequest(email, password));
 
             return (true, null, result?.UserId);
@@ -40,7 +40,7 @@ public class AuthApiService
         try
         {
             var result = await _api.PostAsync<LoginResponse>(
-                "api/auth/login",
+                "api/Authentication/login",
                 new LoginRequest(email, password));
 
             return (true, null, result);
@@ -56,7 +56,7 @@ public class AuthApiService
         try
         {
             await _api.PostAsync<object>(
-                "api/auth/biometric",
+                "api/Authentication/biometric",
                 new SetBiometricRequest(userId, enable));
             return true;
         }

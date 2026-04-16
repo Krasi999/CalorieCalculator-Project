@@ -15,8 +15,10 @@ public class UserDetails
     }
 
     [Key]
+    [Column("Id")]
     public Guid ID { get; private set; } = Guid.NewGuid();
 
+    [Column("UserId")]
     public Guid UserID { get; private set; }
 
     public string Nickname { get; private set; } = string.Empty;

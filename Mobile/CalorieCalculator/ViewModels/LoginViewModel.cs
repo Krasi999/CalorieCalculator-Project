@@ -14,16 +14,58 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty] private string password = string.Empty;
     [ObservableProperty] private string errorMessage = string.Empty;
     [ObservableProperty] private bool isBusy = false;
+    [ObservableProperty] private bool rememberMe = false;
+    [ObservableProperty] private bool isBiometricAvailable = false;
+    [ObservableProperty] private bool isPasswordVisible;
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 
     public LoginViewModel(AuthApiService authService)
     {
         _authService = authService;
+        _ = CheckBiometricAvailability();
+        LoadSavedEmail();
+    }
+
+    /// <summary>
+    /// Проверява дали устройството поддържа биометрия
+    /// и дали потребителят я е активирал.
+    /// </summary>
+    private async Task CheckBiometricAvailability()
+    {
+        var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
+        var userEnabled = Preferences.Get("biometric_enabled", false);
+        isBiometricAvailable = deviceSupports && userEnabled;
+    }
+
+    /// <summary>
+    /// Зарежда запазения имейл, ако потребителят е избрал "Запомни ме".
+    /// </summary>
+    private void LoadSavedEmail()
+    {
+        var savedEmail = Preferences.Get("saved_email", string.Empty);
+        if (!string.IsNullOrEmpty(savedEmail))
+        {
+            Email = savedEmail;
+            rememberMe = true;
+        }
     }
 
     [RelayCommand]
     private async Task LoginAsync()
     {
         ErrorMessage = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Моля, въведете имейл и парола.";
+            return;
+        }
+
         IsBusy = true;
 
         try
@@ -32,15 +74,27 @@ public partial class LoginViewModel : ObservableObject
 
             if (!success || data == null)
             {
-                ErrorMessage = error ?? "Грешка при вход.";
+                ErrorMessage = error ?? "Грешка при вход. Проверете данните си.";
                 return;
             }
 
+            // Запази auth данните
             Preferences.Set("auth_token", data.Token);
             Preferences.Set("user_id", data.UserId.ToString());
             Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
 
+            // Запомни имейла ако е избрано
+            if (rememberMe)
+                Preferences.Set("saved_email", Email);
+            else
+                Preferences.Remove("saved_email");
+
             await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Възникна неочаквана грешка. Опитайте отново.";
+            System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
         }
         finally
         {
@@ -53,6 +107,7 @@ public partial class LoginViewModel : ObservableObject
     {
         ErrorMessage = string.Empty;
 
+        // Проверка за 72-часовото изискване
         if (AuthApiService.RequiresPasswordReauth())
         {
             ErrorMessage = "Изминаха 72 часа. Моля, влезте с имейл и парола.";
@@ -64,10 +119,26 @@ public partial class LoginViewModel : ObservableObject
 
         if (!result)
         {
-            ErrorMessage = "Биометричната автентикация неуспешна.";
+            ErrorMessage = "Биометричната автентикация е неуспешна.";
             return;
         }
 
         await Shell.Current.GoToAsync("//Dashboard");
+    }
+
+    [RelayCommand]
+    private async Task GoToRegister()
+    {
+        await Shell.Current.GoToAsync("//Register");
+    }
+
+    [RelayCommand]
+    private async Task ForgotPassword()
+    {
+        // TODO: Имплементация на забравена парола
+        await Shell.Current.DisplayAlert(
+            "Забравена парола",
+            "Функцията за възстановяване на парола предстои да бъде добавена.",
+            "OK");
     }
 }

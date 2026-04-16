@@ -1,10 +1,15 @@
-﻿namespace CalorieCalculator
+﻿using CalorieCalculator.Views;
+
+namespace CalorieCalculator;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        // Регистриране на допълнителни маршрути за навигация
+        Routing.RegisterRoute("Login", typeof(LoginPage));
+        Routing.RegisterRoute("Register", typeof(RegisterPage));
     }
 }

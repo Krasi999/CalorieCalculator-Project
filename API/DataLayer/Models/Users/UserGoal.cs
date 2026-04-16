@@ -15,8 +15,10 @@ public class UserGoal
     }
 
     [Key]
+    [Column("Id")]
     public Guid Id { get; private set; } = Guid.NewGuid();
 
+    [Column("UserId")]
     public Guid UserID { get; private set; }
 
     public GoalType GoalType { get; private set; }

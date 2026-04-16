@@ -1,0 +1,1 @@
+﻿ALTER TABLE "UserDetails" DROP COLUMN IF EXISTS "Salt";
