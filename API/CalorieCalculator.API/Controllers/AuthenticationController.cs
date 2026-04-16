@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataLayer.Models.Users;
+using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Commands.User;
 
@@ -25,20 +26,31 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
 
-        return Ok(result);
+        // Вземаме UserId от базата, за да го върнем на мобилния клиент
+        var user = _services.Repository.SetNoTracking<User>()
+            .FirstOrDefault(u => u.Email == request.Email);
+
+        return Ok(new { userId = user?.ID });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> LogIn([FromBody] LogInRequest request)
     {
-        var result = await _services.Authorization.LogIn(request.Username, request.Password);
+        var result = await _services.Authorization.LogIn(request.Email, request.Password);
 
         if (!result)
         {
             return Unauthorized();
         }
 
-        return Ok();
+        // Вземаме UserId от базата след успешен login
+        var user = _services.Repository.SetNoTracking<User>()
+            .FirstOrDefault(u => u.Email == request.Email);
+
+        // TODO: реален JWT token по-късно
+        var token = Guid.NewGuid().ToString("N");
+
+        return Ok(new { userId = user?.ID, token });
     }
 
     /* TODO да се добави подобна логика при желание за активиране на биометрия от потребителя

@@ -7,6 +7,7 @@ namespace DataLayer.Models.Users;
 public class User
 {
     [Key]
+    [Column("Id")]
     public Guid ID { get; private set; } = Guid.NewGuid();
 
     public string Email { get; private set; } = string.Empty;

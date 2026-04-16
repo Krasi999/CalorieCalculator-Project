@@ -3,12 +3,28 @@
     x:Class="CalorieCalculator.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:CalorieCalculator.Views"
     xmlns:local="clr-namespace:CalorieCalculator"
-    Title="CalorieCalculator">
+    Title="CalorieCalculator"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
 
+    <!-- Login Page — стартова страница -->
     <ShellContent
-        Title="Home"
+        Title="Вход"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="Login" />
+
+    <!-- Register Page -->
+    <ShellContent
+        Title="Регистрация"
+        ContentTemplate="{DataTemplate views:RegisterPage}"
+        Route="Register" />
+
+    <!-- Dashboard — след успешен вход (Колега1 ще добави съдържанието) -->
+    <ShellContent
+        Title="Начало"
         ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Route="Dashboard" />
 
 </Shell>
