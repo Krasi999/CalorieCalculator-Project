@@ -30,7 +30,11 @@ public class AuthApiService
         }
         catch (HttpRequestException ex)
         {
-            return (false, ex.Message, null);
+            return (false, GetFriendlyError(ex, isLogin: false), null);
+        }
+        catch (Exception)
+        {
+            return (false, "Няма връзка със сървъра. Провери интернет връзката.", null);
         }
     }
 
@@ -47,7 +51,11 @@ public class AuthApiService
         }
         catch (HttpRequestException ex)
         {
-            return (false, ex.Message, null);
+            return (false, GetFriendlyError(ex, isLogin: true), null);
+        }
+        catch (Exception)
+        {
+            return (false, "Няма връзка със сървъра. Провери интернет връзката.", null);
         }
     }
 
@@ -75,6 +83,21 @@ public class AuthApiService
         var lastLogin = DateTime.Parse(stored, null,
             System.Globalization.DateTimeStyles.RoundtripKind);
         return (DateTime.UtcNow - lastLogin).TotalHours >= 72;
+    }
+
+    /// <summary>
+    /// Превръща HTTP грешка в разбираемо за потребителя съобщение.
+    /// </summary>
+    private static string GetFriendlyError(HttpRequestException ex, bool isLogin)
+    {
+        return ex.StatusCode switch
+        {
+            System.Net.HttpStatusCode.Unauthorized => "Невалиден имейл или парола.",
+            System.Net.HttpStatusCode.BadRequest when isLogin => "Невалиден имейл или парола.",
+            System.Net.HttpStatusCode.BadRequest => "Потребител с този имейл вече съществува.",
+            System.Net.HttpStatusCode.NotFound => "Услугата не е намерена. Провери връзката.",
+            _ => "Няма връзка със сървъра. Опитай отново."
+        };
     }
 
     private record RegisterResultDto(Guid UserId);
