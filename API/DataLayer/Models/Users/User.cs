@@ -62,4 +62,12 @@ public class User
         if (LastPasswordLogin == null) return true;
         return (DateTime.UtcNow - LastPasswordLogin.Value).TotalHours >= 72;
     }
+
+    public void UpdatePassword(string passwordHash, string salt)
+    {
+        PasswordHash = passwordHash;
+        Salt = salt;
+        LastPasswordLogin = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

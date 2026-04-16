@@ -83,3 +83,53 @@ public class BoolToColorConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+
+/// <summary>
+/// За progress bar стъпка — бяло при активна, полу-прозрачно при неактивна.
+/// </summary>
+public class BoolToStepColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Обратен от StepColor — бяло когато стъпка 1 НЕ е видима (значи вече сме на 2 или 3).
+/// </summary>
+public class BoolToStepInactiveConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        // value = IsStep1Visible; ако е false значи сме поне на стъпка 2
+        return value is false ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Цвят на таймера — бял при нормално, червен при изтекъл.
+/// </summary>
+public class BoolToTimerColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#FCA5A5") : Color.FromArgb("#FFFFFF");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}

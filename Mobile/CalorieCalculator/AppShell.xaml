@@ -9,22 +9,20 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
-    <!-- Login Page — стартова страница -->
-    <ShellContent
-        Title="Вход"
-        ContentTemplate="{DataTemplate views:LoginPage}"
-        Route="Login" />
+    <ShellContent Title="Вход"
+                  ContentTemplate="{DataTemplate views:LoginPage}"
+                  Route="Login" />
 
-    <!-- Register Page -->
-    <ShellContent
-        Title="Регистрация"
-        ContentTemplate="{DataTemplate views:RegisterPage}"
-        Route="Register" />
+    <ShellContent Title="Регистрация"
+                  ContentTemplate="{DataTemplate views:RegisterPage}"
+                  Route="Register" />
 
-    <!-- Dashboard — след успешен вход (Колега1 ще добави съдържанието) -->
-    <ShellContent
-        Title="Начало"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="Dashboard" />
+    <ShellContent Title="Забравена парола"
+                  ContentTemplate="{DataTemplate views:ForgotPasswordPage}"
+                  Route="ForgotPassword" />
+
+    <ShellContent Title="Начало"
+                  ContentTemplate="{DataTemplate local:MainPage}"
+                  Route="Dashboard" />
 
 </Shell>

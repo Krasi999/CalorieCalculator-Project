@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 
 namespace CalorieCalculator.Service;
 
@@ -7,6 +8,12 @@ public record RegisterRequest(string Email, string Password);
 public record LoginRequest(string Email, string Password);
 public record LoginResponse(Guid UserId, string Token, bool RequiresPasswordReauth);
 public record SetBiometricRequest(Guid UserId, bool Enable);
+public record ForgotPasswordRequest(string Email);
+public record ForgotPasswordResponse(
+    [property: JsonPropertyName("success")] bool Success,
+    [property: JsonPropertyName("code")] string Code);
+public record VerifyCodeRequest(string Email, string Code);
+public record ResetPasswordApiRequest(string Email, string Code, string NewPassword);
 
 public class AuthApiService
 {
@@ -74,6 +81,80 @@ public class AuthApiService
         }
     }
 
+    /// Стъпка 1 — изпраща заявка за забравена парола.
+    /// Връща 6-цифрен код (засега директно от API, по-късно по email).
+    public async Task<(bool Success, string? Error, string? Code)> ForgotPasswordAsync(string email)
+    {
+        try
+        {
+            var result = await _api.PostAsync<ForgotPasswordResponse>(
+                "api/Authentication/forgot-password",
+                new ForgotPasswordRequest(email));
+
+            return (true, null, result?.Code);
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                return (false, "Няма регистриран потребител с този имейл.", null);
+
+            return (false, "Няма връзка със сървъра.", null);
+        }
+        catch (Exception)
+        {
+            return (false, "Няма връзка със сървъра.", null);
+        }
+    }
+
+    /// Стъпка 2 — проверява дали въведеният код е валиден.
+    public async Task<(bool Success, string? Error)> VerifyCodeAsync(string email, string code)
+    {
+        try
+        {
+            await _api.PostAsync(
+                "api/Authentication/verify-code",
+                new VerifyCodeRequest(email, code));
+
+            return (true, null);
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                return (false, "Невалиден или изтекъл код. Опитайте отново.");
+
+            return (false, "Няма връзка със сървъра.");
+        }
+        catch (Exception)
+        {
+            return (false, "Няма връзка със сървъра.");
+        }
+    }
+
+    /// Стъпка 3 — задава нова парола.
+    public async Task<(bool Success, string? Error)> ResetPasswordAsync(
+        string email, string code, string newPassword)
+    {
+        try
+        {
+            await _api.PostAsync(
+                "api/Authentication/reset-password",
+                new ResetPasswordApiRequest(email, code, newPassword));
+
+            return (true, null);
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                return (false, "Невалиден код или грешка при смяна на паролата.");
+
+            return (false, "Няма връзка със сървъра.");
+        }
+        catch (Exception)
+        {
+            return (false, "Няма връзка със сървъра.");
+        }
+    }
+
     // Проверка дали са минали 72 часа
     public static bool RequiresPasswordReauth()
     {
@@ -85,9 +166,6 @@ public class AuthApiService
         return (DateTime.UtcNow - lastLogin).TotalHours >= 72;
     }
 
-    /// <summary>
-    /// Превръща HTTP грешка в разбираемо за потребителя съобщение.
-    /// </summary>
     private static string GetFriendlyError(HttpRequestException ex, bool isLogin)
     {
         return ex.StatusCode switch
@@ -95,7 +173,7 @@ public class AuthApiService
             System.Net.HttpStatusCode.Unauthorized => "Невалиден имейл или парола.",
             System.Net.HttpStatusCode.BadRequest when isLogin => "Невалиден имейл или парола.",
             System.Net.HttpStatusCode.BadRequest => "Потребител с този имейл вече съществува.",
-            System.Net.HttpStatusCode.NotFound => "Услугата не е намерена. Провери връзката.",
+            System.Net.HttpStatusCode.NotFound => "Услугата не е намерена.",
             _ => "Няма връзка със сървъра. Опитай отново."
         };
     }

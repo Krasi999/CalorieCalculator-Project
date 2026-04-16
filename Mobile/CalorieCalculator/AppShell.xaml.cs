@@ -11,5 +11,6 @@ public partial class AppShell : Shell
         // Регистриране на допълнителни маршрути за навигация
         Routing.RegisterRoute("Login", typeof(LoginPage));
         Routing.RegisterRoute("Register", typeof(RegisterPage));
+        Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
     }
 }

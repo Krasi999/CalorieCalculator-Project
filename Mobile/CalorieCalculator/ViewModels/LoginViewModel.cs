@@ -135,10 +135,6 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private async Task ForgotPassword()
     {
-        // TODO: Имплементация на забравена парола
-        await Shell.Current.DisplayAlert(
-            "Забравена парола",
-            "Функцията за възстановяване на парола предстои да бъде добавена.",
-            "OK");
+        await Shell.Current.GoToAsync("//ForgotPassword");
     }
 }

@@ -26,7 +26,6 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
 
-        // Вземаме UserId от базата, за да го върнем на мобилния клиент
         var user = _services.Repository.SetNoTracking<User>()
             .FirstOrDefault(u => u.Email == request.Email);
 
@@ -43,14 +42,75 @@ public class AuthenticationController : ControllerBase
             return Unauthorized();
         }
 
-        // Вземаме UserId от базата след успешен login
         var user = _services.Repository.SetNoTracking<User>()
             .FirstOrDefault(u => u.Email == request.Email);
 
-        // TODO: реален JWT token по-късно
         var token = Guid.NewGuid().ToString("N");
 
         return Ok(new { userId = user?.ID, token });
+    }
+
+    /// Стъпка 1 — генерира 6-цифрен код и го връща на клиента.
+    /// По-късно може да се замени с реално пращане на имейл.
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return BadRequest();
+        }
+
+        var code = await _services.Authorization.GeneratePasswordResetCode(request.Email);
+
+        if (code == null)
+        {
+            // Не съществува потребител с този имейл
+            return NotFound();
+        }
+
+        // TODO: По-късно — пращане на кода по имейл вместо връщане в response-а
+        return Ok(new { success = true, code });
+    }
+
+    /// Стъпка 2 — проверява дали въведеният код е валиден.
+    [HttpPost("verify-code")]
+    public async Task<IActionResult> VerifyCode([FromBody] VerifyCodeRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Code))
+        {
+            return BadRequest();
+        }
+
+        var isValid = await _services.Authorization.VerifyPasswordResetCode(request.Email, request.Code);
+
+        if (!isValid)
+        {
+            return Unauthorized();
+        }
+
+        return Ok();
+    }
+
+    /// Стъпка 3 — задаване на нова парола (кодът се проверява отново за сигурност).
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Code) ||
+            string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return BadRequest();
+        }
+
+        var success = await _services.Authorization.ResetPassword(
+            request.Email, request.Code, request.NewPassword);
+
+        if (!success)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
     }
 
     /* TODO да се добави подобна логика при желание за активиране на биометрия от потребителя
