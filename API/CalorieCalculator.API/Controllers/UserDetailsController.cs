@@ -14,6 +14,25 @@ public class UserDetailsController : ControllerBase
     {
         _mediator = mediator;
     }
+
+    // POST api/userdetails/save
+    [HttpPost("save")]
+    public async Task<IActionResult> SaveUserDetails(
+        [FromBody] UserDetailsCommand command)
+    {
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    // POST api/userdetails/goal
+    [HttpPost("goal")]
+    public async Task<IActionResult> SaveUserGoal(
+        [FromBody] UserGoalCommand command)
+    {
+        await _mediator.Send(command);
+        return Ok();
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]
@@ -21,59 +40,38 @@ public class UserDetailsController : ControllerBase
     {
         var query = new GetUserDetailsQuery { UserId = userId };
         var result = await _mediator.Send(query);
-
         if (result is null)
             return NotFound(new { message = "Profile not found." });
-
         return Ok(result);
     }
 
-    // POST api/userdetails
-    [HttpPost]
-    public async Task<IActionResult> CreateUserDetails(
-        [FromBody] UserDetailsCommand command)
-    {
-        var id = await _mediator.Send(command);
-        return Ok(new { id });
-    }
-
-    // POST api/userdetails
-    [HttpPost]
+    // PUT api/userdetails
+    [HttpPut]
     public async Task<IActionResult> UpdateUserDetails(
         [FromBody] UpdateUserDetailsCommand command)
     {
         var success = await _mediator.Send(command);
         return Ok(new { success });
     }
-    
+
     // GET api/userdetails/{userId}/goal
     [HttpGet("{userId:guid}/goal")]
     public async Task<IActionResult> GetUserGoal(Guid userId)
     {
         var query = new GetUserGoalQuery { UserId = userId };
         var result = await _mediator.Send(query);
-
         if (result is null)
             return NotFound(new { message = "Няма активна цел." });
-
         return Ok(result);
     }
 
-    // POST api/userdetails/goal
-    [HttpPost("goal")]
-    public async Task<IActionResult> CreateUserGoal(
-        [FromBody] UserGoalCommand command)
-    {
-        var id = await _mediator.Send(command);
-        return Ok(new { id });
-    }
-
-    // POST api/userdetails/goal
-    [HttpPost("goal")]
+    // PUT api/userdetails/goal
+    [HttpPut("goal")]
     public async Task<IActionResult> UpdateUserGoal(
         [FromBody] UpdateUserGoalCommand command)
     {
         var success = await _mediator.Send(command);
         return Ok(new { success });
-    }*/
+    }
+    */
 }
