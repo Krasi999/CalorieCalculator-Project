@@ -115,12 +115,7 @@ public partial class RegisterViewModel : ObservableObject
 
             Preferences.Set("user_id", userId.ToString()!);
 
-            await Shell.Current.DisplayAlert(
-                "Успешна регистрация",
-                "Акаунтът ви е създаден. Моля, влезте с вашите данни.",
-                "OK");
-
-            await Shell.Current.GoToAsync("//Login");
+            await Shell.Current.GoToAsync("//ProfileSetup");
         }
         catch (Exception ex)
         {

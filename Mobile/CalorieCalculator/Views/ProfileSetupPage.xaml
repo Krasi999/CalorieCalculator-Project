@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CalorieCalculator.ViewModels"
+             x:Class="CalorieCalculator.Views.ProfileSetupPage"
+             x:DataType="vm:ProfileSetupViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid>
+        <BoxView>
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0A1F3D" Offset="0.0" />
+                    <GradientStop Color="#153A6B" Offset="0.3" />
+                    <GradientStop Color="#2563EB" Offset="0.6" />
+                    <GradientStop Color="#3B82F6" Offset="0.85" />
+                    <GradientStop Color="#93C5FD" Offset="1.0" />
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <Grid RowDefinitions="Auto,*,Auto"
+              Padding="30,50,30,30">
+
+            <!-- Header -->
+            <VerticalStackLayout Grid.Row="0" Spacing="15">
+                <Label Text="← Назад"
+                       FontSize="16"
+                       TextColor="White">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <ProgressBar Progress="{Binding Progress}"
+                             ProgressColor="#22C55E"
+                             BackgroundColor="#FFFFFF30"
+                             HeightRequest="6" />
+
+                <Label Text="{Binding StepTitle}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       Margin="0,10,0,0" />
+
+                <Label Text="{Binding StepSubtitle}"
+                       FontSize="14"
+                       TextColor="#BFDBFE"
+                       Margin="0,0,0,15" />
+            </VerticalStackLayout>
+
+            <!-- Content -->
+            <ScrollView Grid.Row="1" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0">
+
+                    <!-- СТЪПКА 1 — Псевдоним -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep1Visible}" Spacing="10">
+                        <Label Text="Псевдоним" FontSize="13" TextColor="#BFDBFE" Margin="5,0,0,0" />
+                        <Border StrokeShape="RoundRectangle 12" Stroke="#FFFFFF40"
+                                BackgroundColor="White" Padding="14,2">
+                            <Entry Text="{Binding Nickname}"
+                                   PlaceholderColor="#94A3B8"
+                                   TextColor="#0F172A"
+                                   FontSize="16"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 2 — Пол -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep2Visible}" Spacing="12">
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsMaleSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsMaleSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsMaleSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="20,18" HeightRequest="70">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectMaleCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Мъж" FontSize="18" FontAttributes="Bold" TextColor="#0F172A" VerticalOptions="Center" />
+                        </Border>
+
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsFemaleSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsFemaleSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsFemaleSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="20,18" HeightRequest="70">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectFemaleCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Жена" FontSize="18" FontAttributes="Bold" TextColor="#0F172A" VerticalOptions="Center" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 3 — Възраст -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep3Visible}" Spacing="10">
+                        <Picker Title="Избери възраст"
+                                ItemsSource="{Binding AgeOptions}"
+                                SelectedIndex="{Binding SelectedAgeIndex}"
+                                TextColor="#0F172A" TitleColor="#94A3B8"
+                                FontSize="20" BackgroundColor="White" />
+                    </VerticalStackLayout>
+
+                    <!-- Стъпка 4 - Височина -->
+                        <VerticalStackLayout IsVisible="{Binding IsStep4Visible}" Spacing="15"
+                     HorizontalOptions="Fill">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+          HorizontalOptions="Center" WidthRequest="260">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsHeightInCm, Converter={StaticResource BoolToInactiveBorderConverter}}"
+                StrokeThickness="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleStrokeConverter}}"
+                BackgroundColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectHeightFtCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Футове" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Border Grid.Column="1" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsHeightInCm, Converter={StaticResource BoolToActiveBorderConverter}}"
+                StrokeThickness="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleActiveStrokeConverter}}"
+                BackgroundColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleActiveBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectHeightCmCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Сантиметри" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleActiveTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                        <Picker ItemsSource="{Binding HeightCmOptions}" SelectedIndex="{Binding SelectedHeightCmIndex}"
+            IsVisible="{Binding IsHeightInCm}" TextColor="#0F172A" FontSize="20"
+            BackgroundColor="White" HorizontalOptions="Fill" />
+                        <Picker ItemsSource="{Binding HeightFtOptions}" SelectedIndex="{Binding SelectedHeightFtIndex}"
+            IsVisible="{Binding IsHeightInCm, Converter={StaticResource InvertBoolConverter}}"
+            TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 5 — Тегло -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep5Visible}" Spacing="15"
+                     HorizontalOptions="Fill">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+          HorizontalOptions="Center" WidthRequest="260">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsWeightInKg, Converter={StaticResource BoolToInactiveBorderConverter}}"
+                StrokeThickness="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleStrokeConverter}}"
+                BackgroundColor="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectWeightLbsCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Паунди" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Border Grid.Column="1" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsWeightInKg, Converter={StaticResource BoolToActiveBorderConverter}}"
+                StrokeThickness="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleActiveStrokeConverter}}"
+                BackgroundColor="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleActiveBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectWeightKgCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Килограми" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleActiveTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                        <Picker ItemsSource="{Binding WeightKgOptions}" SelectedIndex="{Binding SelectedWeightKgIndex}"
+            IsVisible="{Binding IsWeightInKg}" TextColor="#0F172A" FontSize="20"
+            BackgroundColor="White" HorizontalOptions="Fill" />
+                        <Picker ItemsSource="{Binding WeightLbsOptions}" SelectedIndex="{Binding SelectedWeightLbsIndex}"
+            IsVisible="{Binding IsWeightInKg, Converter={StaticResource InvertBoolConverter}}"
+            TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 6 — Активност -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep6Visible}" Spacing="10">
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsSedentarySelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsSedentarySelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsSedentarySelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectActivityLevelCommand}" CommandParameter="Sedentary" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Заседнал" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Text="Малко или никакво движение" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsLightlyActiveSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsLightlyActiveSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsLightlyActiveSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectActivityLevelCommand}" CommandParameter="LightlyActive" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Леко активен" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Text="Леки упражнения 1-2 пъти седмично" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsModerateActiveSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsModerateActiveSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsModerateActiveSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectActivityLevelCommand}" CommandParameter="ModerateActive" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Умерено активен" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Text="Упражнения 3-4 пъти седмично" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsVeryActiveSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsVeryActiveSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsVeryActiveSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectActivityLevelCommand}" CommandParameter="VeryActive" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Много активен" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Text="Интензивни упражнения 5-6 пъти седмично" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsExtraActiveSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsExtraActiveSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsExtraActiveSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectActivityLevelCommand}" CommandParameter="ExtraActive" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Изключително активен" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Text="Тренировки всеки ден или физическа работа" FontSize="12" TextColor="#64748B" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 7 — Цел -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep7Visible}" Spacing="10">
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsWeightLossSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsWeightLossSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsWeightLossSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectGoalTypeCommand}" CommandParameter="WeightLoss" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Загуба на тегло" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsMaintenanceSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsMaintenanceSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsMaintenanceSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectGoalTypeCommand}" CommandParameter="Maintenance" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Задържане на теглото" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsWeightGainSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsWeightGainSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsWeightGainSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectGoalTypeCommand}" CommandParameter="WeightGain" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Качване на тегло" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 16"
+                                Stroke="{Binding IsMuscleGainSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
+                                StrokeThickness="{Binding IsMuscleGainSelected, Converter={StaticResource BoolToStrokeThicknessConverter}}"
+                                BackgroundColor="{Binding IsMuscleGainSelected, Converter={StaticResource BoolToSelectedBgConverter}}"
+                                Padding="18,14">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectGoalTypeCommand}" CommandParameter="MuscleGain" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Качване на мускулна маса" FontSize="16" FontAttributes="Bold" TextColor="#0F172A" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- СТЪПКА 8 — Желано тегло -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep8Visible}" Spacing="15"
+                     HorizontalOptions="Fill">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+          HorizontalOptions="Center" WidthRequest="260">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToInactiveBorderConverter}}"
+                StrokeThickness="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleStrokeConverter}}"
+                BackgroundColor="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTargetWeightLbsCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Паунди" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Border Grid.Column="1" StrokeShape="RoundRectangle 20"
+                Stroke="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToActiveBorderConverter}}"
+                StrokeThickness="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleActiveStrokeConverter}}"
+                BackgroundColor="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleActiveBgConverter}}"
+                Padding="0" HeightRequest="42">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTargetWeightKgCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="Килограми" FontSize="14" FontAttributes="Bold"
+                   TextColor="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleActiveTextConverter}}"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                        <Picker ItemsSource="{Binding WeightKgOptions}" SelectedIndex="{Binding SelectedTargetWeightKgIndex}"
+            IsVisible="{Binding IsTargetWeightInKg}" TextColor="#0F172A" FontSize="20"
+            BackgroundColor="White" HorizontalOptions="Fill" />
+                        <Picker ItemsSource="{Binding WeightLbsOptions}" SelectedIndex="{Binding SelectedTargetWeightLbsIndex}"
+            IsVisible="{Binding IsTargetWeightInKg, Converter={StaticResource InvertBoolConverter}}"
+            TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+                    <!-- Error -->
+                    <Label Text="{Binding ErrorMessage}" TextColor="#FCA5A5" FontSize="13"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                           Margin="0,10,0,0" />
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- ЗЕЛЕН бутон Продължи -->
+            <Button Grid.Row="2"
+                    Text="Продължи"
+                    Command="{Binding ContinueCommand}"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#22C55E"
+                    CornerRadius="25"
+                    HeightRequest="52"
+                    Margin="0,15,0,0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

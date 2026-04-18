@@ -20,6 +20,17 @@
             <converters:BoolToStepColorConverter x:Key="BoolToStepColorConverter" />
             <converters:BoolToStepInactiveConverter x:Key="BoolToStepInactiveConverter" />
             <converters:BoolToTimerColorConverter x:Key="BoolToTimerColorConverter" />
+            <converters:BoolToSelectedBorderConverter x:Key="BoolToSelectedBorderConverter" />
+            <converters:BoolToToggleBgConverter x:Key="BoolToToggleBgConverter" />
+            <converters:BoolToToggleActiveBgConverter x:Key="BoolToToggleActiveBgConverter" />
+            <converters:BoolToToggleTextConverter x:Key="BoolToToggleTextConverter" />
+            <converters:BoolToSelectedBgConverter x:Key="BoolToSelectedBgConverter" />
+            <converters:BoolToStrokeThicknessConverter x:Key="BoolToStrokeThicknessConverter" />
+            <converters:BoolToToggleActiveTextConverter x:Key="BoolToToggleActiveTextConverter" />
+            <converters:BoolToInactiveBorderConverter x:Key="BoolToInactiveBorderConverter" />
+            <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter" />
+            <converters:BoolToToggleStrokeConverter x:Key="BoolToToggleStrokeConverter" />
+            <converters:BoolToToggleActiveStrokeConverter x:Key="BoolToToggleActiveStrokeConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

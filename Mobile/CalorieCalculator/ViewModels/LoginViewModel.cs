@@ -39,7 +39,7 @@ public partial class LoginViewModel : ObservableObject
     {
         var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
         var userEnabled = Preferences.Get("biometric_enabled", false);
-        isBiometricAvailable = deviceSupports && userEnabled;
+        IsBiometricAvailable = deviceSupports && userEnabled;
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public partial class LoginViewModel : ObservableObject
         if (!string.IsNullOrEmpty(savedEmail))
         {
             Email = savedEmail;
-            rememberMe = true;
+            RememberMe = true;
         }
     }
 
@@ -84,7 +84,7 @@ public partial class LoginViewModel : ObservableObject
             Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
 
             // Запомни имейла ако е избрано
-            if (rememberMe)
+            if (RememberMe)
                 Preferences.Set("saved_email", Email);
             else
                 Preferences.Remove("saved_email");

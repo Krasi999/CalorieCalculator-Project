@@ -24,5 +24,8 @@
     <ShellContent Title="Начало"
                   ContentTemplate="{DataTemplate local:MainPage}"
                   Route="Dashboard" />
-
+    
+    <ShellContent Title="Профил"
+              ContentTemplate="{DataTemplate views:ProfileSetupPage}"
+              Route="ProfileSetup" />
 </Shell>

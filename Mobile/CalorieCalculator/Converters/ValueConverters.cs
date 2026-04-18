@@ -133,3 +133,179 @@ public class BoolToTimerColorConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+/// <summary>
+/// Border при избран елемент — ЗЕЛЕНА рамка при избран, прозрачна при неизбран.
+/// </summary>
+public class BoolToSelectedBorderConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#22C55E") : Color.FromArgb("#D1D5DB");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Фон при избран елемент — светло сив при избран, бял при неизбран.
+/// </summary>
+public class BoolToSelectedBgConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#F0FDF4") : Color.FromArgb("#FFFFFF");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Дебелина на рамката — 2.5 при избран, 1 при неизбран.
+/// </summary>
+public class BoolToStrokeThicknessConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? 2.5 : 1.0;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle бутон — НЕАКТИВЕН фон (прозрачен, без жълто).
+/// </summary>
+public class BoolToToggleBgConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Colors.Transparent : Color.FromArgb("#F0FDF4");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle бутон — АКТИВЕН фон (светло зелен).
+/// </summary>
+public class BoolToToggleActiveBgConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#F0FDF4") : Colors.Transparent;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle border — НЕАКТИВЕН (прозрачен — без рамка).
+/// </summary>
+public class BoolToInactiveBorderConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Colors.Transparent : Color.FromArgb("#22C55E");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle border — АКТИВЕН (зелена).
+/// </summary>
+public class BoolToActiveBorderConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#22C55E") : Colors.Transparent;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle текст — НЕАКТИВЕН (бял/светъл).
+/// </summary>
+public class BoolToToggleTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#166534");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Toggle текст — АКТИВЕН (тъмно зелен).
+/// </summary>
+public class BoolToToggleActiveTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? Color.FromArgb("#166534") : Color.FromArgb("#FFFFFF");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Дебелина на рамката за toggle — 3 при активен, 0 при неактивен.
+/// </summary>
+public class BoolToToggleStrokeConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? 0.0 : 3.0;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Обратен — 3 при активен, 0 при неактивен.
+/// </summary>
+public class BoolToToggleActiveStrokeConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? 3.0 : 0.0;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
