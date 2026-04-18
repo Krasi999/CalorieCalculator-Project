@@ -7,7 +7,8 @@
     xmlns:local="clr-namespace:CalorieCalculator"
     Title="CalorieCalculator"
     Shell.FlyoutBehavior="Disabled"
-    Shell.NavBarIsVisible="False">
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
 
     <ShellContent Title="Вход"
                   ContentTemplate="{DataTemplate views:LoginPage}"
@@ -21,11 +22,16 @@
                   ContentTemplate="{DataTemplate views:ForgotPasswordPage}"
                   Route="ForgotPassword" />
 
-    <ShellContent Title="Начало"
-                  ContentTemplate="{DataTemplate local:MainPage}"
-                  Route="Dashboard" />
-    
     <ShellContent Title="Профил"
               ContentTemplate="{DataTemplate views:ProfileSetupPage}"
               Route="ProfileSetup" />
+
+    <ShellContent Route="ProfilePage"
+                  ContentTemplate="{DataTemplate views:ProfilePage}"/>
+    
+    <ShellContent Route="MainPage"
+                  ContentTemplate="{DataTemplate views:MainPage}"/>
+    
+    <ShellContent Route="ProgressPage"
+                  ContentTemplate="{DataTemplate views:ProgressPage}"/>
 </Shell>

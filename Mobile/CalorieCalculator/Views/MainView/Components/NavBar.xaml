@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalorieCalculator.Views.MainView.Components.NavBar">
+
+    <Border BackgroundColor="White"
+            StrokeShape="RoundRectangle 20,20,0,0"
+            Stroke="Transparent"
+            Shadow="{Shadow Brush=Black, Opacity=0.1, Offset='0,-2'}">
+        <Grid ColumnDefinitions="*,*,*"
+              Padding="0,12"
+              HeightRequest="70">
+
+            <VerticalStackLayout Grid.Column="0"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="4">
+                <Image Source="{Binding ProfileIcon}"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       HorizontalOptions="Center"/>
+                <Label Text="Profile"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{Binding ProfileColor}"/>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}"
+                                          CommandParameter="profile"/>
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="4">
+                <Image Source="{Binding HomeIcon}"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       HorizontalOptions="Center"/>
+                <Label Text="Today"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{Binding HomeColor}"/>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}"
+                                          CommandParameter="home"/>
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="2"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="4">
+                <Image Source="{Binding ProgressIcon}"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       HorizontalOptions="Center"/>
+                <Label Text="Progress"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{Binding ProgressColor}"/>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}"
+                                          CommandParameter="progress"/>
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
+
+        </Grid>
+    </Border>
+
+</ContentView>

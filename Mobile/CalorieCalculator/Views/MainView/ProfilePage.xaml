@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CalorieCalculator.Views.MainView.Components"
+             x:Class="CalorieCalculator.Views.ProfilePage"
+             BackgroundColor="#F5F6FA"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <VerticalStackLayout Grid.Row="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center">
+            <Label Text="Profile"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#1A1A2E"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="Coming soon..."
+                   FontSize="16"
+                   TextColor="#9E9E9E"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <components:NavBar Grid.Row="1" CurrentPage="profile"/>
+
+    </Grid>
+
+</ContentPage>

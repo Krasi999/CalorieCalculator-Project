@@ -1,18 +1,24 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace CalorieCalculator.Service;
 
 // DTO-та за комуникация с API-то
 public record RegisterRequest(string Email, string Password);
+
 public record LoginRequest(string Email, string Password);
+
 public record LoginResponse(Guid UserId, string Token, bool RequiresPasswordReauth);
+
 public record SetBiometricRequest(Guid UserId, bool Enable);
+
 public record ForgotPasswordRequest(string Email);
+
 public record ForgotPasswordResponse(
     [property: JsonPropertyName("success")] bool Success,
     [property: JsonPropertyName("code")] string Code);
+
 public record VerifyCodeRequest(string Email, string Code);
+
 public record ResetPasswordApiRequest(string Email, string Code, string NewPassword);
 
 public class AuthApiService

@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CalorieCalculator.Views.MainView.Components"
+             x:Class="CalorieCalculator.Views.MainPage"
+             BackgroundColor="#F5F6FA"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Page Content -->
+        <ScrollView Grid.Row="0" Padding="20">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- Header -->
+                <Label Text="Today"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="#1A1A2E"/>
+
+                <!-- Calorie Ring Section -->
+                <Frame BackgroundColor="White"
+                   CornerRadius="20"
+                   Padding="25"
+                   HasShadow="False"
+                   BorderColor="Transparent">
+                    <Grid ColumnDefinitions="*,Auto,*"
+                      RowDefinitions="Auto,Auto">
+
+                        <!-- Eaten -->
+                        <VerticalStackLayout Grid.Column="0"
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                            <Label Text="{Binding CaloriesEaten}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#1A1A2E"/>
+                            <Label Text="Total"
+                               FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#9E9E9E"/>
+                        </VerticalStackLayout>
+
+                        <!-- Remaining Circle -->
+                        <Grid Grid.Column="1"
+                          WidthRequest="140"
+                          HeightRequest="140">
+
+                            <!-- Background circle -->
+                            <BoxView CornerRadius="70"
+                                 WidthRequest="140"
+                                 HeightRequest="140"
+                                 Color="#E8F5F0"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"/>
+
+                            <!-- Inner white circle -->
+                            <BoxView CornerRadius="55"
+                                 WidthRequest="110"
+                                 HeightRequest="110"
+                                 Color="White"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"/>
+
+                            <!-- Remaining text -->
+                            <VerticalStackLayout HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+                                <Label Text="{Binding CaloriesRemaining}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#1A1A2E"/>
+                                <Label Text="Eaten"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#9E9E9E"/>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Burned -->
+                        <VerticalStackLayout Grid.Column="2"
+                                         VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                            <Label Text="{Binding CaloriesBurned}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#1A1A2E"/>
+                            <Label Text="Left"
+                               FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#9E9E9E"/>
+                        </VerticalStackLayout>
+
+                        <!-- Macros Row -->
+                        <Grid Grid.Row="1"
+                          Grid.ColumnSpan="3"
+                          ColumnDefinitions="*,*,*"
+                          Margin="0,20,0,0">
+
+                            <!-- Carbs -->
+                            <VerticalStackLayout Grid.Column="0"
+                                             HorizontalOptions="Center"
+                                             Spacing="5">
+                                <Label Text="Carbs"
+                                   FontSize="13"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#9E9E9E"/>
+                                <ProgressBar Progress="{Binding CarbsProgress}"
+                                         ProgressColor="#4DB6AC"
+                                         WidthRequest="80"/>
+                                <Label FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#1A1A2E">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                            <Binding Path="CarbsCurrent"/>
+                                            <Binding Path="CarbsGoal"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <!-- Protein -->
+                            <VerticalStackLayout Grid.Column="1"
+                                             HorizontalOptions="Center"
+                                             Spacing="5">
+                                <Label Text="Protein"
+                                   FontSize="13"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#9E9E9E"/>
+                                <ProgressBar Progress="{Binding ProteinProgress}"
+                                         ProgressColor="#4DB6AC"
+                                         WidthRequest="80"/>
+                                <Label FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#1A1A2E">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                            <Binding Path="ProteinCurrent"/>
+                                            <Binding Path="ProteinGoal"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <!-- Fat -->
+                            <VerticalStackLayout Grid.Column="2"
+                                             HorizontalOptions="Center"
+                                             Spacing="5">
+                                <Label Text="Fat"
+                                   FontSize="13"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#9E9E9E"/>
+                                <ProgressBar Progress="{Binding FatProgress}"
+                                         ProgressColor="#4DB6AC"
+                                         WidthRequest="80"/>
+                                <Label FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="#1A1A2E">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                            <Binding Path="FatCurrent"/>
+                                            <Binding Path="FatGoal"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Grid>
+                </Frame>
+
+                <!-- Meal Cards -->
+                <CollectionView ItemsSource="{Binding Meals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="White"
+                               CornerRadius="15"
+                               Padding="15"
+                               Margin="0,5"
+                               HasShadow="False"
+                               BorderColor="Transparent">
+                                <Grid ColumnDefinitions="50,*,Auto">
+
+                                    <!-- Meal Icon -->
+                                    <Frame Grid.Column="0"
+                                       WidthRequest="45"
+                                       HeightRequest="45"
+                                       CornerRadius="22"
+                                       Padding="0"
+                                       BackgroundColor="#F0F7F4"
+                                       HasShadow="False"
+                                       BorderColor="Transparent"
+                                       VerticalOptions="Center">
+                                        <Label Text="{Binding Icon}"
+                                           FontSize="22"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                    </Frame>
+
+                                    <!-- Meal Name and Calories -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                     VerticalOptions="Center"
+                                                     Padding="10,0,0,0">
+                                        <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="#1A1A2E"/>
+                                        <Label FontSize="13"
+                                           TextColor="#9E9E9E">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} / {1} Cal">
+                                                    <Binding Path="CurrentCalories"/>
+                                                    <Binding Path="GoalCalories"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </VerticalStackLayout>
+
+                                    <!-- Add Button -->
+                                    <Button Grid.Column="2"
+                                        Text="+"
+                                        FontSize="20"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        CornerRadius="20"
+                                        BackgroundColor="#4DB6AC"
+                                        TextColor="White"
+                                        Padding="0"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddMealCommand}"
+                                        CommandParameter="{Binding Name}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Nav Bar -->
+        <components:NavBar Grid.Row="1" CurrentPage="Home"/>
+
+    </Grid>
+
+</ContentPage>

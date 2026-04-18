@@ -1,7 +1,6 @@
 ﻿using CalorieCalculator.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.VisualStudio.PlatformUI;
 using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace CalorieCalculator.ViewModels;
@@ -89,7 +88,7 @@ public partial class LoginViewModel : ObservableObject
             else
                 Preferences.Remove("saved_email");
 
-            await Shell.Current.GoToAsync("//Dashboard");
+            await Shell.Current.GoToAsync("//MainPage");
         }
         catch (Exception ex)
         {
