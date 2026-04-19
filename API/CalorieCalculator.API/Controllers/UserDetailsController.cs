@@ -17,8 +17,7 @@ public class UserDetailsController : ControllerBase
 
     // POST api/userdetails/save
     [HttpPost("save")]
-    public async Task<IActionResult> SaveUserDetails(
-        [FromBody] UserDetailsCommand command)
+    public async Task<IActionResult> SaveUserDetails([FromBody] ProfileDataRequest request)
     {
         await _mediator.Send(command);
         return Ok();

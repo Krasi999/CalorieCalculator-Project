@@ -325,7 +325,7 @@ public partial class ProfileSetupViewModel : ObservableObject
                 UserID = userIdGuid,
                 Nickname = Nickname.Trim(),
                 Gender = SelectedGender,
-                DateOfBirth = dateOfBirth.ToString("O"),
+                DateOfBirth = dateOfBirth,
                 HeightCm = IsHeightInCm ? (decimal?)(SelectedHeightCmIndex + 100) : null,
                 HeightFt = !IsHeightInCm ? (decimal?)ParseFtToDecimal(SelectedHeightFtIndex) : null,
                 WeightKg = IsWeightInKg ? (decimal?)(SelectedWeightKgIndex + 30) : null,
