@@ -350,7 +350,7 @@ public partial class ProfileSetupViewModel : ObservableObject
 
             await _api.PostAsync("api/UserDetails/goal", goalData);
 
-            await Shell.Current.GoToAsync("//Dashboard");
+            await Shell.Current.GoToAsync("//MainPage");
         }
         catch (Exception ex)
         {
