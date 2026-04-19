@@ -87,6 +87,12 @@ public partial class RegisterViewModel : ObservableObject
             return;
         }
 
+        if (Email != Email.ToLowerInvariant())
+        {
+            ErrorMessage = "Имейлът трябва да съдържа само малки букви.";
+            return;
+        }
+
         // Валидация на паролата по ISO/IEC 27001
         if (!IsPasswordValid)
         {
