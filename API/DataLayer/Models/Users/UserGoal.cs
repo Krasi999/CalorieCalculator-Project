@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using DataLayer.Enums;
 
-namespace DataLayer.Models.Users;
+namespace DataLayer.Models;
 
 [Table("UserGoals")]
 public class UserGoal

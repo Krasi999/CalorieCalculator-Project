@@ -1,6 +1,8 @@
 ﻿using DataLayer.Enums;
+using DataLayer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 using Services.Commands.User;
 
 namespace CalorieCalculator.API.Controllers;
@@ -9,18 +11,18 @@ namespace CalorieCalculator.API.Controllers;
 [Route("api/[controller]")]
 public class UserDetailsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IServices _services;
 
-    public UserDetailsController(IMediator mediator)
+    public UserDetailsController(IServices services)
     {
-        _mediator = mediator;
+        _services = services;
     }
 
     // POST api/userdetails/save
     [HttpPost("save")]
     public async Task<IActionResult> SaveUserDetails([FromBody] ProfileDataRequest request)
     {
-        var result = await _mediator.Send(new UserDetailsCommand
+        var result = await _services.Mediator.Send(new UserDetailsCommand
         {
             UserID = request.UserID.Value,
             Nickname = request.Nickname,
@@ -36,6 +38,8 @@ public class UserDetailsController : ControllerBase
             TargetWeightLbs = request.TargetWeightLbs,
         });
 
+        await _services.Mediator.Send(new CalorieProgramCommand { UserID = request.UserID.Value });
+
         return Ok(new ProfileDataResponse() { Success = result, UserID = request.UserID});
     }
 
@@ -44,7 +48,7 @@ public class UserDetailsController : ControllerBase
     public async Task<IActionResult> SaveUserGoal(
         [FromBody] UserGoalCommand command)
     {
-        await _mediator.Send(command);
+        await _services.Mediator.Send(command);
         return Ok();
     }
 

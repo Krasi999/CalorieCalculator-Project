@@ -1,7 +1,6 @@
-﻿using DataLayer.Models.Users;
+﻿using DataLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services;
-using Services.Commands.User;
 
 namespace CalorieCalculator.API.Controllers;
 
@@ -46,6 +45,8 @@ public class AuthenticationController : ControllerBase
             .FirstOrDefault(u => u.Email == request.Email);
 
         var token = Guid.NewGuid().ToString("N");
+
+        await _services.Mediator.Send(new CalorieProgramCommand { UserID = user.ID });
 
         return Ok(new { userId = user?.ID, token });
     }

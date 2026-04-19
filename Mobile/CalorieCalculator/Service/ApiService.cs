@@ -24,6 +24,14 @@ public class ApiService
         return await response.Content.ReadFromJsonAsync<List<T>>() ?? new List<T>();
     }
 
+    public async Task<T?> GetAsyncT<T>(string endpoint)
+    {
+        var response = await _httpClient.GetAsync(endpoint);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<T>();
+    }
+
     public async Task<T?> PostAsync<T>(string endpoint, object data)
     {
         var response = await _httpClient.PostAsJsonAsync(endpoint, data);

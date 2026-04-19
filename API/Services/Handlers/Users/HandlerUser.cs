@@ -1,5 +1,4 @@
-﻿using DataLayer.Models.Users;
-using MediatR;
+﻿using MediatR;
 
 
 namespace Services.Handlers.Users;

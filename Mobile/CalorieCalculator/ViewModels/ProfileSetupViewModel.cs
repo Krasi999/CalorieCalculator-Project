@@ -392,7 +392,7 @@ public partial class ProfileSetupViewModel : ObservableObject
                 return;
             }
 
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
         }
         catch (Exception ex)
         {

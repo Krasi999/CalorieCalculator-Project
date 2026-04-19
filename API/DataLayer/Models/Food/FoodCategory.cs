@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Models.FoodDTOs;
+namespace DataLayer.Models;
 
 [Table("FoodCategories")]
 public class FoodCategory

@@ -94,7 +94,7 @@ public partial class LoginViewModel : ObservableObject
             else
                 Preferences.Remove("saved_email");
 
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
         }
         catch (Exception ex)
         {

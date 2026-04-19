@@ -1,4 +1,4 @@
-﻿using DataLayer.Models.Users;
+﻿using DataLayer.Models;
 using DataLayer.Repository;
 using Services.Authorization;
 using System.Security.Cryptography;

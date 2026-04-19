@@ -1,4 +1,4 @@
-﻿using DataLayer.Models.Users;
+﻿using DataLayer.Models;
 using MediatR;
 
 public class UserDetailsQuery : IRequest<UserDetails?>

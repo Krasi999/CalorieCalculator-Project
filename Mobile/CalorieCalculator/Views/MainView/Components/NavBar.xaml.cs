@@ -36,13 +36,13 @@ public partial class NavBar : ContentView
             switch (page)
             {
                 case "profile":
-                    await Shell.Current.GoToAsync("//ProfilePage");
+                    await Shell.Current.GoToAsync("//ProfilePage?UserID={userId}");
                     break;
                 case "home":
-                    await Shell.Current.GoToAsync("//MainPage");
+                    await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
                     break;
                 case "progress":
-                    await Shell.Current.GoToAsync("//ProgressPage");
+                    await Shell.Current.GoToAsync("//ProgressPage?UserID={userId}");
                     break;
             }
         });

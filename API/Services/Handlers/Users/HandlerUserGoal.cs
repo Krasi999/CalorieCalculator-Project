@@ -1,4 +1,4 @@
-﻿using DataLayer.Models.Users;
+﻿using DataLayer.Models;
 using MediatR;
 using Services.Commands.User;
 

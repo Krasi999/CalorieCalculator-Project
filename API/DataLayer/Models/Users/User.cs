@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataLayer.Models.Users;
+namespace DataLayer.Models;
 
 [Table("Users")]
 public class User
