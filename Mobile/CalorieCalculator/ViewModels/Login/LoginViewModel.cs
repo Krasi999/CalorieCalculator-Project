@@ -65,6 +65,12 @@ public partial class LoginViewModel : ObservableObject
             return;
         }
 
+        if (Email != Email.ToLowerInvariant())
+        {
+            ErrorMessage = "Имейлът трябва да съдържа само малки букви.";
+            return;
+        }
+
         IsBusy = true;
 
         try
@@ -122,7 +128,7 @@ public partial class LoginViewModel : ObservableObject
             return;
         }
 
-        await Shell.Current.GoToAsync("//Dashboard");
+        await Shell.Current.GoToAsync("//MainPage");
     }
 
     [RelayCommand]

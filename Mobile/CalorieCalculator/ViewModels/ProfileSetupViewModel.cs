@@ -305,61 +305,101 @@ public partial class ProfileSetupViewModel : ObservableObject
 
     private async Task SaveProfileAsync()
     {
-        IsBusy = true;
+        isBusy = true;
+        OnPropertyChanged(nameof(IsBusy));
 
         try
         {
             var userId = Preferences.Get("user_id", string.Empty);
+            System.Diagnostics.Debug.WriteLine($"=== USER ID: '{userId}' ===");
+
             if (string.IsNullOrEmpty(userId))
             {
-                ErrorMessage = "Грешка: не е намерен потребител.";
+                errorMessage = "Грешка: не е намерен потребител.";
+                OnPropertyChanged(nameof(ErrorMessage));
                 return;
             }
 
             var userIdGuid = Guid.Parse(userId);
-            var age = SelectedAgeIndex + 14;
+            var age = selectedAgeIndex + 14;
             var dateOfBirth = DateTime.UtcNow.AddYears(-age);
 
+            System.Diagnostics.Debug.WriteLine($"=== Nickname: {nickname}, Gender: {selectedGender}, Age: {age} ===");
+            System.Diagnostics.Debug.WriteLine($"=== HeightCm: {selectedHeightCmIndex + 100}, WeightKg: {selectedWeightKgIndex + 30} ===");
+            System.Diagnostics.Debug.WriteLine($"=== Activity: {selectedActivityLevel}, Goal: {selectedGoalType} ===");
+
+            // Пробваме първо само profile data
             var profileData = new
             {
                 UserID = userIdGuid,
-                Nickname = Nickname.Trim(),
-                Gender = SelectedGender,
+                Nickname = nickname.Trim(),
+                Gender = selectedGender,
                 DateOfBirth = dateOfBirth.ToString("O"),
-                HeightCm = IsHeightInCm ? (decimal?)(SelectedHeightCmIndex + 100) : null,
-                HeightFt = !IsHeightInCm ? (decimal?)ParseFtToDecimal(SelectedHeightFtIndex) : null,
-                WeightKg = IsWeightInKg ? (decimal?)(SelectedWeightKgIndex + 30) : null,
-                WeightLbs = !IsWeightInKg ? (decimal?)(SelectedWeightLbsIndex + 66) : null,
-                ActivityLevel = SelectedActivityLevel,
-                CurrentGoal = SelectedGoalType,
-                TargetWeightKg = IsTargetWeightInKg ? (decimal?)(SelectedTargetWeightKgIndex + 30) : null,
-                TargetWeightLbs = !IsTargetWeightInKg ? (decimal?)(SelectedTargetWeightLbsIndex + 66) : null
+                HeightCm = isHeightInCm ? (decimal?)(selectedHeightCmIndex + 100) : null,
+                HeightFt = !isHeightInCm ? (decimal?)ParseFtToDecimal(selectedHeightFtIndex) : null,
+                WeightKg = isWeightInKg ? (decimal?)(selectedWeightKgIndex + 30) : null,
+                WeightLbs = !isWeightInKg ? (decimal?)(selectedWeightLbsIndex + 66) : null,
+                ActivityLevel = selectedActivityLevel,
+                CurrentGoal = selectedGoalType,
+                TargetWeightKg = isTargetWeightInKg ? (decimal?)(selectedTargetWeightKgIndex + 30) : null,
+                TargetWeightLbs = !isTargetWeightInKg ? (decimal?)(selectedTargetWeightLbsIndex + 66) : null
             };
 
-            await _api.PostAsync("api/UserDetails/save", profileData);
+            System.Diagnostics.Debug.WriteLine("=== SENDING PROFILE DATA... ===");
 
+            try
+            {
+                await _api.PostAsync("api/UserDetails/save", profileData);
+                System.Diagnostics.Debug.WriteLine("=== PROFILE OK ===");
+            }
+            catch (Exception profileEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"!!! PROFILE ERROR: {profileEx.Message}");
+                System.Diagnostics.Debug.WriteLine($"!!! STATUS: {(profileEx as HttpRequestException)?.StatusCode}");
+                errorMessage = $"Профил грешка: {profileEx.Message}";
+                OnPropertyChanged(nameof(ErrorMessage));
+                return;
+            }
+
+            // После goal data
             var goalData = new
             {
                 UserID = userIdGuid,
-                GoalType = SelectedGoalType,
-                TargetWeightKg = IsTargetWeightInKg ? (decimal?)(SelectedTargetWeightKgIndex + 30) : null,
-                TargetWeightLbs = !IsTargetWeightInKg ? (decimal?)(SelectedTargetWeightLbsIndex + 66) : null,
+                GoalType = selectedGoalType,
+                TargetWeightKg = isTargetWeightInKg ? (decimal?)(selectedTargetWeightKgIndex + 30) : null,
+                TargetWeightLbs = !isTargetWeightInKg ? (decimal?)(selectedTargetWeightLbsIndex + 66) : null,
                 StartDate = DateTime.UtcNow.ToString("O"),
                 EndDate = DateTime.UtcNow.AddMonths(3).ToString("O")
             };
 
-            await _api.PostAsync("api/UserDetails/goal", goalData);
+            System.Diagnostics.Debug.WriteLine("=== SENDING GOAL DATA... ===");
 
-            await Shell.Current.GoToAsync("//Dashboard");
+            try
+            {
+                await _api.PostAsync("api/UserDetails/goal", goalData);
+                System.Diagnostics.Debug.WriteLine("=== GOAL OK ===");
+            }
+            catch (Exception goalEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"!!! GOAL ERROR: {goalEx.Message}");
+                errorMessage = $"Цел грешка: {goalEx.Message}";
+                OnPropertyChanged(nameof(ErrorMessage));
+                return;
+            }
+
+            await Shell.Current.GoToAsync("//MainPage");
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Грешка при запис на профила. Опитайте отново.";
-            System.Diagnostics.Debug.WriteLine($"Profile save error: {ex.Message}");
+            errorMessage = $"Грешка: {ex.Message}";
+            OnPropertyChanged(nameof(ErrorMessage));
+            System.Diagnostics.Debug.WriteLine($"!!! GENERAL ERROR: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"!!! STACK: {ex.StackTrace}");
         }
         finally
         {
-            IsBusy = false;
+            isBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
         }
     }
 
