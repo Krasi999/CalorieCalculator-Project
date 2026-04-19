@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using DataLayer.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Services.Commands.User;
 
@@ -19,8 +20,23 @@ public class UserDetailsController : ControllerBase
     [HttpPost("save")]
     public async Task<IActionResult> SaveUserDetails([FromBody] ProfileDataRequest request)
     {
-        await _mediator.Send(command);
-        return Ok();
+        var result = await _mediator.Send(new UserDetailsCommand
+        {
+            UserID = request.UserID.Value,
+            Nickname = request.Nickname,
+            Gender = (Gender)request.Gender.Value,
+            DateOfBirth = request.DateOfBirth.Value,
+            HeightCm = request.HeightCm,
+            HeightFt = request.HeightFt,
+            WeightKg = request.WeightKg,
+            WeightLbs = request.WeightLbs,
+            ActivityLevel = (ActivityLevel)request.ActivityLevel.Value,
+            CurrentGoal = (GoalType)request.CurrentGoal.Value,
+            TargetWeightKg = request.TargetWeightKg,
+            TargetWeightLbs = request.TargetWeightLbs,
+        });
+
+        return Ok(new ProfileDataResponse() { Success = result, UserID = request.UserID});
     }
 
     // POST api/userdetails/goal

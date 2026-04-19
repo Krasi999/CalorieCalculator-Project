@@ -5,7 +5,7 @@ using MediatR;
 namespace Services.Handlers.Users;
 
 public class HandlerUserDetails :
-    IRequestHandler<UserDetailsCommand, Unit>,
+    IRequestHandler<UserDetailsCommand, bool>,
     IRequestHandler<UserDetailsQuery, UserDetails?>
 {
     private readonly IServices _services;
@@ -15,7 +15,7 @@ public class HandlerUserDetails :
         _services = services;
     }
 
-    public async Task<Unit> Handle(UserDetailsCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UserDetailsCommand request, CancellationToken cancellationToken)
     {
         var userDetails = request.ID != null
             ? _services.Repository.Set<UserDetails>().First(record => record.UserID == request.ID)
@@ -39,8 +39,9 @@ public class HandlerUserDetails :
         _services.Repository.Save(userDetails, request.ID.HasValue);
 
         await _services.Repository.SaveChanges();
+        transaction.Commit();
 
-        return Unit.Value;
+        return userDetails != null;
     }
 
     public async Task<UserDetails?> Handle(UserDetailsQuery request, CancellationToken cancellationToken)

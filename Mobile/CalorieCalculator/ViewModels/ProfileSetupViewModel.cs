@@ -5,6 +5,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CalorieCalculator.ViewModels;
 
+public record ProfileDataRequest(Guid UserID, string Nickname, int Gender, DateTime DateOfBirth, decimal? HeightCm, 
+    decimal? HeightFt, decimal? WeightKg, decimal? WeightLbs, int ActivityLevel, int CurrentGoal, decimal? TargetWeightKg, decimal? TargetWeightLbs);
+
+public record ProfileDataResponse(bool Success, Guid UserID);
+
 public partial class ProfileSetupViewModel : ObservableObject
 {
     private readonly ApiService _api;
@@ -14,6 +19,7 @@ public partial class ProfileSetupViewModel : ObservableObject
         _api = api;
         UpdateStepInfo();
     }
+
 
     // ==========================
     // Стъпки и навигация
@@ -329,21 +335,20 @@ public partial class ProfileSetupViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"=== Activity: {selectedActivityLevel}, Goal: {selectedGoalType} ===");
 
             // Пробваме първо само profile data
-            var profileData = new
-            {
-                UserID = userIdGuid,
-                Nickname = nickname.Trim(),
-                Gender = selectedGender,
-                DateOfBirth = dateOfBirth.ToString("O"),
-                HeightCm = isHeightInCm ? (decimal?)(selectedHeightCmIndex + 100) : null,
-                HeightFt = !isHeightInCm ? (decimal?)ParseFtToDecimal(selectedHeightFtIndex) : null,
-                WeightKg = isWeightInKg ? (decimal?)(selectedWeightKgIndex + 30) : null,
-                WeightLbs = !isWeightInKg ? (decimal?)(selectedWeightLbsIndex + 66) : null,
-                ActivityLevel = selectedActivityLevel,
-                CurrentGoal = selectedGoalType,
-                TargetWeightKg = isTargetWeightInKg ? (decimal?)(selectedTargetWeightKgIndex + 30) : null,
-                TargetWeightLbs = !isTargetWeightInKg ? (decimal?)(selectedTargetWeightLbsIndex + 66) : null
-            };
+            var profileData = new ProfileDataRequest(
+                userIdGuid,
+                nickname.Trim(),
+                selectedGender,
+                dateOfBirth,
+                isHeightInCm ? (selectedHeightCmIndex + 100) : null,
+                !isHeightInCm ? ParseFtToDecimal(selectedHeightFtIndex) : null,
+                isWeightInKg ? (selectedWeightKgIndex + 30) : null,
+                !isWeightInKg ? (selectedWeightLbsIndex + 66) : null,
+                selectedActivityLevel,
+                selectedGoalType,
+                isTargetWeightInKg ? (selectedTargetWeightKgIndex + 30) : null,
+                !isTargetWeightInKg ? (selectedTargetWeightLbsIndex + 66) : null
+            );
 
             System.Diagnostics.Debug.WriteLine("=== SENDING PROFILE DATA... ===");
 

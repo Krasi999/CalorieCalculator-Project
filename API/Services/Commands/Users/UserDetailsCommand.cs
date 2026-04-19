@@ -1,7 +1,7 @@
 ﻿using DataLayer.Enums;
 using MediatR;
 
-public class UserDetailsCommand : IRequest<Unit>
+public class UserDetailsCommand : IRequest<bool>
 {
     public Guid? ID { get; set; }
 
