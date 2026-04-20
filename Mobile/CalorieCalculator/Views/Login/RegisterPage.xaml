@@ -7,7 +7,6 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent">
 
-    <!-- Gradient Background -->
     <Grid>
         <BoxView>
             <BoxView.Background>
@@ -21,14 +20,14 @@
             </BoxView.Background>
         </BoxView>
 
-        <ScrollView VerticalOptions="Center">
-            <VerticalStackLayout
-                Padding="35,20"
+        <ScrollView VerticalOptions="Center"
+                HorizontalOptions="Fill">
+                <VerticalStackLayout
+                Padding="0"
+                Margin="30,20"
                 Spacing="0"
-                MaximumWidthRequest="420"
-                HorizontalOptions="Center">
+                HorizontalOptions="Fill">   
 
-                <!-- Logo / Icon -->
                 <Grid HeightRequest="90"
                       WidthRequest="90"
                       HorizontalOptions="Center"
@@ -44,7 +43,6 @@
                            VerticalOptions="Center" />
                 </Grid>
 
-                <!-- App Name -->
                 <Label Text="CalorieTracker"
                        FontSize="26"
                        FontAttributes="Bold"
@@ -58,7 +56,6 @@
                        HorizontalTextAlignment="Center"
                        Margin="0,0,0,30" />
 
-                <!-- Title -->
                 <Label Text="Регистрация"
                        FontSize="24"
                        FontAttributes="Bold"
@@ -66,7 +63,6 @@
                        HorizontalTextAlignment="Center"
                        Margin="0,0,0,25" />
 
-                <!-- Email Field -->
                 <Label Text="Имейл"
                        FontSize="13"
                        TextColor="#BFDBFE"
@@ -86,7 +82,6 @@
                            BackgroundColor="Transparent" />
                 </Border>
 
-                <!-- Password Field -->
                 <Label Text="Парола"
                        FontSize="13"
                        TextColor="#BFDBFE"
@@ -119,10 +114,8 @@
                     </Grid>
                 </Border>
 
-                <!-- Password Requirements -->
                 <VerticalStackLayout Margin="5,2,0,18"
                                      Spacing="3">
-                    <Label FontSize="11" TextColor="#93C5FD" Text="Изисквания за паролата (ISO/IEC 27001):" />
 
                     <HorizontalStackLayout Spacing="5">
                         <Label Text="{Binding HasMinLength, Converter={StaticResource BoolToIconConverter}}"
@@ -170,7 +163,6 @@
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
 
-                <!-- Confirm Password Field -->
                 <Label Text="Потвърди парола"
                        FontSize="13"
                        TextColor="#BFDBFE"
@@ -203,7 +195,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Error Message -->
                 <Label Text="{Binding ErrorMessage}"
                        TextColor="#FCA5A5"
                        FontSize="13"
@@ -211,7 +202,6 @@
                        IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
                        Margin="0,0,0,10" />
 
-                <!-- Register Button -->
                 <Button Text="Регистрация"
                         Command="{Binding RegisterCommand}"
                         FontSize="16"
@@ -223,14 +213,12 @@
                         Margin="0,0,0,15"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
 
-                <!-- Loading Indicator -->
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
                                    IsVisible="{Binding IsBusy}"
                                    Color="White"
                                    HeightRequest="30"
                                    Margin="0,0,0,10" />
 
-                <!-- Divider -->
                 <Grid ColumnDefinitions="*,Auto,*"
                       Margin="0,0,0,20">
                     <BoxView Grid.Column="0"
@@ -248,7 +236,6 @@
                              VerticalOptions="Center" />
                 </Grid>
 
-                <!-- Login Link -->
                 <HorizontalStackLayout HorizontalOptions="Center"
                                        Spacing="5"
                                        Margin="0,0,0,20">

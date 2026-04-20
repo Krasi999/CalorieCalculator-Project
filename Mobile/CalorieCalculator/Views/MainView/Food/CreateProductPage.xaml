@@ -7,7 +7,6 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0"
                     Text="←"
@@ -24,11 +23,9 @@
                    VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Form -->
         <ScrollView Grid.Row="1" Padding="20,10">
             <VerticalStackLayout Spacing="15">
 
-                <!-- Product Name -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Име на продукт"
                            FontSize="13"
@@ -47,7 +44,6 @@
                     </Frame>
                 </VerticalStackLayout>
 
-                <!-- Description -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Описание"
                            FontSize="13"
@@ -67,7 +63,6 @@
                     </Frame>
                 </VerticalStackLayout>
 
-                <!-- Category Picker -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Категория"
                            FontSize="13"
@@ -88,7 +83,6 @@
                     </Frame>
                 </VerticalStackLayout>
 
-                <!-- Weight -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Грамаж (g)"
                            FontSize="13"
@@ -108,14 +102,12 @@
                     </Frame>
                 </VerticalStackLayout>
 
-                <!-- Macros Section Header -->
                 <Label Text="Хранителни стойности (на 100g)"
                        FontSize="15"
                        FontAttributes="Bold"
                        TextColor="#4DB6AC"
                        Margin="0,10,0,0"/>
 
-                <!-- Calories -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0" Spacing="5">
                         <Label Text="Калории (kcal)"
@@ -199,7 +191,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Save Button -->
         <Button Grid.Row="2"
                 Text="Запази продукт"
                 FontSize="18"

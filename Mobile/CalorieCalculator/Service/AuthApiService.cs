@@ -2,7 +2,6 @@
 
 namespace CalorieCalculator.Service;
 
-// DTO-та за комуникация с API-то
 public record RegisterRequest(string Email, string Password);
 
 public record LoginRequest(string Email, string Password);
@@ -87,8 +86,6 @@ public class AuthApiService
         }
     }
 
-    /// Стъпка 1 — изпраща заявка за забравена парола.
-    /// Връща 6-цифрен код (засега директно от API, по-късно по email).
     public async Task<(bool Success, string? Error, string? Code)> ForgotPasswordAsync(string email)
     {
         try
@@ -112,7 +109,6 @@ public class AuthApiService
         }
     }
 
-    /// Стъпка 2 — проверява дали въведеният код е валиден.
     public async Task<(bool Success, string? Error)> VerifyCodeAsync(string email, string code)
     {
         try
@@ -136,7 +132,6 @@ public class AuthApiService
         }
     }
 
-    /// Стъпка 3 — задава нова парола.
     public async Task<(bool Success, string? Error)> ResetPasswordAsync(
         string email, string code, string newPassword)
     {
@@ -161,7 +156,6 @@ public class AuthApiService
         }
     }
 
-    // Проверка дали са минали 72 часа
     public static bool RequiresPasswordReauth()
     {
         var stored = Preferences.Get("last_password_login", string.Empty);

@@ -9,18 +9,16 @@ public partial class ForgotPasswordViewModel : ObservableObject
 {
     private readonly AuthApiService _authService;
     private System.Timers.Timer? _countdownTimer;
-    private string _resetCode = string.Empty;  // Кодът получен от API
+    private string _resetCode = string.Empty;  
 
     [ObservableProperty] private string email = string.Empty;
     [ObservableProperty] private string errorMessage = string.Empty;
     [ObservableProperty] private bool isBusy = false;
 
-    // Стъпки
     [ObservableProperty] private bool isStep1Visible = true;
     [ObservableProperty] private bool isStep2Visible = false;
     [ObservableProperty] private bool isStep3Visible = false;
 
-    // 6-цифрен код — всяка цифра отделно
     [ObservableProperty] private string digit1 = string.Empty;
     [ObservableProperty] private string digit2 = string.Empty;
     [ObservableProperty] private string digit3 = string.Empty;
@@ -28,17 +26,14 @@ public partial class ForgotPasswordViewModel : ObservableObject
     [ObservableProperty] private string digit5 = string.Empty;
     [ObservableProperty] private string digit6 = string.Empty;
 
-    // Timer
     [ObservableProperty] private string timerText = "05:00";
     [ObservableProperty] private bool isTimerExpired = false;
 
-    // Стъпка 3 — Нова парола
     [ObservableProperty] private string newPassword = string.Empty;
     [ObservableProperty] private string confirmPassword = string.Empty;
     [ObservableProperty] private bool isPasswordVisible = false;
     [ObservableProperty] private bool isConfirmPasswordVisible = false;
 
-    // ISO/IEC 27001 индикатори
     [ObservableProperty] private bool hasMinLength;
     [ObservableProperty] private bool hasUpperCase;
     [ObservableProperty] private bool hasLowerCase;
@@ -65,10 +60,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
     }
 
     public bool IsPasswordValid => HasMinLength && HasUpperCase && HasLowerCase && HasDigit && HasSpecialChar;
-
-    // ==========================
-    // СТЪПКА 1 — Въвеждане на имейл
-    // ==========================
 
     [RelayCommand]
     private async Task RequestCodeAsync()
@@ -101,14 +92,12 @@ public partial class ForgotPasswordViewModel : ObservableObject
 
             _resetCode = code;
 
-            // Показваме кода в dialog (симулация на email)
             // TODO: По-късно — замени с реално пращане по email
             await Shell.Current.DisplayAlert(
                 "Код за възстановяване",
                 $"Вашият код за възстановяване е:\n\n{code}\n\nКодът е валиден 5 минути.",
                 "Разбрах");
 
-            // Преминаваме към стъпка 2
             IsStep1Visible = false;
             IsStep2Visible = true;
 
@@ -119,10 +108,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
             IsBusy = false;
         }
     }
-
-    // ==========================
-    // СТЪПКА 2 — Въвеждане на код
-    // ==========================
 
     [RelayCommand]
     private async Task VerifyCodeAsync()
@@ -155,7 +140,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
                 return;
             }
 
-            // Спираме таймера и преминаваме към стъпка 3
             StopCountdown();
             IsStep2Visible = false;
             IsStep3Visible = true;
@@ -184,16 +168,13 @@ public partial class ForgotPasswordViewModel : ObservableObject
 
             _resetCode = code;
 
-            // Изчистваме полетата за код
             Digit1 = Digit2 = Digit3 = Digit4 = Digit5 = Digit6 = string.Empty;
 
-            // Показваме новия код
             await Shell.Current.DisplayAlert(
                 "Нов код за възстановяване",
                 $"Вашият нов код е:\n\n{code}\n\nКодът е валиден 5 минути.",
                 "Разбрах");
 
-            // Рестартираме таймера
             IsTimerExpired = false;
             StartCountdown();
         }
@@ -202,10 +183,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
             IsBusy = false;
         }
     }
-
-    // ==========================
-    // СТЪПКА 3 — Нова парола
-    // ==========================
 
     [RelayCommand]
     private async Task ResetPasswordAsync()
@@ -252,10 +229,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
         }
     }
 
-    // ==========================
-    // Toggle и навигация
-    // ==========================
-
     [RelayCommand]
     private void TogglePasswordVisibility()
     {
@@ -289,11 +262,6 @@ public partial class ForgotPasswordViewModel : ObservableObject
             await Shell.Current.GoToAsync("//Login");
         }
     }
-
-    // ==========================
-    // Timer логика
-    // ==========================
-
     private void StartCountdown()
     {
         var endTime = DateTime.UtcNow.AddMinutes(5);

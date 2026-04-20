@@ -30,10 +30,6 @@ public partial class LoginViewModel : ObservableObject
         LoadSavedEmail();
     }
 
-    /// <summary>
-    /// Проверява дали устройството поддържа биометрия
-    /// и дали потребителят я е активирал.
-    /// </summary>
     private async Task CheckBiometricAvailability()
     {
         var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
@@ -41,9 +37,6 @@ public partial class LoginViewModel : ObservableObject
         IsBiometricAvailable = deviceSupports && userEnabled;
     }
 
-    /// <summary>
-    /// Зарежда запазения имейл, ако потребителят е избрал "Запомни ме".
-    /// </summary>
     private void LoadSavedEmail()
     {
         var savedEmail = Preferences.Get("saved_email", string.Empty);
@@ -83,12 +76,10 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            // Запази auth данните
             Preferences.Set("auth_token", data.Token);
             Preferences.Set("user_id", data.UserId.ToString());
             Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
 
-            // Запомни имейла ако е избрано
             if (RememberMe)
                 Preferences.Set("saved_email", Email);
             else
@@ -112,7 +103,6 @@ public partial class LoginViewModel : ObservableObject
     {
         ErrorMessage = string.Empty;
 
-        // Проверка за 72-часовото изискване
         if (AuthApiService.RequiresPasswordReauth())
         {
             ErrorMessage = "Изминаха 72 часа. Моля, влезте с имейл и парола.";

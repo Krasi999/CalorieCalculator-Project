@@ -65,7 +65,6 @@ public class UserGoal
         }
     }
 
-    // Препоръчителен калориен прием спрямо цел
     public decimal? GetCalorieTarget(decimal? tdee)
     {
         if (!tdee.HasValue) return null;

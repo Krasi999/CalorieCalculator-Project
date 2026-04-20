@@ -40,9 +40,6 @@ public class ApiService
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    /// <summary>
-    /// POST без десериализация на отговор — за endpoint-и които връщат Ok() без тяло.
-    /// </summary>
     public async Task PostAsync(string endpoint, object data)
     {
         var response = await _httpClient.PostAsJsonAsync(endpoint, data);

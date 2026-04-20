@@ -51,8 +51,6 @@ public class AuthenticationController : ControllerBase
         return Ok(new { userId = user?.ID, token });
     }
 
-    /// Стъпка 1 — генерира 6-цифрен код и го връща на клиента.
-    /// По-късно може да се замени с реално пращане на имейл.
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
@@ -65,7 +63,6 @@ public class AuthenticationController : ControllerBase
 
         if (code == null)
         {
-            // Не съществува потребител с този имейл
             return NotFound();
         }
 
@@ -73,7 +70,6 @@ public class AuthenticationController : ControllerBase
         return Ok(new { success = true, code });
     }
 
-    /// Стъпка 2 — проверява дали въведеният код е валиден.
     [HttpPost("verify-code")]
     public async Task<IActionResult> VerifyCode([FromBody] VerifyCodeRequest request)
     {
@@ -92,7 +88,6 @@ public class AuthenticationController : ControllerBase
         return Ok();
     }
 
-    /// Стъпка 3 — задаване на нова парола (кодът се проверява отново за сигурност).
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {

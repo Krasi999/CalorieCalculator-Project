@@ -17,7 +17,6 @@ public partial class RegisterViewModel : ObservableObject
     [ObservableProperty] private string errorMessage = string.Empty;
     [ObservableProperty] private bool isBusy = false;
 
-    // ISO/IEC 27001 парола индикатори — обновяват се в реално време
     [ObservableProperty] private bool hasMinLength;
     [ObservableProperty] private bool hasUpperCase;
     [ObservableProperty] private bool hasLowerCase;
@@ -45,10 +44,6 @@ public partial class RegisterViewModel : ObservableObject
         _authService = authService;
     }
 
-    /// <summary>
-    /// Извиква се автоматично при всяка промяна на Password property.
-    /// Обновява индикаторите за изискванията на паролата в реално време.
-    /// </summary>
     partial void OnPasswordChanged(string value)
     {
         ValidatePasswordRequirements(value);
@@ -63,10 +58,6 @@ public partial class RegisterViewModel : ObservableObject
         HasSpecialChar = Regex.IsMatch(pwd ?? string.Empty, @"[!@#$%^&*()\-_=+\[\]{};:'"",.<>?/\\|`~]");
     }
 
-    /// <summary>
-    /// Проверява дали паролата покрива всички ISO изисквания.
-    /// Преизползваем метод — може да се извика и от други части на проекта.
-    /// </summary>
     public bool IsPasswordValid => HasMinLength && HasUpperCase && HasLowerCase && HasDigit && HasSpecialChar;
 
     [RelayCommand]
@@ -74,7 +65,6 @@ public partial class RegisterViewModel : ObservableObject
     {
         ErrorMessage = string.Empty;
 
-        // Валидация на имейл
         if (string.IsNullOrWhiteSpace(Email))
         {
             ErrorMessage = "Моля, въведете имейл адрес.";
@@ -83,7 +73,7 @@ public partial class RegisterViewModel : ObservableObject
 
         if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            ErrorMessage = "Моля, въведете валиден имейл адрес.";
+            ErrorMessage = "Моля, въведете валиден имейл адрес или парола.";
             return;
         }
 
@@ -93,14 +83,12 @@ public partial class RegisterViewModel : ObservableObject
             return;
         }
 
-        // Валидация на паролата по ISO/IEC 27001
         if (!IsPasswordValid)
         {
             ErrorMessage = "Паролата не покрива всички изисквания.";
             return;
         }
 
-        // Проверка дали паролите съвпадат
         if (Password != ConfirmPassword)
         {
             ErrorMessage = "Паролите не съвпадат.";

@@ -7,7 +7,6 @@
 
     <Grid RowDefinitions="Auto,Auto,*">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*,Auto">
             <Button Grid.Column="0"
                     Text="←"
@@ -32,7 +31,6 @@
                     Command="{Binding CreateProductCommand}"/>
         </Grid>
 
-        <!-- Search Bar -->
         <Frame Grid.Row="1"
                Margin="20,5,20,10"
                Padding="5"
@@ -56,7 +54,6 @@
             </Grid>
         </Frame>
 
-        <!-- Product List -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding FilteredProducts}"
                         Margin="10,0">
@@ -91,7 +88,6 @@
                        Margin="0,0,10,0"/>
                         </Grid>
 
-                        <!-- Separator -->
                         <BoxView HeightRequest="0.5"
                      Color="#333"
                      VerticalOptions="End"/>
