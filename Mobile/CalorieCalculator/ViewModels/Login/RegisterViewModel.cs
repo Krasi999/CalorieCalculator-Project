@@ -73,7 +73,7 @@ public partial class RegisterViewModel : ObservableObject
 
         if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
         {
-            ErrorMessage = "Моля, въведете валиден имейл адрес.";
+            ErrorMessage = "Моля, въведете валиден имейл адрес или парола.";
             return;
         }
 
