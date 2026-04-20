@@ -70,7 +70,6 @@ public class UserDetails
         CurrentGoal = currentGoal;
         UpdatedAt = DateTime.UtcNow;
 
-        // Ръст
         if (heightCm.HasValue)
         {
             HeightCm = heightCm;
@@ -82,7 +81,6 @@ public class UserDetails
             HeightCm = Math.Round(heightFt.Value * 30.48m, 2);
         }
 
-        // Тегло
         if (weightKg.HasValue)
         {
             WeightKg = weightKg;
@@ -94,7 +92,6 @@ public class UserDetails
             WeightKg = Math.Round(weightLbs.Value / 2.20462m, 2);
         }
 
-        // Желано тегло
         if (targetWeightKg.HasValue)
         {
             TargetWeightKg = targetWeightKg;
@@ -107,12 +104,10 @@ public class UserDetails
         }
     }
 
-    // Изчислява възрастта за BMR формулата
     public int GetAge() =>
         DateTime.UtcNow.Year - DateOfBirth.Year -
         (DateTime.UtcNow.DayOfYear < DateOfBirth.DayOfYear ? 1 : 0);
 
-    // BMR по Mifflin-St Jeor
     public decimal? CalculateBMR()
     {
         if (!WeightKg.HasValue || !HeightCm.HasValue) return null;
@@ -125,7 +120,6 @@ public class UserDetails
         };
     }
 
-    // TDEE = BMR × activity multiplier
     public decimal? CalculateTDEE()
     {
         var bmr = CalculateBMR();

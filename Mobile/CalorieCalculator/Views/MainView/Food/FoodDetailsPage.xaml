@@ -7,7 +7,6 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0"
                     Text="←"
@@ -25,11 +24,9 @@
                    LineBreakMode="TailTruncation"/>
         </Grid>
 
-        <!-- Content -->
         <ScrollView Grid.Row="1" Padding="20,10">
             <VerticalStackLayout Spacing="20">
 
-                <!-- Grams Input -->
                 <Frame BackgroundColor="#2D2D44"
                        CornerRadius="15"
                        Padding="20"
@@ -57,7 +54,6 @@
                     </Grid>
                 </Frame>
 
-                <!-- Calories -->
                 <Frame BackgroundColor="#2D2D44"
                        CornerRadius="15"
                        Padding="20"
@@ -80,10 +76,8 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Macros -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
 
-                    <!-- Protein -->
                     <Frame Grid.Column="0"
                            BackgroundColor="#2D2D44"
                            CornerRadius="15"
@@ -107,7 +101,6 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    <!-- Carbs -->
                     <Frame Grid.Column="1"
                            BackgroundColor="#2D2D44"
                            CornerRadius="15"
@@ -131,7 +124,6 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    <!-- Fats -->
                     <Frame Grid.Column="2"
                            BackgroundColor="#2D2D44"
                            CornerRadius="15"
@@ -157,7 +149,6 @@
 
                 </Grid>
 
-                <!-- Per 100g reference -->
                 <Frame BackgroundColor="#2D2D44"
                        CornerRadius="15"
                        Padding="15"
@@ -194,7 +185,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Add Button -->
         <Button Grid.Row="2"
                 Text="Добави към ястие"
                 FontSize="18"

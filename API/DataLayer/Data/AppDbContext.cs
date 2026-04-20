@@ -24,8 +24,6 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Казваме на Npgsql да приема DateTime без Kind specification,
-        // за да нямаме проблем със синхронизацията при смяна на паролата
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         base.OnConfiguring(optionsBuilder);

@@ -16,7 +16,6 @@ public partial class ForgotPasswordPage : ContentPage
         {
             if (sender is not Entry currentEntry) return;
 
-            // Намираме Entry-тата по x:Name динамично
             var entry1 = this.FindByName<Entry>("Entry1");
             var entry2 = this.FindByName<Entry>("Entry2");
             var entry3 = this.FindByName<Entry>("Entry3");

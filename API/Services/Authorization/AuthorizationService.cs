@@ -10,7 +10,6 @@ public class AuthorizationService : IAuthorization
 {
     private readonly IRepository _repository;
 
-    // Валидност на кода за възстановяване в минути
     private const int ResetCodeValidityMinutes = 5;
 
     public AuthorizationService(IRepository repository)
@@ -69,8 +68,6 @@ public class AuthorizationService : IAuthorization
         return true;
     }
 
-    /// Генерира нов 6-цифрен код за възстановяване на парола.
-    /// Деактивира всички предишни кодове за този потребител.
     public async Task<string?> GeneratePasswordResetCode(string email)
     {
         var normalizedEmail = email.ToLowerInvariant().Trim();
@@ -83,7 +80,6 @@ public class AuthorizationService : IAuthorization
             return null;
         }
 
-        // Деактивираме всички предишни неизползвани кодове на този потребител
         var oldCodes = await _repository.Find<PasswordResetCode>(
             c => c.UserId == user.ID && !c.IsUsed);
 
@@ -98,7 +94,6 @@ public class AuthorizationService : IAuthorization
             await _repository.SaveChanges();
         }
 
-        // Генерираме нов 6-цифрен код
         var code = GenerateSixDigitCode();
         var expiresAt = DateTime.UtcNow.AddMinutes(ResetCodeValidityMinutes);
 
@@ -110,8 +105,6 @@ public class AuthorizationService : IAuthorization
         return code;
     }
 
-    /// Проверява дали даденият код е валиден за този потребител.
-    /// НЕ маркира кода като използван — само проверка.
     public async Task<bool> VerifyPasswordResetCode(string email, string code)
     {
         var normalizedEmail = email.ToLowerInvariant().Trim();
@@ -130,8 +123,6 @@ public class AuthorizationService : IAuthorization
         return resetCode != null && resetCode.IsValid();
     }
 
-    /// Сменя паролата след верификация на кода.
-    /// Маркира кода като използван, за да не може да се ползва повторно.
     public async Task<bool> ResetPassword(string email, string code, string newPassword)
     {
         var normalizedEmail = email.ToLowerInvariant().Trim();
@@ -152,13 +143,11 @@ public class AuthorizationService : IAuthorization
             return false;
         }
 
-        // Нов salt + хеш
         var salt = GenerateSalt();
         var hash = HashPassword(newPassword, salt);
 
         user.UpdatePassword(hash, salt);
 
-        // Маркираме кода като използван
         resetCode.MarkAsUsed();
 
         await _repository.SaveChanges();
@@ -190,9 +179,6 @@ public class AuthorizationService : IAuthorization
         return Convert.ToBase64String(saltBytes);
     }
 
-    /// <summary>
-    /// Генерира криптографски сигурен 6-цифрен код.
-    /// </summary>
     private static string GenerateSixDigitCode()
     {
         using var rng = RandomNumberGenerator.Create();

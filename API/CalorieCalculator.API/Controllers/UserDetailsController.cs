@@ -18,7 +18,6 @@ public class UserDetailsController : ControllerBase
         _services = services;
     }
 
-    // POST api/userdetails/save
     [HttpPost("save")]
     public async Task<IActionResult> SaveUserDetails([FromBody] ProfileDataRequest request)
     {
@@ -43,7 +42,6 @@ public class UserDetailsController : ControllerBase
         return Ok(new ProfileDataResponse() { Success = result, UserID = request.UserID});
     }
 
-    // POST api/userdetails/goal
     [HttpPost("goal")]
     public async Task<IActionResult> SaveUserGoal(
         [FromBody] UserGoalCommand command)

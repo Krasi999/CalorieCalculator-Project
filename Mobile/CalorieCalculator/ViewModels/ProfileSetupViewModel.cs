@@ -21,10 +21,6 @@ public partial class ProfileSetupViewModel : ObservableObject
     }
 
 
-    // ==========================
-    // Стъпки и навигация
-    // ==========================
-
     [ObservableProperty] private int currentStep = 1;
     [ObservableProperty] private double progress = 0.125;
     [ObservableProperty] private string stepTitle = string.Empty;
@@ -32,7 +28,6 @@ public partial class ProfileSetupViewModel : ObservableObject
     [ObservableProperty] private string errorMessage = string.Empty;
     [ObservableProperty] private bool isBusy;
 
-    // Step visibility
     [ObservableProperty] private bool isStep1Visible = true;
     [ObservableProperty] private bool isStep2Visible;
     [ObservableProperty] private bool isStep3Visible;
@@ -42,56 +37,40 @@ public partial class ProfileSetupViewModel : ObservableObject
     [ObservableProperty] private bool isStep7Visible;
     [ObservableProperty] private bool isStep8Visible;
 
-    // Стъпка 1 — Псевдоним
     [ObservableProperty] private string nickname = string.Empty;
 
-    // Стъпка 2 — Пол (1=Мъж, 2=Жена)
     [ObservableProperty] private int selectedGender;
     [ObservableProperty] private bool isMaleSelected;
     [ObservableProperty] private bool isFemaleSelected;
 
-    // Стъпка 3 — Възраст
-    [ObservableProperty] private int selectedAgeIndex = 11; // 14+11=25
+    [ObservableProperty] private int selectedAgeIndex = 11; 
 
-    // Стъпка 4 — Ръст
     [ObservableProperty] private bool isHeightInCm = true;
-    [ObservableProperty] private int selectedHeightCmIndex = 70; // 100+70=170cm
-    [ObservableProperty] private int selectedHeightFtIndex = 30; // ~5'6"
+    [ObservableProperty] private int selectedHeightCmIndex = 70;
+    [ObservableProperty] private int selectedHeightFtIndex = 30;
 
-    // Стъпка 5 — Тегло
     [ObservableProperty] private bool isWeightInKg = true;
     [ObservableProperty] private int selectedWeightKgIndex = 40;
     [ObservableProperty] private int selectedWeightLbsIndex = 88;
 
-    // Стъпка 6 — Ниво на активност (1-5)
     [ObservableProperty] private int selectedActivityLevel = 1;
 
-    // Стъпка 6 — кой е избран
     [ObservableProperty] private bool isSedentarySelected;
     [ObservableProperty] private bool isLightlyActiveSelected;
     [ObservableProperty] private bool isModerateActiveSelected;
     [ObservableProperty] private bool isVeryActiveSelected;
     [ObservableProperty] private bool isExtraActiveSelected;
 
-    // Стъпка 7 — Цел (1-4)
     [ObservableProperty] private int selectedGoalType = 1;
 
-    // Стъпка 7 — коя цел е избрана
     [ObservableProperty] private bool isWeightLossSelected;
     [ObservableProperty] private bool isMaintenanceSelected;
     [ObservableProperty] private bool isWeightGainSelected;
     [ObservableProperty] private bool isMuscleGainSelected;
 
-    // Стъпка 8 — Желано тегло
     [ObservableProperty] private bool isTargetWeightInKg = true;
     [ObservableProperty] private int selectedTargetWeightKgIndex = 35;
     [ObservableProperty] private int selectedTargetWeightLbsIndex = 77;
-
-
-
-    // ==========================
-    // Списъци за Picker-ите (read-only, не са ObservableProperty)
-    // ==========================
 
     public List<string> AgeOptions { get; } = Enumerable.Range(14, 87)
         .Select(a => $"{a} години").ToList();
@@ -119,10 +98,6 @@ public partial class ProfileSetupViewModel : ObservableObject
         return options;
     }
 
-    // ==========================
-    // Commands — Пол
-    // ==========================
-
     [RelayCommand]
     private void SelectMale()
     {
@@ -138,10 +113,6 @@ public partial class ProfileSetupViewModel : ObservableObject
         IsMaleSelected = false;
         IsFemaleSelected = true;
     }
-
-    // ==========================
-    // Commands — Toggles
-    // ==========================
 
     [RelayCommand]
     private void SelectHeightCm() => IsHeightInCm = true;
@@ -160,10 +131,6 @@ public partial class ProfileSetupViewModel : ObservableObject
 
     [RelayCommand]
     private void SelectTargetWeightLbs() => IsTargetWeightInKg = false;
-
-    // ==========================
-    // Commands — Активност и цел
-    // ==========================
 
     [RelayCommand]
     private void SelectActivityLevel(string level)
@@ -214,10 +181,6 @@ public partial class ProfileSetupViewModel : ObservableObject
         OnPropertyChanged(nameof(IsMuscleGainSelected));
     }
 
-    // ==========================
-    // Навигация между стъпките
-    // ==========================
-
     [RelayCommand]
     private async Task ContinueAsync()
     {
@@ -254,23 +217,105 @@ public partial class ProfileSetupViewModel : ObservableObject
 
     private bool ValidateCurrentStep()
     {
-        switch (CurrentStep)
+        errorMessage = string.Empty;
+        OnPropertyChanged(nameof(ErrorMessage));
+
+        switch (currentStep)
         {
             case 1:
-                if (string.IsNullOrWhiteSpace(Nickname) || Nickname.Length < 2)
+                if (string.IsNullOrWhiteSpace(nickname) || nickname.Length < 2)
                 {
-                    ErrorMessage = "Псевдонимът трябва да е поне 2 символа.";
+                    errorMessage = "Псевдонимът трябва да е поне 2 символа.";
+                    OnPropertyChanged(nameof(ErrorMessage));
                     return false;
                 }
                 break;
+
             case 2:
-                if (!IsMaleSelected && !IsFemaleSelected)
+                if (!isMaleSelected && !isFemaleSelected)
                 {
-                    ErrorMessage = "Моля, изберете пол.";
+                    errorMessage = "Моля, изберете пол.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 3:
+                if (selectedAgeIndex < 0)
+                {
+                    errorMessage = "Моля, изберете възраст.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 4:
+                if (isHeightInCm && selectedHeightCmIndex < 0)
+                {
+                    errorMessage = "Моля, изберете ръст.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                if (!isHeightInCm && selectedHeightFtIndex < 0)
+                {
+                    errorMessage = "Моля, изберете ръст.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 5:
+                if (isWeightInKg && selectedWeightKgIndex < 0)
+                {
+                    errorMessage = "Моля, изберете тегло.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                if (!isWeightInKg && selectedWeightLbsIndex < 0)
+                {
+                    errorMessage = "Моля, изберете тегло.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 6:
+                if (!isSedentarySelected && !isLightlyActiveSelected &&
+                    !isModerateActiveSelected && !isVeryActiveSelected &&
+                    !isExtraActiveSelected)
+                {
+                    errorMessage = "Моля, изберете ниво на активност.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 7:
+                if (!isWeightLossSelected && !isMaintenanceSelected &&
+                    !isWeightGainSelected && !isMuscleGainSelected)
+                {
+                    errorMessage = "Моля, изберете цел.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                break;
+
+            case 8:
+                if (isTargetWeightInKg && selectedTargetWeightKgIndex < 0)
+                {
+                    errorMessage = "Моля, изберете желано тегло.";
+                    OnPropertyChanged(nameof(ErrorMessage));
+                    return false;
+                }
+                if (!isTargetWeightInKg && selectedTargetWeightLbsIndex < 0)
+                {
+                    errorMessage = "Моля, изберете желано тегло.";
+                    OnPropertyChanged(nameof(ErrorMessage));
                     return false;
                 }
                 break;
         }
+
         return true;
     }
 
@@ -305,10 +350,6 @@ public partial class ProfileSetupViewModel : ObservableObject
         };
     }
 
-    // ==========================
-    // Запис в базата
-    // ==========================
-
     private async Task SaveProfileAsync()
     {
         isBusy = true;
@@ -334,7 +375,6 @@ public partial class ProfileSetupViewModel : ObservableObject
             System.Diagnostics.Debug.WriteLine($"=== HeightCm: {selectedHeightCmIndex + 100}, WeightKg: {selectedWeightKgIndex + 30} ===");
             System.Diagnostics.Debug.WriteLine($"=== Activity: {selectedActivityLevel}, Goal: {selectedGoalType} ===");
 
-            // Пробваме първо само profile data
             var profileData = new ProfileDataRequest(
                 userIdGuid,
                 nickname.Trim(),
@@ -366,7 +406,6 @@ public partial class ProfileSetupViewModel : ObservableObject
                 return;
             }
 
-            // После goal data
             var goalData = new
             {
                 UserID = userIdGuid,

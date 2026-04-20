@@ -23,7 +23,6 @@
         <Grid RowDefinitions="Auto,*,Auto"
               Padding="30,50,30,30">
 
-            <!-- Header -->
             <VerticalStackLayout Grid.Row="0" Spacing="15">
                 <Label Text="← Назад"
                        FontSize="16"
@@ -50,11 +49,9 @@
                        Margin="0,0,0,15" />
             </VerticalStackLayout>
 
-            <!-- Content -->
             <ScrollView Grid.Row="1" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="0">
 
-                    <!-- СТЪПКА 1 — Псевдоним -->
                     <VerticalStackLayout IsVisible="{Binding IsStep1Visible}" Spacing="10">
                         <Label Text="Псевдоним" FontSize="13" TextColor="#BFDBFE" Margin="5,0,0,0" />
                         <Border StrokeShape="RoundRectangle 12" Stroke="#FFFFFF40"
@@ -67,7 +64,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 2 — Пол -->
                     <VerticalStackLayout IsVisible="{Binding IsStep2Visible}" Spacing="12">
                         <Border StrokeShape="RoundRectangle 16"
                                 Stroke="{Binding IsMaleSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
@@ -92,7 +88,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 3 — Възраст -->
                     <VerticalStackLayout IsVisible="{Binding IsStep3Visible}" Spacing="10">
                         <Picker Title="Избери възраст"
                                 ItemsSource="{Binding AgeOptions}"
@@ -101,7 +96,6 @@
                                 FontSize="20" BackgroundColor="White" />
                     </VerticalStackLayout>
 
-                    <!-- Стъпка 4 - Височина -->
                         <VerticalStackLayout IsVisible="{Binding IsStep4Visible}" Spacing="15"
                      HorizontalOptions="Fill">
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
@@ -139,7 +133,6 @@
             TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 5 — Тегло -->
                     <VerticalStackLayout IsVisible="{Binding IsStep5Visible}" Spacing="15"
                      HorizontalOptions="Fill">
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
@@ -177,7 +170,6 @@
             TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 6 — Активност -->
                     <VerticalStackLayout IsVisible="{Binding IsStep6Visible}" Spacing="10">
                         <Border StrokeShape="RoundRectangle 16"
                                 Stroke="{Binding IsSedentarySelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
@@ -246,7 +238,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 7 — Цел -->
                     <VerticalStackLayout IsVisible="{Binding IsStep7Visible}" Spacing="10">
                         <Border StrokeShape="RoundRectangle 16"
                                 Stroke="{Binding IsWeightLossSelected, Converter={StaticResource BoolToSelectedBorderConverter}}"
@@ -290,7 +281,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- СТЪПКА 8 — Желано тегло -->
                     <VerticalStackLayout IsVisible="{Binding IsStep8Visible}" Spacing="15"
                      HorizontalOptions="Fill">
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
@@ -327,7 +317,6 @@
             IsVisible="{Binding IsTargetWeightInKg, Converter={StaticResource InvertBoolConverter}}"
             TextColor="#0F172A" FontSize="20" BackgroundColor="White" HorizontalOptions="Fill" />
                     </VerticalStackLayout>
-                    <!-- Error -->
                     <Label Text="{Binding ErrorMessage}" TextColor="#FCA5A5" FontSize="13"
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
@@ -336,7 +325,6 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- ЗЕЛЕН бутон Продължи -->
             <Button Grid.Row="2"
                     Text="Продължи"
                     Command="{Binding ContinueCommand}"
