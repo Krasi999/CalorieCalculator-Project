@@ -5,7 +5,8 @@ using MediatR;
 namespace Services.Handlers.Food;
 
 public class HandlerFoodProduct : 
-    IRequestHandler<FoodProductCommand, Unit>
+    IRequestHandler<FoodProductCommand, Unit>,
+    IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>
 {
     private readonly IServices _services;
 
@@ -37,5 +38,10 @@ public class HandlerFoodProduct :
         await _services.Repository.SaveChanges();
 
         return Unit.Value;
+    }
+
+    public async Task<List<FoodCategory>> Handle(FoodCategoriesQuery request, CancellationToken cancellationToken)
+    {
+        return _services.Repository.SetNoTracking<FoodCategory>(nameof(FoodCategory.FoodProducts)).OrderBy(c => c.CategoryName).ToList();
     }
 }
