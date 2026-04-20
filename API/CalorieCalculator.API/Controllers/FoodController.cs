@@ -14,7 +14,7 @@ public class FoodController : ControllerBase
         _services = services;
     }
 
-    [HttpGet]
+    [HttpGet("foodcategory")]
     public async Task<IActionResult> GetAll()
     {
         var result = await _services.Mediator.Send(new FoodCategoriesQuery());

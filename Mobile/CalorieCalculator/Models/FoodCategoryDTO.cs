@@ -1,8 +1,7 @@
 ﻿namespace CalorieCalculator.Models;
 
-public class FoodCategoryDto
+public class FoodCategoryDTO
 {
     public int CategoryID { get; set; }
     public string CategoryName { get; set; }
-    public int ProductCount { get; set; }
 }

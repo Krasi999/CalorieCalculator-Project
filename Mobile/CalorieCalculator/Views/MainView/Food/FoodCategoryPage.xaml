@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalorieCalculator.Views.MainView.Food.FoodCategoryPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="Храни"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+
+            <!-- Create button placeholder -->
+            <Button Grid.Column="2"
+                    Text="+"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="#4DB6AC"
+                    Command="{Binding CreateProductCommand}"/>
+        </Grid>
+
+        <!-- Search Bar -->
+        <Frame Grid.Row="1"
+               Margin="20,5,20,10"
+               Padding="5"
+               CornerRadius="25"
+               BackgroundColor="#2D2D44"
+               BorderColor="Transparent"
+               HasShadow="False">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0"
+                       Text="🔍"
+                       FontSize="18"
+                       VerticalOptions="Center"
+                       Margin="10,0,5,0"/>
+                <Entry Grid.Column="1"
+                       Placeholder="Търсене"
+                       PlaceholderColor="#888"
+                       TextColor="White"
+                       BackgroundColor="Transparent"
+                       Text="{Binding SearchText}"
+                       FontSize="16"/>
+            </Grid>
+        </Frame>
+
+        <!-- Category List -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredCategories}"
+                        Margin="10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10,12">
+                        <Grid ColumnDefinitions="50,*,Auto">
+
+                            <!-- Category Icon -->
+                            <Frame Grid.Column="0"
+                                   WidthRequest="45"
+                                   HeightRequest="45"
+                                   CornerRadius="22"
+                                   Padding="0"
+                                   BackgroundColor="#2D2D44"
+                                   HasShadow="False"
+                                   BorderColor="Transparent"
+                                   VerticalOptions="Center">
+                                <Label Text="{Binding Icon}"
+                                       FontSize="22"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Frame>
+
+                            <!-- Category Name -->
+                            <Label Grid.Column="1"
+                                   Text="{Binding CategoryName}"
+                                   FontSize="17"
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   Padding="10,0,0,0"/>
+                        </Grid>
+
+                        <!-- Separator -->
+                        <BoxView HeightRequest="0.5"
+                                 Color="#333"
+                                 VerticalOptions="End"
+                                 Margin="60,0,0,0"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectCategoryCommand}"
+                                CommandParameter="{Binding}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
