@@ -32,7 +32,7 @@
                         <VerticalStackLayout Grid.Column="0"
                                          VerticalOptions="Center"
                                          HorizontalOptions="Center">
-                            <Label Text="{Binding CaloriesEaten}"
+                            <Label Text="{Binding CaloriesPerDay}"
                                FontSize="24"
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"
@@ -67,7 +67,7 @@
                             <!-- Remaining text -->
                             <VerticalStackLayout HorizontalOptions="Center"
                                              VerticalOptions="Center">
-                                <Label Text="{Binding CaloriesRemaining}"
+                                <Label Text="{Binding CaloriesEaten}"
                                    FontSize="28"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
@@ -83,7 +83,7 @@
                         <VerticalStackLayout Grid.Column="2"
                                          VerticalOptions="Center"
                                          HorizontalOptions="Center">
-                            <Label Text="{Binding CaloriesBurned}"
+                            <Label Text="{Binding CaloriesRemaining}"
                                FontSize="24"
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"

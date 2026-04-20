@@ -6,7 +6,9 @@ public class MealFoodDTO
 
     public int ProductID { get; set; }
 
-    public string ProductName { get; set; }
+    public string Name { get; set; }
+
+    public int Weight { get; set; }
 
     public int Calories { get; set; }
 
@@ -15,6 +17,4 @@ public class MealFoodDTO
     public decimal Carbs { get; set; }
 
     public decimal Fats { get; set; }
-
-    public int Weight { get; set; }
 }

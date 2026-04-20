@@ -67,7 +67,7 @@
 
                             <VerticalStackLayout Grid.Column="0"
                                      VerticalOptions="Center">
-                                <Label Text="{Binding ProductName}"
+                                <Label Text="{Binding Name}"
                            FontSize="16"
                            TextColor="White"/>
                                 <Label FontSize="11"

@@ -79,7 +79,7 @@ public class HandlerCalorieProgram :
                 .ToList()
             : new List<MealFood>();
 
-        var allMealTypes = new[] { (int)MealTypes.Breakfast, (int)MealTypes.Lunch, (int)MealTypes.Dinner, (int)MealTypes.Dinner };
+        var allMealTypes = new[] { (int)MealTypes.Breakfast, (int)MealTypes.Lunch, (int)MealTypes.Dinner, (int)MealTypes.Snack };
 
         var meals = allMealTypes.Select(mealType =>
         {
@@ -97,12 +97,12 @@ public class HandlerCalorieProgram :
                         {
                             MealFoodID = mf.MealFoodID,
                             ProductID = mf.ProductID,
-                            ProductName = mf.FoodProduct?.Name ?? "",
-                            Calories = mf.FoodProduct?.Calories ?? 0,
-                            Protein = mf.FoodProduct?.Protein ?? 0,
-                            Carbs = mf.FoodProduct?.Carbs ?? 0,
-                            Fats = mf.FoodProduct?.Fats ?? 0,
-                            Weight = mf.FoodProduct?.Weight ?? 0
+                            Name = mf.FoodProduct?.Name ?? "",
+                            Weight = mf.Weight,
+                            Calories = (int)Math.Round((mf.FoodProduct?.Calories ?? 0) * mf.Weight / 100.0),
+                            Protein = Math.Round((mf.FoodProduct?.Protein ?? 0) * mf.Weight / 100m, 1),
+                            Carbs = Math.Round((mf.FoodProduct?.Carbs ?? 0) * mf.Weight / 100m, 1),
+                            Fats = Math.Round((mf.FoodProduct?.Fats ?? 0) * mf.Weight / 100m, 1)
                         }).ToList()
                     : new List<MealFoodResponse>()
             };
@@ -137,7 +137,7 @@ public class HandlerCalorieProgram :
             ActivityLevel.LightlyActive => 1.375m,
             ActivityLevel.ModerateActive => 1.55m,
             ActivityLevel.VeryActive => 1.725m,
-            ActivityLevel.ExtraActive => 1.9m, 
+            ActivityLevel.ExtraActive => 1.9m,
             _ => 1.2m
         };
 

@@ -6,6 +6,8 @@ using System.Windows.Input;
 
 namespace CalorieCalculator.ViewModels.MainView.Food;
 
+public record FoodToMealRequest(int ProgramID, int MealType, int? MealID, int ProductID, int Weight);
+
 public class FoodDetailViewModel : INotifyPropertyChanged
 {
     private readonly ApiService _apiService;
@@ -85,11 +87,11 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     {
         try
         {
-            var product = await _apiService.GetAsyncT<FoodProductDTO>($"api/foodproduct/{ProductID}");
+            var product = await _apiService.GetAsyncT<FoodProductDTO>($"api/food/{ProductID}");
 
             if (product == null) return;
 
-            ProductName = product.ProductName;
+            ProductName = product.Name;
             BaseCalories = product.Calories;
             BaseProtein = product.Protein;
             BaseCarbs = product.Carbs;
@@ -137,14 +139,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var request = new
-            {
-                ProgramID = ProgramID,
-                MealType = MealType,
-                MealID = MealID,
-                ProductID = ProductID,
-                Weight = (int)grams
-            };
+            var request = new FoodToMealRequest(ProgramID, MealType, MealID, ProductID, (int)grams);
 
             await _apiService.PostAsync<object>("api/dailyprogram/meal/add-food", request);
 

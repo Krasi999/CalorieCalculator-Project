@@ -79,7 +79,7 @@ public class FoodProductViewModel : INotifyPropertyChanged
         FilteredProducts.Clear();
         var filtered = string.IsNullOrWhiteSpace(SearchText)
             ? AllProducts
-            : AllProducts.Where(p => p.ProductName.ToLower().Contains(SearchText.ToLower()));
+            : AllProducts.Where(p => p.Name.ToLower().Contains(SearchText.ToLower()));
 
         foreach (var product in filtered)
         {
@@ -93,7 +93,7 @@ public class FoodProductViewModel : INotifyPropertyChanged
             $"food/details?ProductID={product.ProductID}&ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
     }
 
-    private async void GoBack()
+    private async void GoBack() 
     {
         await Shell.Current.GoToAsync("..");
     }

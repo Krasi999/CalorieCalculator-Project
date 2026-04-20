@@ -8,10 +8,11 @@ public class MealFood
 {
     public MealFood() { }
 
-    public MealFood(int mealID, int productID)
+    public MealFood(int mealID, int productID, int weight)
     {
         MealID = mealID;
         ProductID = productID;
+        Weight = weight;
     }
 
     [Key]
@@ -27,4 +28,6 @@ public class MealFood
 
     [ForeignKey("ProductID")]
     public FoodProduct? FoodProduct { get; set; }
+
+    public int Weight { get; private set; }
 }

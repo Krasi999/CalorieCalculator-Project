@@ -38,4 +38,19 @@ public class DailyProgramController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("meal/add-food")]
+    public async Task<IActionResult> AttachFoodToMeal([FromBody] FoodToMealRequest request)
+    {
+        var mealId = await _services.Mediator.Send(new FoodToMealCommand
+        {
+            ProgramID = request.ProgramID,
+            MealType = request.MealType,
+            MealID = request.MealID,
+            ProductID = request.ProductID,
+            Weight = request.Weight
+        });
+
+        return Ok(new { mealId });
+    }
 }

@@ -69,18 +69,4 @@ public class FoodController : ControllerBase
 
         return Ok(new { message = "Продукта е запазен успешно" });
     }
-
-    [HttpPost("meal/add-food")]
-    public async Task<IActionResult> AttachFoodToMeal([FromBody] FoodToMealRequest request)
-    {
-        var mealId = await _services.Mediator.Send(new FoodToMealCommand
-        {
-            ProgramID = request.ProgramID,
-            MealType = request.MealType,
-            MealID = request.MealID,
-            ProductID = request.ProductID
-        });
-
-        return Ok(new { mealId });
-    }
 }

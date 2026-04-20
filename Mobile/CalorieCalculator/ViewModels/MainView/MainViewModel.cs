@@ -27,13 +27,6 @@ public class MainViewModel : INotifyPropertyChanged
         set { _caloriesEaten = value; OnPropertyChanged(); UpdateRemaining(); }
     }
 
-    private int _caloriesBurned;
-    public int CaloriesBurned
-    {
-        get => _caloriesBurned;
-        set { _caloriesBurned = value; OnPropertyChanged(); UpdateRemaining(); }
-    }
-
     private int _caloriesRemaining;
     public int CaloriesRemaining
     {
@@ -164,7 +157,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void UpdateRemaining()
     {
-        CaloriesRemaining = _caloriesPerDay - _caloriesEaten + _caloriesBurned;
+        CaloriesRemaining = _caloriesPerDay - _caloriesEaten;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

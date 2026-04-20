@@ -3,7 +3,7 @@
 public class FoodProductDTO
 {
     public int ProductID { get; set; }
-    public string ProductName { get; set; }
+    public string Name { get; set; }
     public string Description { get; set; }
     public int Calories { get; set; }
     public decimal Fats { get; set; }

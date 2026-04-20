@@ -7,4 +7,6 @@
     public int? MealID { get; set; }
 
     public int ProductID { get; set; }
+
+    public int Weight { get; set; }
 }

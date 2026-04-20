@@ -6,6 +6,7 @@ namespace Services.Handlers.Food;
 
 public class HandlerFoodProduct :
     IRequestHandler<FoodProductCommand, Unit>,
+    IRequestHandler<FoodToMealCommand, int>,
     IRequestHandler<FoodProductQuery, FoodProduct?>,
     IRequestHandler<FoodProductsQuery, List<FoodProduct>>,
     IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>
@@ -62,7 +63,7 @@ public class HandlerFoodProduct :
             mealId = meal.MealID;
         }
 
-        var mealFood = new MealFood(mealId, request.ProductID);
+        var mealFood = new MealFood(mealId, request.ProductID, request.Weight);
 
         await _services.Repository.Add(mealFood);
         await _services.Repository.SaveChanges();
