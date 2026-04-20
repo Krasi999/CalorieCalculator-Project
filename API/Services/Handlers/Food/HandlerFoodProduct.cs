@@ -42,6 +42,35 @@ public class HandlerFoodProduct :
         return Unit.Value;
     }
 
+    public async Task<int> Handle(FoodToMealCommand request, CancellationToken cancellationToken)
+    {
+        using var transaction = await _services.Repository.BeginTransaction();
+
+        int mealId;
+
+        if (request.MealID.HasValue && request.MealID.Value > 0)
+        {
+            mealId = request.MealID.Value;
+        }
+        else
+        {
+            var meal = new CalorieProgramMeal(request.MealType, request.ProgramID);
+
+            await _services.Repository.Add(meal);
+            await _services.Repository.SaveChanges();
+            mealId = meal.MealID;
+        }
+
+        var mealFood = new MealFood(mealId, request.ProductID);
+
+        await _services.Repository.Add(mealFood);
+        await _services.Repository.SaveChanges();
+
+        transaction.Commit();
+
+        return mealId;
+    }
+
     public async Task<FoodProduct?> Handle(FoodProductQuery request, CancellationToken cancellationToken)
     {
         return _services.Repository.SetNoTracking<FoodProduct>().Where(p => p.ProductID == request.ProductID).FirstOrDefault();

@@ -11,14 +11,14 @@ public class FoodCategoryDisplayItem
 {
     public int CategoryID { get; set; }
     public string CategoryName { get; set; }
-    public string Icon => CategoryName switch
+    public string Icon => CategoryID switch
     {
-        "Месо и местни продукти" => "🥩",
-        "Риба и морски храни" => "🐟",
-        "Млечни и яйчни" => "🥛",
-        "Зърнени и тестени" => "🌾",
-        "Растителни храни" => "🥬",
-        "Подп" => "🧂",
+        1 => "🥩",
+        2 => "🐟",
+        3 => "🥛",
+        4 => "🌾",
+        5 => "🥬",
+        6 => "🧂",
         _ => "🍽"
     };
 }
@@ -113,8 +113,7 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
 
     private async void CreateProduct()
     {
-        // TODO: Navigate to create product page
-        await Shell.Current.DisplayAlert("Info", "Create product - coming soon", "OK");
+        await Shell.Current.GoToAsync("food/create");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

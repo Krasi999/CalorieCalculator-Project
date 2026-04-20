@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataLayer.Enums;
+using Microsoft.AspNetCore.Mvc;
 using Services;
 
 namespace CalorieCalculator.API.Controllers;
@@ -48,5 +49,38 @@ public class FoodController : ControllerBase
         }
 
         return Ok(result);
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateProduct([FromBody] FoodProductRequest request)
+    {
+        await _services.Mediator.Send(new FoodProductCommand
+        {
+            ProductID = request.ProductID,
+            ProductName = request.ProductName,
+            Description = request.Description,
+            Calories = request.Calories,
+            Weight = request.Weight,
+            Fats = request.Fats,
+            Protein = request.Protein,
+            Carbs = request.Carbs,
+            Category = (FoodCategories)request.CategoryID
+        });
+
+        return Ok(new { message = "Продукта е запазен успешно" });
+    }
+
+    [HttpPost("meal/add-food")]
+    public async Task<IActionResult> AttachFoodToMeal([FromBody] FoodToMealRequest request)
+    {
+        var mealId = await _services.Mediator.Send(new FoodToMealCommand
+        {
+            ProgramID = request.ProgramID,
+            MealType = request.MealType,
+            MealID = request.MealID,
+            ProductID = request.ProductID
+        });
+
+        return Ok(new { mealId });
     }
 }

@@ -100,7 +100,7 @@ public class FoodProductViewModel : INotifyPropertyChanged
 
     private async void CreateProduct()
     {
-        await Shell.Current.DisplayAlert("Info", "Create product - coming soon", "OK");
+        await Shell.Current.GoToAsync($"food/create?CategoryID={CategoryID}");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

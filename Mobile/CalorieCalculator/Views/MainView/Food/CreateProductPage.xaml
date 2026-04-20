@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalorieCalculator.Views.MainView.Food.CreateProductPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="Нов продукт"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Form -->
+        <ScrollView Grid.Row="1" Padding="20,10">
+            <VerticalStackLayout Spacing="15">
+
+                <!-- Product Name -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Име на продукт"
+                           FontSize="13"
+                           TextColor="#888"/>
+                    <Frame BackgroundColor="#2D2D44"
+                           CornerRadius="12"
+                           Padding="12"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <Entry Text="{Binding ProductName}"
+                               Placeholder="Напр. Пилешко филе"
+                               PlaceholderColor="#555"
+                               TextColor="White"
+                               FontSize="16"
+                               BackgroundColor="Transparent"/>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Description -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Описание"
+                           FontSize="13"
+                           TextColor="#888"/>
+                    <Frame BackgroundColor="#2D2D44"
+                           CornerRadius="12"
+                           Padding="12"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <Editor Text="{Binding Description}"
+                                Placeholder="Описание на продукта"
+                                PlaceholderColor="#555"
+                                TextColor="White"
+                                FontSize="14"
+                                BackgroundColor="Transparent"
+                                HeightRequest="80"/>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Category Picker -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Категория"
+                           FontSize="13"
+                           TextColor="#888"/>
+                    <Frame BackgroundColor="#2D2D44"
+                           CornerRadius="12"
+                           Padding="5"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <Picker ItemsSource="{Binding Categories}"
+                                ItemDisplayBinding="{Binding CategoryName}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                Title="Избери категория"
+                                TitleColor="#555"
+                                TextColor="White"
+                                FontSize="16"
+                                BackgroundColor="Transparent"/>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Weight -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Грамаж (g)"
+                           FontSize="13"
+                           TextColor="#888"/>
+                    <Frame BackgroundColor="#2D2D44"
+                           CornerRadius="12"
+                           Padding="12"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <Entry Text="{Binding Weight}"
+                               Placeholder="100"
+                               PlaceholderColor="#555"
+                               TextColor="White"
+                               FontSize="16"
+                               Keyboard="Numeric"
+                               BackgroundColor="Transparent"/>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Macros Section Header -->
+                <Label Text="Хранителни стойности (на 100g)"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="#4DB6AC"
+                       Margin="0,10,0,0"/>
+
+                <!-- Calories -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Калории (kcal)"
+                               FontSize="13"
+                               TextColor="#888"/>
+                        <Frame BackgroundColor="#2D2D44"
+                               CornerRadius="12"
+                               Padding="12"
+                               HasShadow="False"
+                               BorderColor="Transparent">
+                            <Entry Text="{Binding Calories}"
+                                   Placeholder="0"
+                                   PlaceholderColor="#555"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="Transparent"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                        <Label Text="Протеин (g)"
+                               FontSize="13"
+                               TextColor="#888"/>
+                        <Frame BackgroundColor="#2D2D44"
+                               CornerRadius="12"
+                               Padding="12"
+                               HasShadow="False"
+                               BorderColor="Transparent">
+                            <Entry Text="{Binding Protein}"
+                                   Placeholder="0"
+                                   PlaceholderColor="#555"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="Transparent"/>
+                        </Frame>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Въглехидрати (g)"
+                               FontSize="13"
+                               TextColor="#888"/>
+                        <Frame BackgroundColor="#2D2D44"
+                               CornerRadius="12"
+                               Padding="12"
+                               HasShadow="False"
+                               BorderColor="Transparent">
+                            <Entry Text="{Binding Carbs}"
+                                   Placeholder="0"
+                                   PlaceholderColor="#555"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="Transparent"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                        <Label Text="Мазнини (g)"
+                               FontSize="13"
+                               TextColor="#888"/>
+                        <Frame BackgroundColor="#2D2D44"
+                               CornerRadius="12"
+                               Padding="12"
+                               HasShadow="False"
+                               BorderColor="Transparent">
+                            <Entry Text="{Binding Fats}"
+                                   Placeholder="0"
+                                   PlaceholderColor="#555"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="Transparent"/>
+                        </Frame>
+                    </VerticalStackLayout>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Save Button -->
+        <Button Grid.Row="2"
+                Text="Запази продукт"
+                FontSize="18"
+                FontAttributes="Bold"
+                BackgroundColor="#4DB6AC"
+                TextColor="White"
+                CornerRadius="15"
+                Margin="20,10,20,30"
+                HeightRequest="55"
+                Command="{Binding SaveCommand}"/>
+
+    </Grid>
+
+</ContentPage>
