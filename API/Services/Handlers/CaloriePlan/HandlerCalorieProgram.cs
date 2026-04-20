@@ -45,7 +45,7 @@ public class HandlerCalorieProgram :
         var proteinPerDay = CalculateProteinPerDay(caloriesPerDay, userDetails.WeightKg.Value, userDetails.CurrentGoal);
         var carbsPerDay = CalculateCarbsPerDay(caloriesPerDay, proteinPerDay, fatsPerDay);
 
-        var lastProgramDate = LastCalorieProgramDate(userDetails.CreatedAt.Date);
+        var lastProgramDate = LastCalorieProgramDate(userDetails.CreatedAt.Date, userDetails.UserID);
 
         for (var date = lastProgramDate; date <= DateTime.UtcNow.Date; date = date.AddDays(1))
         {
@@ -204,9 +204,9 @@ public class HandlerCalorieProgram :
         return false;
     }
 
-    public DateTime LastCalorieProgramDate(DateTime date)
+    public DateTime LastCalorieProgramDate(DateTime date, Guid userID)
     {
-        var caloriePrograms = _services.Repository.SetNoTracking<CalorieProgram>().OrderByDescending(record => record.ProgramDate);
+        var caloriePrograms = _services.Repository.SetNoTracking<CalorieProgram>().Where(record => record.UserID == userID && record.ProgramDate.Date == date.Date).OrderByDescending(record => record.ProgramDate);
 
         if (caloriePrograms.Any() == true)
         {
