@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalorieCalculator.Views.MainView.Food.FoodProductPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="{Binding CategoryName}"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   LineBreakMode="TailTruncation"/>
+
+            <Button Grid.Column="2"
+                    Text="+"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="#4DB6AC"
+                    Command="{Binding CreateProductCommand}"/>
+        </Grid>
+
+        <!-- Search Bar -->
+        <Frame Grid.Row="1"
+               Margin="20,5,20,10"
+               Padding="5"
+               CornerRadius="25"
+               BackgroundColor="#2D2D44"
+               BorderColor="Transparent"
+               HasShadow="False">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0"
+                       Text="🔍"
+                       FontSize="18"
+                       VerticalOptions="Center"
+                       Margin="10,0,5,0"/>
+                <Entry Grid.Column="1"
+                       Placeholder="Търсене"
+                       PlaceholderColor="#888"
+                       TextColor="White"
+                       BackgroundColor="Transparent"
+                       Text="{Binding SearchText}"
+                       FontSize="16"/>
+            </Grid>
+        </Frame>
+
+        <!-- Product List -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredProducts}"
+                        Margin="10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10,12">
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout Grid.Column="0"
+                                                 VerticalOptions="Center">
+                                <Label Text="{Binding ProductName}"
+                                       FontSize="16"
+                                       TextColor="White"/>
+                                <Label FontSize="12"
+                                       TextColor="#888">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} kcal | P:{1}g C:{2}g F:{3}g">
+                                            <Binding Path="Calories"/>
+                                            <Binding Path="Protein"/>
+                                            <Binding Path="Carbs"/>
+                                            <Binding Path="Fats"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Label Grid.Column="1"
+                                   Text="☆"
+                                   FontSize="28"
+                                   TextColor="#888"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,10,0"/>
+                        </Grid>
+
+                        <!-- Separator -->
+                        <BoxView HeightRequest="0.5"
+                                 Color="#333"
+                                 VerticalOptions="End"/>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectProductCommand}"
+                                CommandParameter="{Binding}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
