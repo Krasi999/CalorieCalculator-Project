@@ -66,15 +66,14 @@
                         <Grid ColumnDefinitions="*,Auto">
 
                             <VerticalStackLayout Grid.Column="0"
-                                                 VerticalOptions="Center">
+                                     VerticalOptions="Center">
                                 <Label Text="{Binding ProductName}"
-                                       FontSize="16"
-                                       TextColor="White"/>
-                                <Label FontSize="12"
-                                       TextColor="#888">
+                           FontSize="16"
+                           TextColor="White"/>
+                                <Label FontSize="11"
+                           TextColor="#888">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} kcal | P:{1}g C:{2}g F:{3}g">
-                                            <Binding Path="Calories"/>
+                                        <MultiBinding StringFormat="P: {0}g  C: {1}g  F: {2}g">
                                             <Binding Path="Protein"/>
                                             <Binding Path="Carbs"/>
                                             <Binding Path="Fats"/>
@@ -84,22 +83,23 @@
                             </VerticalStackLayout>
 
                             <Label Grid.Column="1"
-                                   Text="☆"
-                                   FontSize="28"
-                                   TextColor="#888"
-                                   VerticalOptions="Center"
-                                   Margin="0,0,10,0"/>
+                       Text="{Binding Calories, StringFormat='{0} kcal'}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#4DB6AC"
+                       VerticalOptions="Center"
+                       Margin="0,0,10,0"/>
                         </Grid>
 
                         <!-- Separator -->
                         <BoxView HeightRequest="0.5"
-                                 Color="#333"
-                                 VerticalOptions="End"/>
+                     Color="#333"
+                     VerticalOptions="End"/>
 
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectProductCommand}"
-                                CommandParameter="{Binding}"/>
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectProductCommand}"
+                    CommandParameter="{Binding .}"/>
                         </Grid.GestureRecognizers>
                     </Grid>
                 </DataTemplate>

@@ -36,8 +36,9 @@ public class HandlerFoodProduct :
             request.Category);
 
         _services.Repository.Save(product, request.ProductID.HasValue);
-
         await _services.Repository.SaveChanges();
+
+        transaction.Commit();
 
         return Unit.Value;
     }
@@ -85,10 +86,10 @@ public class HandlerFoodProduct :
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
                 var search = request.SearchTerm.ToLower();
-                query = query.Where(recod => recod.ProductName.ToLower().Contains(search));
+                query = query.Where(recod => recod.Name.ToLower().Contains(search));
             }
 
-            return query.OrderBy(recod => recod.ProductName).ToList();
+            return query.OrderBy(recod => recod.Name).ToList();
         }
 
         return new List<FoodProduct>();

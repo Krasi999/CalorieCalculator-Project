@@ -97,7 +97,7 @@ public class HandlerCalorieProgram :
                         {
                             MealFoodID = mf.MealFoodID,
                             ProductID = mf.ProductID,
-                            ProductName = mf.FoodProduct?.ProductName ?? "",
+                            ProductName = mf.FoodProduct?.Name ?? "",
                             Calories = mf.FoodProduct?.Calories ?? 0,
                             Protein = mf.FoodProduct?.Protein ?? 0,
                             Carbs = mf.FoodProduct?.Carbs ?? 0,

@@ -91,7 +91,7 @@ public class CreateProductViewModel : INotifyPropertyChanged
     {
         try
         {
-            var categories = await _apiService.GetAsync<FoodCategoryDTO>("api/foodcategory");
+            var categories = await _apiService.GetAsync<FoodCategoryDTO>("api/food/foodcategory");
 
             Categories.Clear();
             foreach (var cat in categories)
@@ -145,7 +145,7 @@ public class CreateProductViewModel : INotifyPropertyChanged
                 SelectedCategory.CategoryID
             );
 
-            await _apiService.PostAsync<object>("api/foodproduct/create", request);
+            await _apiService.PostAsync<object>("api/food/create", request);
 
             await Shell.Current.DisplayAlert("Успех", "Продуктът е записан", "OK");
             await Shell.Current.GoToAsync("..");

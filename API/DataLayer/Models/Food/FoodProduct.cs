@@ -1,6 +1,7 @@
 ﻿using DataLayer.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace DataLayer.Models;
 
@@ -10,7 +11,7 @@ public class FoodProduct
     [Key]
     public int ProductID { get; private set; }
 
-    public string? ProductName { get; private set; }
+    public string? Name { get; private set; }
 
     public string? Description { get; private set; }
 
@@ -42,7 +43,7 @@ public class FoodProduct
         decimal carbs,
         FoodCategories categoryId)
     {
-        ProductName = name;
+        Name = name;
         Description = description;
         Calories = calories;
         Weight = weight;

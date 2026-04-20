@@ -90,7 +90,7 @@ public class FoodProductViewModel : INotifyPropertyChanged
     private async void SelectProduct(FoodProductDTO product)
     {
         await Shell.Current.GoToAsync(
-            $"food/detail?ProductID={product.ProductID}&ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
+            $"food/details?ProductID={product.ProductID}&ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
     }
 
     private async void GoBack()
