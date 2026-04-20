@@ -6,6 +6,8 @@ namespace Services.Handlers.Food;
 
 public class HandlerFoodProduct : 
     IRequestHandler<FoodProductCommand, Unit>,
+    IRequestHandler<FoodProductQuery, FoodProduct?>,
+    IRequestHandler<FoodProductsQuery, List<FoodProduct>>,
     IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>
 {
     private readonly IServices _services;
@@ -40,8 +42,26 @@ public class HandlerFoodProduct :
         return Unit.Value;
     }
 
+    public async Task<FoodProduct?> Handle(FoodProductQuery request, CancellationToken cancellationToken)
+    {
+        return _services.Repository.SetNoTracking<FoodProduct>().Where(p => p.ProductID == request.ProductID).FirstOrDefault();
+    }
+
+    public async Task<List<FoodProduct>> Handle(FoodProductsQuery request, CancellationToken cancellationToken)
+    {
+        var query = _services.Repository.SetNoTracking<FoodProduct>().Where(p => p.CategoryID == request.CategoryID);
+
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var search = request.SearchTerm.ToLower();
+            query = query.Where(recod => recod.ProductName!.ToLower().Contains(search));
+        }
+
+        return query.OrderBy(recod => recod.ProductName).ToList();
+    }
+
     public async Task<List<FoodCategory>> Handle(FoodCategoriesQuery request, CancellationToken cancellationToken)
     {
-        return _services.Repository.SetNoTracking<FoodCategory>(nameof(FoodCategory.FoodProducts)).OrderBy(c => c.CategoryName).ToList();
+        return _services.Repository.SetNoTracking<FoodCategory>(nameof(FoodCategory.FoodProducts)).OrderBy(recod => recod.CategoryName).ToList();
     }
 }
