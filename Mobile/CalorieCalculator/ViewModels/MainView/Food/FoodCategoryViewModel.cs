@@ -65,7 +65,7 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
     {
         try
         {
-            var categories = await _apiService.GetAsync<FoodCategoryDTO>("api/foodcategory");
+            var categories = await _apiService.GetAsync<FoodCategoryDTO>("api/food/foodcategory");
 
             AllCategories.Clear();
             FilteredCategories.Clear();
@@ -103,7 +103,7 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
     private async void SelectCategory(FoodCategoryDisplayItem category)
     {
         await Shell.Current.GoToAsync(
-            $"FoodProductPage?CategoryID={category.CategoryID}&CategoryName={category.CategoryName}&ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
+                $"food/products?CategoryID={category.CategoryID}&CategoryName={category.CategoryName}&ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
     }
 
     private async void GoBack()

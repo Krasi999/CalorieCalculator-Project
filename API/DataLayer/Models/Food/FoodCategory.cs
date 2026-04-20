@@ -9,7 +9,7 @@ public class FoodCategory
     [Key]
     public int CategoryID { get; set; }
 
-    public string? CategoryName { get; set; }
+    public string? Name { get; set; }
 
     public ICollection<FoodProduct> FoodProducts { get; set; } = new List<FoodProduct>();
 }

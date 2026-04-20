@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Services.Handlers.Food;
 
-public class HandlerFoodProduct : 
+public class HandlerFoodProduct :
     IRequestHandler<FoodProductCommand, Unit>,
     IRequestHandler<FoodProductQuery, FoodProduct?>,
     IRequestHandler<FoodProductsQuery, List<FoodProduct>>,
@@ -19,8 +19,8 @@ public class HandlerFoodProduct :
 
     public async Task<Unit> Handle(FoodProductCommand request, CancellationToken cancellationToken)
     {
-        var product = request.ProductID != null 
-            ? _services.Repository.Set<FoodProduct>().First(record => record.ProductID == request.ProductID) 
+        var product = request.ProductID != null
+            ? _services.Repository.Set<FoodProduct>().First(record => record.ProductID == request.ProductID)
             : new FoodProduct();
 
         using var transaction = await _services.Repository.BeginTransaction();
@@ -51,17 +51,22 @@ public class HandlerFoodProduct :
     {
         var query = _services.Repository.SetNoTracking<FoodProduct>().Where(p => p.CategoryID == request.CategoryID);
 
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        if (query.Any() == true)
         {
-            var search = request.SearchTerm.ToLower();
-            query = query.Where(recod => recod.ProductName!.ToLower().Contains(search));
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
+                var search = request.SearchTerm.ToLower();
+                query = query.Where(recod => recod.ProductName.ToLower().Contains(search));
+            }
+
+            return query.OrderBy(recod => recod.ProductName).ToList();
         }
 
-        return query.OrderBy(recod => recod.ProductName).ToList();
+        return new List<FoodProduct>();
     }
 
     public async Task<List<FoodCategory>> Handle(FoodCategoriesQuery request, CancellationToken cancellationToken)
     {
-        return _services.Repository.SetNoTracking<FoodCategory>(nameof(FoodCategory.FoodProducts)).OrderBy(recod => recod.CategoryName).ToList();
+        return _services.Repository.SetNoTracking<FoodCategory>().OrderBy(recod => recod.Name).ToList();
     }
 }

@@ -12,6 +12,8 @@ public class MainViewModel : INotifyPropertyChanged
     private readonly ApiService _apiService;
 
     private int _caloriesPerDay;
+    private int _programId;
+
     public int CaloriesPerDay
     {
         get => _caloriesPerDay;
@@ -101,10 +103,7 @@ public class MainViewModel : INotifyPropertyChanged
         _apiService = apiService;
 
         LoadCommand = new Command(async () => await LoadDailyProgramAsync());
-        AddMealCommand = new Command<string>(async (mealName) =>
-        {
-            await Shell.Current.DisplayAlert("Add Food", $"Add food to {mealName}", "OK");
-        });
+        AddMealCommand = new Command<MealDTO>(AddMeal);
     }
 
     private async Task LoadDailyProgramAsync()
@@ -115,11 +114,13 @@ public class MainViewModel : INotifyPropertyChanged
             var userIdSessions = Preferences.Get("user_id", string.Empty);
 
             var userId = Guid.Parse(userIdSessions);
-            var program = await _apiService.GetAsyncT<DailyProgramDTO>(
-                $"api/dailyprogram/{userId}");
+            var program = await _apiService.GetAsyncT<DailyProgramDTO>($"api/dailyprogram/{userId}");
 
-            if (program == null) return;
-
+            if (program == null)
+            {
+                return;
+            }
+            _programId = program.ProgramID;
             CaloriesPerDay = program.CaloriesPerDay;
             CarbsGoal = program.CarbsPerDay;
             ProteinGoal = program.ProteinPerDay;
@@ -153,6 +154,12 @@ public class MainViewModel : INotifyPropertyChanged
         {
             IsLoading = false;
         }
+    }
+
+    private async void AddMeal(MealDTO meal)
+    {
+        await Shell.Current.GoToAsync(
+            $"food/categories?ProgramID={_programId}&MealType={meal.MealType}&MealID={meal.MealID}");
     }
 
     private void UpdateRemaining()

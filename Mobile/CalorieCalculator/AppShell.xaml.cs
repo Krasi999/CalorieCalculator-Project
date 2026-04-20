@@ -1,4 +1,5 @@
 ﻿using CalorieCalculator.Views;
+using CalorieCalculator.Views.MainView.Food;
 
 namespace CalorieCalculator;
 
@@ -8,13 +9,13 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        // Регистриране на допълнителни маршрути за навигация
         Routing.RegisterRoute("Login", typeof(LoginPage));
         Routing.RegisterRoute("Register", typeof(RegisterPage));
         Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
         Routing.RegisterRoute("ProfileSetup", typeof(ProfileSetupPage));
-        Routing.RegisterRoute("MainPage", typeof(MainPage));
-        Routing.RegisterRoute("ProfilePage", typeof(ProfilePage));
-        Routing.RegisterRoute("ProgressPage", typeof(ProgressPage));
+
+        Routing.RegisterRoute("food/categories", typeof(FoodCategoryPage));
+        Routing.RegisterRoute("food/products", typeof(FoodProductPage));
+        Routing.RegisterRoute("food/details", typeof(FoodDetailsPage));
     }
 }

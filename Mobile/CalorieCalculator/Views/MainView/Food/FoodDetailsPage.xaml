@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalorieCalculator.Views.MainView.Food.FoodDetailsPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="{Binding ProductName}"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   LineBreakMode="TailTruncation"/>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1" Padding="20,10">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- Grams Input -->
+                <Frame BackgroundColor="#2D2D44"
+                       CornerRadius="15"
+                       Padding="20"
+                       HasShadow="False"
+                       BorderColor="Transparent">
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <Label Grid.Row="0" Grid.ColumnSpan="2"
+                               Text="Грамаж"
+                               FontSize="14"
+                               TextColor="#888"
+                               Margin="0,0,0,8"/>
+                        <Entry Grid.Row="1" Grid.Column="0"
+                               Text="{Binding Grams}"
+                               Keyboard="Numeric"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               BackgroundColor="Transparent"
+                               Placeholder="100"/>
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Text="g"
+                               FontSize="28"
+                               TextColor="#888"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Calories -->
+                <Frame BackgroundColor="#2D2D44"
+                       CornerRadius="15"
+                       Padding="20"
+                       HasShadow="False"
+                       BorderColor="Transparent">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+                        <Label Text="Калории"
+                               FontSize="14"
+                               TextColor="#888"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding CalculatedCalories, StringFormat='{0:F0}'}"
+                               FontSize="40"
+                               FontAttributes="Bold"
+                               TextColor="#4DB6AC"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="kcal"
+                               FontSize="14"
+                               TextColor="#888"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Macros -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+
+                    <!-- Protein -->
+                    <Frame Grid.Column="0"
+                           BackgroundColor="#2D2D44"
+                           CornerRadius="15"
+                           Padding="15"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+                            <Label Text="Протеин"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding CalculatedProtein, StringFormat='{0:F1}'}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="g"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Carbs -->
+                    <Frame Grid.Column="1"
+                           BackgroundColor="#2D2D44"
+                           CornerRadius="15"
+                           Padding="15"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+                            <Label Text="Въглех."
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding CalculatedCarbs, StringFormat='{0:F1}'}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="g"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Fats -->
+                    <Frame Grid.Column="2"
+                           BackgroundColor="#2D2D44"
+                           CornerRadius="15"
+                           Padding="15"
+                           HasShadow="False"
+                           BorderColor="Transparent">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+                            <Label Text="Мазнини"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding CalculatedFats, StringFormat='{0:F1}'}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="g"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </Grid>
+
+                <!-- Per 100g reference -->
+                <Frame BackgroundColor="#2D2D44"
+                       CornerRadius="15"
+                       Padding="15"
+                       HasShadow="False"
+                       BorderColor="Transparent">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="На 100 грама"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#888"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Калории" TextColor="#AAA" FontSize="14"/>
+                            <Label Grid.Column="1" Text="{Binding BaseCalories, StringFormat='{0} kcal'}"
+                                   TextColor="White" FontSize="14"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Протеин" TextColor="#AAA" FontSize="14"/>
+                            <Label Grid.Column="1" Text="{Binding BaseProtein, StringFormat='{0}g'}"
+                                   TextColor="White" FontSize="14"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Въглехидрати" TextColor="#AAA" FontSize="14"/>
+                            <Label Grid.Column="1" Text="{Binding BaseCarbs, StringFormat='{0}g'}"
+                                   TextColor="White" FontSize="14"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Мазнини" TextColor="#AAA" FontSize="14"/>
+                            <Label Grid.Column="1" Text="{Binding BaseFats, StringFormat='{0}g'}"
+                                   TextColor="White" FontSize="14"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Add Button -->
+        <Button Grid.Row="2"
+                Text="Добави към ястие"
+                FontSize="18"
+                FontAttributes="Bold"
+                BackgroundColor="#4DB6AC"
+                TextColor="White"
+                CornerRadius="15"
+                Margin="20,10,20,30"
+                HeightRequest="55"
+                Command="{Binding AddToMealCommand}"/>
+
+    </Grid>
+
+</ContentPage>
