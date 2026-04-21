@@ -22,16 +22,16 @@
                   ContentTemplate="{DataTemplate views:ForgotPasswordPage}"
                   Route="ForgotPassword" />
 
-    <ShellContent Title="Профил"
-              ContentTemplate="{DataTemplate views:ProfileSetupPage}"
-              Route="ProfileSetup" />
+    <ShellContent Title="Профил настройка"
+                  ContentTemplate="{DataTemplate views:ProfileSetupPage}"
+                  Route="ProfileSetup" />
 
     <ShellContent Route="ProfilePage"
-                  ContentTemplate="{DataTemplate views:ProfilePage}"/>
-    
+                  ContentTemplate="{DataTemplate views:ProfilePage}" />
+
     <ShellContent Route="MainPage"
-                  ContentTemplate="{DataTemplate views:MainPage}"/>
-    
+                  ContentTemplate="{DataTemplate views:MainPage}" />
+
     <ShellContent Route="ProgressPage"
-                  ContentTemplate="{DataTemplate views:ProgressPage}"/>
+                  ContentTemplate="{DataTemplate views:ProgressPage}" />
 </Shell>
