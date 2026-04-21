@@ -3,7 +3,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="CalorieCalculator.Views.MainView.Components.NavBar">
 
-    <Border StrokeShape="RoundRectangle 0"
+    <Border StrokeShape="RoundRectangle 20,20,0,0"
             Stroke="#E2E8F0"
             StrokeThickness="1"
             BackgroundColor="White"
