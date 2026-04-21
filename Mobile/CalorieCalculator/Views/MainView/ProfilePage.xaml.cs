@@ -17,14 +17,4 @@ public partial class ProfilePage : ContentPage
             "CalorieTracker v1.0\n\nТвоят персонален хранителен дневник.\n\nРазработено от екип CalorieCalculator, 2026.",
             "OK");
     }
-
-    private async void OnTodayTapped(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("//MainPage");
-    }
-
-    private async void OnProgressTapped(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("//ProgressPage");
-    }
 }
