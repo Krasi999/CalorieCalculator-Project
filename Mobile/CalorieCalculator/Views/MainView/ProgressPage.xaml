@@ -20,7 +20,6 @@
                    HorizontalTextAlignment="Center"/>
         </VerticalStackLayout>
 
-        <!-- Custom Tab Bar -->
         <Border Grid.Row="1"
                 StrokeShape="RoundRectangle 0"
                 Stroke="#E2E8F0"
@@ -31,7 +30,6 @@
             <Grid ColumnDefinitions="*,*,*"
                   HorizontalOptions="Fill">
 
-                <!-- Профил -->
                 <VerticalStackLayout Grid.Column="0"
                                      HorizontalOptions="Center"
                                      VerticalOptions="Center"
@@ -44,7 +42,6 @@
                            TextColor="#94A3B8" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
 
-                <!-- Днес -->
                 <VerticalStackLayout Grid.Column="1"
                                      HorizontalOptions="Center"
                                      VerticalOptions="Center"
@@ -57,7 +54,6 @@
                            TextColor="#94A3B8" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
 
-                <!-- Прогрес — АКТИВЕН -->
                 <VerticalStackLayout Grid.Column="2"
                                      HorizontalOptions="Center"
                                      VerticalOptions="Center"
