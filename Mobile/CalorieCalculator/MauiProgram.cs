@@ -1,6 +1,7 @@
 ﻿using CalorieCalculator.Service;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using CommunityToolkit.Maui;
 
 namespace CalorieCalculator
 {
@@ -11,6 +12,7 @@ namespace CalorieCalculator
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

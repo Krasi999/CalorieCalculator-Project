@@ -1,28 +1,29 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="CalorieCalculator.Views.MainView.Components.NavBar">
 
-    <Border BackgroundColor="White"
-            StrokeShape="RoundRectangle 20,20,0,0"
-            Stroke="Transparent"
-            Shadow="{Shadow Brush=Black, Opacity=0.1, Offset='0,-2'}">
+    <Border StrokeShape="RoundRectangle 0"
+            Stroke="#E2E8F0"
+            StrokeThickness="1"
+            BackgroundColor="White"
+            Padding="0"
+            HeightRequest="56">
         <Grid ColumnDefinitions="*,*,*"
-              Padding="0,12"
-              HeightRequest="70">
+              HorizontalOptions="Fill">
 
             <VerticalStackLayout Grid.Column="0"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
-                                 Spacing="4">
-                <Image Source="{Binding ProfileIcon}"
+                                 Spacing="2">
+                <Image Source="person_outline.png"
                        WidthRequest="24"
                        HeightRequest="24"
-                       HorizontalOptions="Center"/>
-                <Label Text="Profile"
-                       FontSize="11"
-                       HorizontalTextAlignment="Center"
-                       TextColor="{Binding ProfileColor}"/>
+                       HorizontalOptions="Center">
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{Binding ProfileColor}"/>
+                    </Image.Behaviors>
+                </Image>
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateCommand}"
                                           CommandParameter="profile"/>
@@ -32,15 +33,15 @@
             <VerticalStackLayout Grid.Column="1"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
-                                 Spacing="4">
-                <Image Source="{Binding HomeIcon}"
+                                 Spacing="2">
+                <Image Source="home_outline.png"
                        WidthRequest="24"
                        HeightRequest="24"
-                       HorizontalOptions="Center"/>
-                <Label Text="Today"
-                       FontSize="11"
-                       HorizontalTextAlignment="Center"
-                       TextColor="{Binding HomeColor}"/>
+                       HorizontalOptions="Center">
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{Binding HomeColor}"/>
+                    </Image.Behaviors>
+                </Image>
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateCommand}"
                                           CommandParameter="home"/>
@@ -50,15 +51,15 @@
             <VerticalStackLayout Grid.Column="2"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center"
-                                 Spacing="4">
-                <Image Source="{Binding ProgressIcon}"
+                                 Spacing="2">
+                <Image Source="chart_outline.png"
                        WidthRequest="24"
                        HeightRequest="24"
-                       HorizontalOptions="Center"/>
-                <Label Text="Progress"
-                       FontSize="11"
-                       HorizontalTextAlignment="Center"
-                       TextColor="{Binding ProgressColor}"/>
+                       HorizontalOptions="Center">
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{Binding ProgressColor}"/>
+                    </Image.Behaviors>
+                </Image>
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateCommand}"
                                           CommandParameter="progress"/>

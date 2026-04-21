@@ -216,6 +216,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="Home"/>
+        <components:NavBar Grid.Row="1" CurrentPage="home"/>
     </Grid>
 </ContentPage>

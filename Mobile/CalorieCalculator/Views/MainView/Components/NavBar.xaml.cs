@@ -21,34 +21,31 @@ public partial class NavBar : ContentView
     public Color HomeColor => CurrentPage == "home" ? ActiveColor : InactiveColor;
     public Color ProgressColor => CurrentPage == "progress" ? ActiveColor : InactiveColor;
 
-    public string ProfileIcon => CurrentPage == "profile" ? "person_filled.png" : "person_outline.png";
-    public string HomeIcon => CurrentPage == "home" ? "home_filled.png" : "home_outline.png";
-    public string ProgressIcon => CurrentPage == "progress" ? "chart_filled.png" : "chart_outline.png";
-
     public ICommand NavigateCommand { get; }
 
     public NavBar()
     {
-        NavigateCommand = new Command<string>(async (page) =>
-        {
-            if (page == CurrentPage) return;
-
-            switch (page)
-            {
-                case "profile":
-                    await Shell.Current.GoToAsync("//ProfilePage?UserID={userId}");
-                    break;
-                case "home":
-                    await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
-                    break;
-                case "progress":
-                    await Shell.Current.GoToAsync("//ProgressPage?UserID={userId}");
-                    break;
-            }
-        });
-
+        NavigateCommand = new Command<string>(NavigateToPage);
         InitializeComponent();
         BindingContext = this;
+    }
+
+    private async void NavigateToPage(string page)
+    {
+        if (page == CurrentPage) return;
+
+        switch (page)
+        {
+            case "profile":
+                await Shell.Current.GoToAsync("//ProfilePage");
+                break;
+            case "home":
+                await Shell.Current.GoToAsync("//MainPage");
+                break;
+            case "progress":
+                await Shell.Current.GoToAsync("//ProgressPage");
+                break;
+        }
     }
 
     private static void OnCurrentPageChanged(BindableObject bindable, object oldValue, object newValue)
@@ -57,8 +54,5 @@ public partial class NavBar : ContentView
         navBar.OnPropertyChanged(nameof(ProfileColor));
         navBar.OnPropertyChanged(nameof(HomeColor));
         navBar.OnPropertyChanged(nameof(ProgressColor));
-        navBar.OnPropertyChanged(nameof(ProfileIcon));
-        navBar.OnPropertyChanged(nameof(HomeIcon));
-        navBar.OnPropertyChanged(nameof(ProgressIcon));
     }
 }
