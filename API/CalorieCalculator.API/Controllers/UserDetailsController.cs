@@ -50,6 +50,43 @@ public class UserDetailsController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserDetails(Guid userId)
+    {
+        var details = await _services.Mediator.Send(new UserDetailsQuery
+        {
+            UserID = userId,
+            Includes = new string[] { }
+        });
+
+        var goal = await _services.Mediator.Send(new UserGoalQuery
+        {
+            UserID = userId,
+            Includes = new string[] { }
+        });
+
+        if (details == null)
+            return NotFound();
+
+        return Ok(new
+        {
+            details.Nickname,
+            Gender = (int)details.Gender,
+            DateOfBirth = details.DateOfBirth.ToString("O"),
+            details.HeightCm,
+            details.HeightFt,
+            details.WeightKg,
+            details.WeightLbs,
+            ActivityLevel = (int)details.ActivityLevel,
+            CurrentGoal = (int)details.CurrentGoal,
+            details.TargetWeightKg,
+            details.TargetWeightLbs,
+            GoalType = goal != null ? (int)goal.GoalType : 0,
+            GoalStartDate = goal?.StartDate.ToString("O"),
+            GoalEndDate = goal?.EndDate.ToString("O")
+        });
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]

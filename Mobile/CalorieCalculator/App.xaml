@@ -30,6 +30,9 @@
             <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter" />
             <converters:BoolToToggleStrokeConverter x:Key="BoolToToggleStrokeConverter" />
             <converters:BoolToToggleActiveStrokeConverter x:Key="BoolToToggleActiveStrokeConverter" />
+            <converters:BoolToChevronConverter x:Key="BoolToChevronConverter" />
+            <converters:BoolToSwitchTextConverter x:Key="BoolToSwitchTextConverter" />
+            <converters:BoolToSwitchColorConverter x:Key="BoolToSwitchColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
