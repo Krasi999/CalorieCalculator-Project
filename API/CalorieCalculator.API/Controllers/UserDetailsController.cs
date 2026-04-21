@@ -50,6 +50,58 @@ public class UserDetailsController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserDetails(Guid userId)
+    {
+        var details = await _services.Mediator.Send(new UserDetailsQuery
+        {
+            UserID = userId,
+            Includes = new string[] { }
+        });
+
+        var goal = await _services.Mediator.Send(new UserGoalQuery
+        {
+            UserID = userId,
+            Includes = new string[] { }
+        });
+
+        if (details == null)
+            return NotFound();
+
+        return Ok(new
+        {
+            details.Nickname,
+            Gender = (int)details.Gender,
+            DateOfBirth = details.DateOfBirth.ToString("O"),
+            details.HeightCm,
+            details.HeightFt,
+            details.WeightKg,
+            details.WeightLbs,
+            ActivityLevel = (int)details.ActivityLevel,
+            CurrentGoal = (int)details.CurrentGoal,
+            details.TargetWeightKg,
+            details.TargetWeightLbs,
+            GoalType = goal != null ? (int)goal.GoalType : 0,
+            GoalStartDate = goal?.StartDate.ToString("O"),
+            GoalEndDate = goal?.EndDate.ToString("O")
+        });
+    }
+
+    [HttpPost("update-nickname")]
+    public async Task<IActionResult> UpdateNickname([FromBody] UpdateNicknameRequest request)
+    {
+        var userDetails =  _services.Repository.Set<DataLayer.Models.UserDetails>()
+            .FirstOrDefault(ud => ud.UserID == request.UserID);
+
+        if (userDetails == null)
+            return NotFound();
+
+        userDetails.UpdateNickname(request.Nickname);
+        await _services.Repository.SaveChanges();
+
+        return Ok();
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]
