@@ -4,8 +4,7 @@
              xmlns:components="clr-namespace:CalorieCalculator.Views.MainView.Components"
              x:Class="CalorieCalculator.Views.MainPage"
              BackgroundColor="#F5F6FA"
-             Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False">
+             Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="*,Auto">
 
@@ -216,9 +215,53 @@
                 </CollectionView>
             </VerticalStackLayout>
         </ScrollView>
+        
+        <Border Grid.Row="1"
+            StrokeShape="RoundRectangle 0"
+            Stroke="#E2E8F0"
+            StrokeThickness="1"
+            BackgroundColor="White"
+            Padding="0"
+            HeightRequest="56">
+            <Grid ColumnDefinitions="*,*,*"
+              HorizontalOptions="Fill">
 
-        <components:NavBar Grid.Row="1" CurrentPage="Home"/>
+                <VerticalStackLayout Grid.Column="0"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="2">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="👤" FontSize="20" HorizontalTextAlignment="Center" />
+                    <Label Text="Профил" FontSize="11"
+                       TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
 
+                <VerticalStackLayout Grid.Column="1"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="2">
+                    <Label Text="📅" FontSize="20" HorizontalTextAlignment="Center" />
+                    <Label Text="Днес" FontSize="11" FontAttributes="Bold"
+                       TextColor="#22C55E" HorizontalTextAlignment="Center" />
+                    <BoxView HeightRequest="2" WidthRequest="40"
+                         Color="#22C55E" CornerRadius="1"
+                         HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="2">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProgressTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="📊" FontSize="20" HorizontalTextAlignment="Center" />
+                    <Label Text="Прогрес" FontSize="11"
+                       TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
     </Grid>
-
 </ContentPage>

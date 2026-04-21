@@ -7,74 +7,71 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="#F5F5F5">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="12" Padding="16,20">
+    <Grid RowDefinitions="*,Auto">
 
-            <!-- Header -->
-            <Label Text="Моят профил"
+        <ScrollView  Grid.Row="0">
+            <VerticalStackLayout Spacing="12" Padding="16,20">
+
+                <Label Text="Моят профил"
                    FontSize="24"
                    FontAttributes="Bold"
                    TextColor="#1E293B"
                    HorizontalTextAlignment="Center"
                    Margin="0,0,0,5" />
 
-            <!-- Профилна карта -->
-            <Border StrokeShape="RoundRectangle 20"
+                <Border StrokeShape="RoundRectangle 20"
                     Stroke="#E2E8F0"
                     StrokeThickness="1"
                     BackgroundColor="White"
                     Padding="20">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
 
-                    <!-- Аватар -->
-                    <Grid WidthRequest="90" HeightRequest="90"
+                        <Grid WidthRequest="90" HeightRequest="90"
                           HorizontalOptions="Center">
-                        <Ellipse Fill="{Binding ProfileColor}"
+                            <Ellipse Fill="{Binding ProfileColor}"
                                  WidthRequest="90" HeightRequest="90"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center" />
-                        <Label Text="{Binding ProfileInitial}"
+                            <Label Text="{Binding ProfileInitial}"
                                FontSize="36"
                                FontAttributes="Bold"
                                TextColor="White"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
-                    </Grid>
+                        </Grid>
 
-                    <!-- Псевдоним (показване) -->
-                    <HorizontalStackLayout HorizontalOptions="Center"
+                        <HorizontalStackLayout HorizontalOptions="Center"
                                            Spacing="8"
                                            IsVisible="{Binding IsEditingNickname, Converter={StaticResource InvertBoolConverter}}">
-                        <Label Text="{Binding Nickname}"
+                            <Label Text="{Binding Nickname}"
                                FontSize="20"
                                FontAttributes="Bold"
                                TextColor="#1E293B"
                                VerticalOptions="Center" />
-                        <Label Text="✏️"
+                            <Label Text="✏️"
                                FontSize="16"
                                VerticalOptions="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding StartEditNicknameCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </HorizontalStackLayout>
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding StartEditNicknameCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
 
-                    <!-- Псевдоним (редактиране) -->
-                    <VerticalStackLayout IsVisible="{Binding IsEditingNickname}"
+                        <VerticalStackLayout IsVisible="{Binding IsEditingNickname}"
                                          Spacing="8" HorizontalOptions="Center">
-                        <Border StrokeShape="RoundRectangle 10"
+                            <Border StrokeShape="RoundRectangle 10"
                                 Stroke="#CBD5E1"
                                 BackgroundColor="#F8FAFC"
                                 Padding="10,4"
                                 WidthRequest="200">
-                            <Entry Text="{Binding EditNickname}"
+                                <Entry Text="{Binding EditNickname}"
                                    FontSize="16"
                                    TextColor="#1E293B"
                                    BackgroundColor="Transparent"
                                    HorizontalTextAlignment="Center" />
-                        </Border>
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                            <Button Text="Запази"
+                            </Border>
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                                <Button Text="Запази"
                                     Command="{Binding SaveNicknameCommand}"
                                     FontSize="13"
                                     BackgroundColor="#22C55E"
@@ -82,7 +79,7 @@
                                     CornerRadius="15"
                                     HeightRequest="34"
                                     Padding="15,0" />
-                            <Button Text="Откажи"
+                                <Button Text="Откажи"
                                     Command="{Binding CancelEditNicknameCommand}"
                                     FontSize="13"
                                     BackgroundColor="#EF4444"
@@ -90,206 +87,307 @@
                                     CornerRadius="15"
                                     HeightRequest="34"
                                     Padding="15,0" />
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
 
-                    <Label Text="{Binding ErrorMessage}"
+                        <Label Text="{Binding ErrorMessage}"
                            TextColor="#EF4444"
                            FontSize="12"
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
-                </VerticalStackLayout>
-            </Border>
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- Детайли за профила -->
-            <Border StrokeShape="RoundRectangle 16"
+                <Border StrokeShape="RoundRectangle 16"
                     Stroke="#E2E8F0"
                     StrokeThickness="1"
                     BackgroundColor="White"
                     Padding="16">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleDetailsCommand}" />
-                </Border.GestureRecognizers>
-                <VerticalStackLayout>
-                    <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Label Grid.Column="0" Text="📋" FontSize="20"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleDetailsCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Label Grid.Column="0" Text="📋" FontSize="20"
                                VerticalOptions="Center" Margin="0,0,12,0" />
-                        <Label Grid.Column="1" Text="Детайли за профила"
+                            <Label Grid.Column="1" Text="Детайли за профила"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="#1E293B" VerticalOptions="Center" />
-                        <Label Grid.Column="2"
+                            <Label Grid.Column="2"
                                Text="{Binding IsDetailsVisible, Converter={StaticResource BoolToChevronConverter}}"
                                FontSize="18" TextColor="#94A3B8"
                                VerticalOptions="Center" />
-                    </Grid>
+                        </Grid>
 
-                    <VerticalStackLayout IsVisible="{Binding IsDetailsVisible}"
+                        <VerticalStackLayout IsVisible="{Binding IsDetailsVisible}"
                                          Spacing="8" Margin="0,12,0,0">
-                        <BoxView HeightRequest="1" Color="#F1F5F9" />
-                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto"
+                            <BoxView HeightRequest="1" Color="#F1F5F9" />
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto"
                               RowSpacing="10" ColumnSpacing="10" Padding="4">
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                                <Label Text="Пол" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding GenderText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                                <Label Text="Възраст" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding AgeText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                                <Label Text="Ръст" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding HeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                                <Label Text="Тегло" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding WeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="2" Grid.Column="0">
-                                <Label Text="Активност" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding ActivityText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="2" Grid.Column="1">
-                                <Label Text="Цел" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding GoalText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
-                                <Label Text="Желано тегло" FontSize="11" TextColor="#94A3B8" />
-                                <Label Text="{Binding TargetWeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
-                            </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                                    <Label Text="Пол" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding GenderText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                    <Label Text="Възраст" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding AgeText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                                    <Label Text="Ръст" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding HeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                                    <Label Text="Тегло" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding WeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                                    <Label Text="Активност" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding ActivityText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                                    <Label Text="Цел" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding GoalText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Label Text="Желано тегло" FontSize="11" TextColor="#94A3B8" />
+                                    <Label Text="{Binding TargetWeightText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 16"
+        Stroke="#E2E8F0"
+        StrokeThickness="1"
+        BackgroundColor="White"
+        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        
+                        <Label Text="{Binding MonthYear}"
+               FontSize="16" FontAttributes="Bold"
+               TextColor="#1E293B" />
+
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*"
+              ColumnSpacing="2"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="8"
+              HorizontalOptions="Fill">
+
+                            <Label Grid.Row="0" Grid.Column="0" Text="Пн" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="Вт" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="2" Text="Ср" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="3" Text="Чт" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="4" Text="Пт" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="5" Text="Сб" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                            <Label Grid.Row="0" Grid.Column="6" Text="Нд" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="0"
+                   Text="{Binding WeekDay1}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay1Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay1Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay1Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="1"
+                   Text="{Binding WeekDay2}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay2Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay2Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay2Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="2"
+                   Text="{Binding WeekDay3}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay3Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay3Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay3Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="3"
+                   Text="{Binding WeekDay4}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay4Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay4Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay4Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="4"
+                   Text="{Binding WeekDay5}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay5Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay5Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay5Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="5"
+                   Text="{Binding WeekDay6}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay6Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay6Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay6Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
+
+                            <Label Grid.Row="1" Grid.Column="6"
+                   Text="{Binding WeekDay7}"
+                   FontSize="14"
+                   FontAttributes="{Binding IsDay7Today, Converter={StaticResource BoolToFontAttrConverter}}"
+                   TextColor="{Binding IsDay7Today, Converter={StaticResource BoolToDayColorConverter}}"
+                   BackgroundColor="{Binding IsDay7Today, Converter={StaticResource BoolToDayBgConverter}}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   HeightRequest="32"
+                   WidthRequest="32"
+                   HorizontalOptions="Center" />
                         </Grid>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
+                </Border>
 
-            <!-- Календар -->
-            <Border StrokeShape="RoundRectangle 16"
+                <Border StrokeShape="RoundRectangle 16"
                     Stroke="#E2E8F0"
                     StrokeThickness="1"
                     BackgroundColor="White"
                     Padding="16">
-                <VerticalStackLayout Spacing="12">
-                    <!-- Месец и година -->
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="📅" FontSize="18" VerticalOptions="Center" />
-                        <Label Text="{Binding MonthYear}"
-                               FontSize="16" FontAttributes="Bold"
-                               TextColor="#1E293B" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-
-                    <!-- Дни от седмицата -->
-                    <Grid ColumnDefinitions="*,*,*,*,*,*,*"
-                          ColumnSpacing="4"
-                          HorizontalOptions="Fill">
-                        <Label Grid.Column="0" Text="Пн" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="1" Text="Вт" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="2" Text="Ср" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="3" Text="Чт" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="4" Text="Пт" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="5" Text="Сб" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="6" Text="Нд" FontSize="11" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
-                    </Grid>
-
-                    <!-- Числа на дните -->
-                    <Grid ColumnDefinitions="*,*,*,*,*,*,*"
-                          ColumnSpacing="4"
-                          HorizontalOptions="Fill">
-                        <Label Grid.Column="0" Text="{Binding CalDay1}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="1" Text="{Binding CalDay2}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="2" Text="{Binding CalDay3}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-
-                        <!-- Днешният ден — маркиран -->
-                        <Grid Grid.Column="3" HorizontalOptions="Center">
-                            <Ellipse Fill="#1E293B"
-                                     WidthRequest="34" HeightRequest="34"
-                                     HorizontalOptions="Center"
-                                     VerticalOptions="Center" />
-                            <Label Text="{Binding TodayDate}"
-                                   FontSize="14" FontAttributes="Bold"
-                                   TextColor="White"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Grid>
-
-                        <Label Grid.Column="4" Text="{Binding CalDay5}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="5" Text="{Binding CalDay6}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-                        <Label Grid.Column="6" Text="{Binding CalDay7}" FontSize="14" TextColor="#64748B" HorizontalTextAlignment="Center" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Биометричен вход -->
-            <Border StrokeShape="RoundRectangle 16"
-                    Stroke="#E2E8F0"
-                    StrokeThickness="1"
-                    BackgroundColor="White"
-                    Padding="16">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleBiometricCommand}" />
-                </Border.GestureRecognizers>
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                    <Label Grid.Column="0" Text="🔐" FontSize="20"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleBiometricCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="🔐" FontSize="20"
                            VerticalOptions="Center" Margin="0,0,12,0" />
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="Биометричен вход"
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Биометричен вход"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="#1E293B" />
-                        <Label Text="Пръстов отпечатък / Face ID"
+                            <Label Text="Пръстов отпечатък / Face ID"
                                FontSize="12" TextColor="#94A3B8" />
-                    </VerticalStackLayout>
-                    <Label Grid.Column="2"
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2"
                            Text="{Binding IsBiometricEnabled, Converter={StaticResource BoolToSwitchTextConverter}}"
                            FontSize="14" FontAttributes="Bold"
                            TextColor="{Binding IsBiometricEnabled, Converter={StaticResource BoolToSwitchColorConverter}}"
                            VerticalOptions="Center" />
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
 
-          
 
-            <!-- За приложението -->
-            <Border StrokeShape="RoundRectangle 16"
+
+                <Border StrokeShape="RoundRectangle 16"
                     Stroke="#E2E8F0"
                     StrokeThickness="1"
                     BackgroundColor="White"
                     Padding="16">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnAboutTapped" />
-                </Border.GestureRecognizers>
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                    <Label Grid.Column="0" Text="ℹ️" FontSize="20"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAboutTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0" Text="ℹ️" FontSize="20"
                            VerticalOptions="Center" Margin="0,0,12,0" />
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label Text="За приложението"
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="За приложението"
                                FontSize="15" FontAttributes="Bold"
                                TextColor="#1E293B" />
-                        <Label Text="CalorieTracker v1.0"
+                            <Label Text="CalorieTracker v1.0"
                                FontSize="12" TextColor="#94A3B8" />
-                    </VerticalStackLayout>
-                    <Label Grid.Column="2" Text="›"
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="›"
                            FontSize="22" TextColor="#94A3B8"
                            VerticalOptions="Center" />
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
 
-            <!-- Logout -->
-            <Border StrokeShape="RoundRectangle 16"
+                <Border StrokeShape="RoundRectangle 16"
                     Stroke="#FEE2E2"
                     StrokeThickness="1"
                     BackgroundColor="#FEF2F2"
                     Padding="16"
                     Margin="0,8,0,0">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LogoutCommand}" />
-                </Border.GestureRecognizers>
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                    <Label Text="🚪" FontSize="18" VerticalOptions="Center" />
-                    <Label Text="Изход от акаунта"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                        <Label Text="🚪" FontSize="18" VerticalOptions="Center" />
+                        <Label Text="Изход от акаунта"
                            FontSize="15" FontAttributes="Bold"
                            TextColor="#EF4444" VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Border>
+                    </HorizontalStackLayout>
+                </Border>
 
-            <BoxView HeightRequest="20" Color="Transparent" />
-        </VerticalStackLayout>
-    </ScrollView>
-</ContentPage>
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </VerticalStackLayout>
+        </ScrollView>
+        
+                <Border Grid.Row="1"
+                StrokeShape="RoundRectangle 0"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                BackgroundColor="White"
+                Padding="0"
+                HeightRequest="56">
+                    <Grid ColumnDefinitions="*,*,*"
+                  HorizontalOptions="Fill">
+
+                        <VerticalStackLayout Grid.Column="0"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="2">
+                            <Label Text="👤" FontSize="20" HorizontalTextAlignment="Center" />
+                            <Label Text="Профил" FontSize="11" FontAttributes="Bold"
+                           TextColor="#22C55E" HorizontalTextAlignment="Center" />
+                            <BoxView HeightRequest="2" WidthRequest="40"
+                             Color="#22C55E" CornerRadius="1"
+                             HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="2">
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTodayTapped" />
+                            </VerticalStackLayout.GestureRecognizers>
+                            <Label Text="📅" FontSize="20" HorizontalTextAlignment="Center" />
+                            <Label Text="Днес" FontSize="11"
+                           TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="2">
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnProgressTapped" />
+                            </VerticalStackLayout.GestureRecognizers>
+                            <Label Text="📊" FontSize="20" HorizontalTextAlignment="Center" />
+                            <Label Text="Прогрес" FontSize="11"
+                           TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ContentPage>
