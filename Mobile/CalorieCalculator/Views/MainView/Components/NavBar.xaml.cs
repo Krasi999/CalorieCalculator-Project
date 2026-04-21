@@ -20,6 +20,7 @@ public partial class NavBar : ContentView
     public Color ProfileColor => CurrentPage == "profile" ? ActiveColor : InactiveColor;
     public Color HomeColor => CurrentPage == "home" ? ActiveColor : InactiveColor;
     public Color ProgressColor => CurrentPage == "progress" ? ActiveColor : InactiveColor;
+    public Color CalendarColor => CurrentPage == "calendar" ? ActiveColor : InactiveColor;
 
     public ICommand NavigateCommand { get; }
 
@@ -45,6 +46,9 @@ public partial class NavBar : ContentView
             case "progress":
                 await Shell.Current.GoToAsync("//ProgressPage");
                 break;
+            case "calendar":
+                await Shell.Current.GoToAsync("//CalendarPage");
+                break;
         }
     }
 
@@ -54,5 +58,6 @@ public partial class NavBar : ContentView
         navBar.OnPropertyChanged(nameof(ProfileColor));
         navBar.OnPropertyChanged(nameof(HomeColor));
         navBar.OnPropertyChanged(nameof(ProgressColor));
+        navBar.OnPropertyChanged(nameof(CalendarColor));
     }
 }

@@ -102,6 +102,14 @@ public class UserDetailsController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("calories/{userId:guid}")]
+    public async Task<IActionResult> GetCaloriesByDate(Guid userId, [FromQuery] int year, [FromQuery] int month)
+    {
+        // TODO: Колега2 трябва да имплементира реалното четене от таблицата с храни
+        // Засега връщаме празен списък — ще се попълни когато има данни
+        return Ok(new List<object>());
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]

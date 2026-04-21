@@ -66,6 +66,23 @@
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
 
+            <VerticalStackLayout Grid.Column="3"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      Spacing="2">
+                <Image Source="calendar_outline.png"
+                    WidthRequest="24"
+                    HeightRequest="24"
+                    HorizontalOptions="Center"> 
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{Binding ProgressColor}"/>
+                    </Image.Behaviors>
+                </Image>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}"
+                               CommandParameter="calnedar"/>
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
         </Grid>
     </Border>
 

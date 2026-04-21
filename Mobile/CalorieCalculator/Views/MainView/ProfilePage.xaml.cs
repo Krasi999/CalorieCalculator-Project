@@ -13,8 +13,8 @@ public partial class ProfilePage : ContentPage
     private async void OnAboutTapped(object? sender, EventArgs e)
     {
         await DisplayAlert(
-            "За CalorieTracker",
-            "CalorieTracker v1.0\n\nТвоят персонален хранителен дневник.\n\nРазработено от екип CalorieCalculator, 2026.",
+            "За приложението",
+            "Калориен калкулатор\n\nПриложението е създадено.\n\nРазработено от екип CalorieCalculator, 2026.",
             "OK");
     }
 }
