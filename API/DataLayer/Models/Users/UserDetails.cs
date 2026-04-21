@@ -137,5 +137,11 @@ public class UserDetails
 
         return Math.Round(bmr.Value * multiplier, 2);
     }
+
+    public void UpdateNickname(string newNickname)
+    {
+        Nickname = newNickname.Trim();
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
 

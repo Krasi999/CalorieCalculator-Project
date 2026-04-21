@@ -87,6 +87,21 @@ public class UserDetailsController : ControllerBase
         });
     }
 
+    [HttpPost("update-nickname")]
+    public async Task<IActionResult> UpdateNickname([FromBody] UpdateNicknameRequest request)
+    {
+        var userDetails =  _services.Repository.Set<DataLayer.Models.UserDetails>()
+            .FirstOrDefault(ud => ud.UserID == request.UserID);
+
+        if (userDetails == null)
+            return NotFound();
+
+        userDetails.UpdateNickname(request.Nickname);
+        await _services.Repository.SaveChanges();
+
+        return Ok();
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]

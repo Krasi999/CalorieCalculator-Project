@@ -31,3 +31,9 @@ public class ProfileDataResponse
 
     public Guid? UserID { get; set; }
 }
+
+public class UpdateNicknameRequest
+{
+    public Guid UserID { get; set; }
+    public string Nickname { get; set; }
+}

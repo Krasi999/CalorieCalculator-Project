@@ -6,7 +6,7 @@
 public class ForgotPasswordResponse
 {
     public bool Success { get; set; }
-    public string Code { get; set; }  // Засега връщаме кода, за да го покажем в dialog
+    public string Code { get; set; }  
 }
 
 public class VerifyCodeRequest

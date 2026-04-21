@@ -50,6 +50,14 @@ public partial class ProfileViewModel : ObservableObject
     [ObservableProperty] private bool isEditingNickname;
     [ObservableProperty] private string editNickname = string.Empty;
 
+    // Календар — дни около днешния
+    [ObservableProperty] private string calDay1 = string.Empty;
+    [ObservableProperty] private string calDay2 = string.Empty;
+    [ObservableProperty] private string calDay3 = string.Empty;
+    [ObservableProperty] private string calDay5 = string.Empty;
+    [ObservableProperty] private string calDay6 = string.Empty;
+    [ObservableProperty] private string calDay7 = string.Empty;
+
     private async Task LoadProfileAsync()
     {
         isBusy = true;
@@ -127,15 +135,32 @@ public partial class ProfileViewModel : ObservableObject
             isBiometricEnabled = Preferences.Get("biometric_enabled", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
+            // Календар
             var today = DateTime.Now;
             todayDate = today.Day.ToString();
             OnPropertyChanged(nameof(TodayDate));
+
             dayOfWeek = today.ToString("dddd", new System.Globalization.CultureInfo("bg-BG"));
             dayOfWeek = char.ToUpper(dayOfWeek[0]) + dayOfWeek[1..];
             OnPropertyChanged(nameof(DayOfWeek));
+
             monthYear = today.ToString("MMMM yyyy", new System.Globalization.CultureInfo("bg-BG"));
             monthYear = char.ToUpper(monthYear[0]) + monthYear[1..];
             OnPropertyChanged(nameof(MonthYear));
+
+            // Дни около днешния
+            calDay1 = today.AddDays(-3).Day.ToString();
+            OnPropertyChanged(nameof(CalDay1));
+            calDay2 = today.AddDays(-2).Day.ToString();
+            OnPropertyChanged(nameof(CalDay2));
+            calDay3 = today.AddDays(-1).Day.ToString();
+            OnPropertyChanged(nameof(CalDay3));
+            calDay5 = today.AddDays(1).Day.ToString();
+            OnPropertyChanged(nameof(CalDay5));
+            calDay6 = today.AddDays(2).Day.ToString();
+            OnPropertyChanged(nameof(CalDay6));
+            calDay7 = today.AddDays(3).Day.ToString();
+            OnPropertyChanged(nameof(CalDay7));
         }
         catch (Exception ex)
         {
@@ -174,24 +199,30 @@ public partial class ProfileViewModel : ObservableObject
             return;
         }
 
-        nickname = editNickname.Trim();
-        OnPropertyChanged(nameof(Nickname));
-        profileInitial = nickname[0].ToString().ToUpper();
-        OnPropertyChanged(nameof(ProfileInitial));
+        try
+        {
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (string.IsNullOrEmpty(userId)) return;
 
-        isEditingNickname = false;
-        OnPropertyChanged(nameof(IsEditingNickname));
-        errorMessage = string.Empty;
-        OnPropertyChanged(nameof(ErrorMessage));
-    }
+            await _api.PostAsync("api/UserDetails/update-nickname",
+                new { UserID = Guid.Parse(userId), Nickname = editNickname.Trim() });
 
-    [RelayCommand]
-    private void CancelEditNickname()
-    {
-        isEditingNickname = false;
-        OnPropertyChanged(nameof(IsEditingNickname));
-        errorMessage = string.Empty;
-        OnPropertyChanged(nameof(ErrorMessage));
+            nickname = editNickname.Trim();
+            OnPropertyChanged(nameof(Nickname));
+            profileInitial = nickname[0].ToString().ToUpper();
+            OnPropertyChanged(nameof(ProfileInitial));
+
+            isEditingNickname = false;
+            OnPropertyChanged(nameof(IsEditingNickname));
+            errorMessage = string.Empty;
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Грешка при запазване на псевдонима.";
+            OnPropertyChanged(nameof(ErrorMessage));
+            System.Diagnostics.Debug.WriteLine($"Nickname save error: {ex.Message}");
+        }
     }
 
     [RelayCommand]
