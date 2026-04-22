@@ -100,7 +100,7 @@
                 <!-- Step 4 - Height -->
                 <VerticalStackLayout IsVisible="{Binding IsStep4Visible}" Spacing="15" HorizontalOptions="Fill">
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
-                          HorizontalOptions="Center" WidthRequest="260">
+                          HorizontalOptions="Center" WidthRequest="260" Padding="2">
                         <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
                                 Stroke="{Binding IsHeightInCm, Converter={StaticResource BoolToInactiveBorderConverter}}"
                                 StrokeThickness="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleStrokeConverter}}"
@@ -109,7 +109,7 @@
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SelectHeightFtCommand}" />
                             </Border.GestureRecognizers>
-                            <Label Text="Футове" FontSize="14" FontAttributes="Bold"
+                            <Label Text="Футове" FontSize="14" FontAttributes="Bold" 
                                    TextColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleTextConverter}}"
                                    HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
@@ -117,7 +117,7 @@
                                 Stroke="{Binding IsHeightInCm, Converter={StaticResource BoolToActiveBorderConverter}}"
                                 StrokeThickness="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleActiveStrokeConverter}}"
                                 BackgroundColor="{Binding IsHeightInCm, Converter={StaticResource BoolToToggleActiveBgConverter}}"
-                                Padding="0" HeightRequest="42">
+                                Padding="2" HeightRequest="42">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SelectHeightCmCommand}" />
                             </Border.GestureRecognizers>
@@ -137,7 +137,7 @@
                 <!-- Step 5 - Weight -->
                 <VerticalStackLayout IsVisible="{Binding IsStep5Visible}" Spacing="15" HorizontalOptions="Fill">
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
-                          HorizontalOptions="Center" WidthRequest="260">
+                          HorizontalOptions="Center" WidthRequest="260" Padding="2">
                         <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
                                 Stroke="{Binding IsWeightInKg, Converter={StaticResource BoolToInactiveBorderConverter}}"
                                 StrokeThickness="{Binding IsWeightInKg, Converter={StaticResource BoolToToggleStrokeConverter}}"
@@ -287,8 +287,8 @@
                 <!-- Step 8 - Target weight -->
                 <VerticalStackLayout IsVisible="{Binding IsStep8Visible}" Spacing="15" HorizontalOptions="Fill">
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
-                          HorizontalOptions="Center" WidthRequest="260">
-                        <Border Grid.Column="0" StrokeShape="RoundRectangle 20"
+                          HorizontalOptions="Center" WidthRequest="260" Padding="2">
+                        <Border Grid.Column="0" StrokeShape="RoundRectangle 20 "
                                 Stroke="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToInactiveBorderConverter}}"
                                 StrokeThickness="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleStrokeConverter}}"
                                 BackgroundColor="{Binding IsTargetWeightInKg, Converter={StaticResource BoolToToggleBgConverter}}"

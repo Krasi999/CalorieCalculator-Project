@@ -146,7 +146,7 @@ public class BoolToToggleBgConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Colors.Transparent : Color.FromArgb("#F0FDF4");
+        return value is true ? Colors.Transparent : Color.FromArgb("#F0FDF4") ;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -197,7 +197,7 @@ public class BoolToToggleTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#166534");
+        return Color.FromArgb("#166534");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -209,7 +209,7 @@ public class BoolToToggleActiveTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#166534") : Color.FromArgb("#FFFFFF");
+        return Color.FromArgb("#166534");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
