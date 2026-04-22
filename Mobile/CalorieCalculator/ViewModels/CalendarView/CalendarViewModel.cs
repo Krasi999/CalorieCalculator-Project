@@ -138,7 +138,6 @@ public partial class CalendarViewModel : ObservableObject
             var userId = Preferences.Get("user_id", string.Empty);
             if (string.IsNullOrEmpty(userId)) return;
 
-            // Зареждаме целевите калории от API
             var response = await _api.GetSingleAsync<JsonElement>(
                 $"api/UserDetails/{userId}/monthly-calories/{_currentMonth.Year}/{_currentMonth.Month}");
 
@@ -146,20 +145,21 @@ public partial class CalendarViewModel : ObservableObject
             {
                 _targetCalories = response.GetProperty("targetCalories").GetDecimal();
 
-                // Ако има реални дневни калории от базата
-                if (response.TryGetProperty("dailyCalories", out var dailyProp))
+                if (response.TryGetProperty("dailyCalories", out var dailyProp) &&
+                    dailyProp.ValueKind == JsonValueKind.Object)
                 {
                     foreach (var prop in dailyProp.EnumerateObject())
                     {
                         if (DateTime.TryParse(prop.Name, out var date))
                         {
                             var eaten = prop.Value.GetInt32();
-                            var day = Days.FirstOrDefault(d => d.Date == date.Date);
+                            var day = Days.FirstOrDefault(d => d.Date.Date == date.Date);
                             if (day != null)
                             {
                                 day.CaloriesEaten = eaten;
                                 day.CaloriesProgress = Math.Min(eaten / (double)_targetCalories, 1.0);
                                 day.IsOverTarget = eaten > (int)_targetCalories;
+                                OnPropertyChanged(nameof(Days));
                             }
                         }
                     }
