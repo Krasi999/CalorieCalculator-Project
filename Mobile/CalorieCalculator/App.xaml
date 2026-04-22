@@ -30,12 +30,12 @@
             <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter" />
             <converters:BoolToToggleStrokeConverter x:Key="BoolToToggleStrokeConverter" />
             <converters:BoolToToggleActiveStrokeConverter x:Key="BoolToToggleActiveStrokeConverter" />
-            <converters:BoolToChevronConverter x:Key="BoolToChevronConverter" />
-            <converters:BoolToSwitchTextConverter x:Key="BoolToSwitchTextConverter" />
             <converters:BoolToSwitchColorConverter x:Key="BoolToSwitchColorConverter" />
             <converters:BoolToFontAttrConverter x:Key="BoolToFontAttrConverter" />
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" />
             <converters:ProgressToSizeConverter x:Key="ProgressToSizeConverter" />
+            <converters:BoolToThumbAlignConverter  x:Key="BoolToThumbAlignConverter" />
+            <converters:BoolToThumbMarginConverter x:Key="BoolToThumbMarginConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

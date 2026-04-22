@@ -244,31 +244,6 @@ public class BoolToToggleActiveStrokeConverter : IValueConverter
     }
 }
 
-public class BoolToChevronConverter : IValueConverter
-{
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is true ? "▲" : "▼";
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-public class BoolToSwitchTextConverter : IValueConverter
-{
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is true ? "ВКЛ" : "ИЗКЛ";
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
 
 public class BoolToSwitchColorConverter : IValueConverter
 {
@@ -332,3 +307,22 @@ public class ProgressToSizeConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+public class BoolToThumbAlignConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is true ? LayoutOptions.End : LayoutOptions.Start;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToThumbMarginConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is true ? new Thickness(0, 0, 3, 0) : new Thickness(3, 0, 0, 0);
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
