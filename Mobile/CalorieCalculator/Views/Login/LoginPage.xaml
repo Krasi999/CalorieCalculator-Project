@@ -20,7 +20,7 @@
                   WidthRequest="90"
                   HorizontalOptions="Center"
                   Margin="0,0,0,14">
-                <Ellipse Fill="#E8F5F1"
+                <Ellipse Fill="#C8E6DF"
                          WidthRequest="90"
                          HeightRequest="90"
                          HorizontalOptions="Center"

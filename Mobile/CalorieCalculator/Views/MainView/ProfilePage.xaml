@@ -182,7 +182,7 @@
                 <!-- App description card – показва се само при натискане -->
                 <Border IsVisible="{Binding IsAboutVisible}"
         StrokeShape="RoundRectangle 16"
-        Stroke="#DBEAFE" StrokeThickness="1"
+        Stroke="#F1F5F9" StrokeThickness="1"
         Padding="0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -243,7 +243,7 @@
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="Персонализирани цели"
                            FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
-                                    <Label Text="Отслабване, поддържане или качване на тегло — планът се адаптира към теб."
+                                    <Label Text="Отслабване, поддържане или качване на тегло - планът се адаптира към теб."
                            FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
                             </Grid>
