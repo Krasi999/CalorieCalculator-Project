@@ -15,7 +15,6 @@
             Spacing="0"
             HorizontalOptions="Fill">
 
-            <!-- Logo -->
             <Grid HeightRequest="90"
                   WidthRequest="90"
                   HorizontalOptions="Center"
@@ -51,7 +50,6 @@
                    HorizontalTextAlignment="Center"
                    Margin="0,0,0,28" />
 
-            <!-- Email -->
             <Label Text="Имейл"
                    FontSize="13"
                    FontAttributes="Bold"
@@ -72,7 +70,6 @@
                        BackgroundColor="Transparent" />
             </Border>
 
-            <!-- Password -->
             <Label Text="Парола"
                    FontSize="13"
                    FontAttributes="Bold"
@@ -106,7 +103,6 @@
                 </Grid>
             </Border>
 
-            <!-- Remember me + Forgot password -->
             <Grid Margin="0,0,0,28"
                   ColumnDefinitions="*,Auto">
 
@@ -135,7 +131,6 @@
                 </Label>
             </Grid>
 
-            <!-- Error message -->
             <Label Text="{Binding ErrorMessage}"
                    TextColor="#EF4444"
                    FontSize="13"
@@ -143,7 +138,6 @@
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
                    Margin="0,0,0,10" />
 
-            <!-- Login button -->
             <Button Text="Вход"
                     Command="{Binding LoginCommand}"
                     FontSize="16"
@@ -155,14 +149,12 @@
                     Margin="0,0,0,14"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
 
-            <!-- Activity indicator -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                Color="#3DB89E"
                                HeightRequest="30"
                                Margin="0,0,0,10" />
 
-            <!-- Biometric login -->
             <Border StrokeShape="RoundRectangle 25"
                     Stroke="#E5E7EB"
                     BackgroundColor="White"
@@ -186,7 +178,6 @@
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- Divider -->
             <Grid ColumnDefinitions="*,Auto,*"
                   Margin="0,0,0,20">
                 <BoxView Grid.Column="0"
@@ -204,7 +195,6 @@
                          VerticalOptions="Center" />
             </Grid>
 
-            <!-- Register link -->
             <HorizontalStackLayout HorizontalOptions="Center"
                                    Spacing="5"
                                    Margin="0,0,0,20">

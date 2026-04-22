@@ -147,7 +147,7 @@ public class BoolToToggleBgConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Colors.Transparent : Color.FromArgb("#F0FDF4");
+        return value is true ? Colors.Transparent : Color.FromArgb("#F0FDF4") ;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -198,7 +198,7 @@ public class BoolToToggleTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#166534");
+        return Color.FromArgb("#166534");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -210,7 +210,7 @@ public class BoolToToggleActiveTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#166534") : Color.FromArgb("#FFFFFF");
+        return Color.FromArgb("#166534");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -284,9 +284,7 @@ public class BoolToFontAttrConverter : IValueConverter
     }
 }
 
-/// <summary>
-/// Показва елемент само ако double стойността е > 0.
-/// </summary>
+// Показва елемент само ако double стойността е > 0.
 public class DoubleToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -300,17 +298,15 @@ public class DoubleToVisibilityConverter : IValueConverter
     }
 }
 
-/// <summary>
-/// Превръща прогрес (0.0-1.0) в размер на кръгче (0-28px).
-/// При 0% = 0px, при 50% = 14px, при 100% = 28px.
-/// </summary>
+// Превръща прогрес (0.0-1.0) в размер на кръгче (0-28px).
+// При 0% = 0px, при 50% = 14px, при 100% = 28px.
 public class ProgressToSizeConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is double progress)
         {
-            return Math.Max(8, progress * 28); // минимум 8px за видимост
+            return Math.Max(8, progress * 28); 
         }
         return 0;
     }
