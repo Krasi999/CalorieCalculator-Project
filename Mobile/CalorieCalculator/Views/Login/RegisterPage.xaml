@@ -5,256 +5,255 @@
              x:Class="CalorieCalculator.Views.RegisterPage"
              x:DataType="vm:RegisterViewModel"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent">
+             BackgroundColor="#F0F4F8">
 
-    <Grid>
-        <BoxView>
-            <BoxView.Background>
-                <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
-                    <GradientStop Color="#0A1F3D" Offset="0.0" />
-                    <GradientStop Color="#153A6B" Offset="0.3" />
-                    <GradientStop Color="#2563EB" Offset="0.6" />
-                    <GradientStop Color="#3B82F6" Offset="0.85" />
-                    <GradientStop Color="#93C5FD" Offset="1.0" />
-                </LinearGradientBrush>
-            </BoxView.Background>
-        </BoxView>
-
-        <ScrollView VerticalOptions="Center"
+    <ScrollView VerticalOptions="Center"
                 HorizontalOptions="Fill">
-                <VerticalStackLayout
-                Padding="0"
-                Margin="30,20"
-                Spacing="0"
-                HorizontalOptions="Fill">   
+        <VerticalStackLayout
+            Padding="0"
+            Margin="30,40"
+            Spacing="0"
+            HorizontalOptions="Fill">
 
-                <Grid HeightRequest="90"
-                      WidthRequest="90"
-                      HorizontalOptions="Center"
-                      Margin="0,0,0,10">
-                    <Ellipse Fill="#FFFFFF20"
-                             WidthRequest="90"
-                             HeightRequest="90"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center" />
-                    <Label Text="🔥"
-                           FontSize="42"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                </Grid>
+            <!-- Logo -->
+            <Grid HeightRequest="90"
+                  WidthRequest="90"
+                  HorizontalOptions="Center"
+                  Margin="0,0,0,14">
+                <Ellipse Fill="#C8E6DF"
+                         WidthRequest="90"
+                         HeightRequest="90"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center" />
+                <Label Text="🔥"
+                       FontSize="42"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Grid>
 
-                <Label Text="CalorieTracker"
-                       FontSize="26"
-                       FontAttributes="Bold"
-                       TextColor="White"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,0,0,5" />
+            <Label Text="CalorieTracker"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#1C1C1E"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,5" />
 
-                <Label Text="Създай своя акаунт"
-                       FontSize="13"
-                       TextColor="#BFDBFE"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,0,0,30" />
+            <Label Text="Създай своя акаунт"
+                   FontSize="13"
+                   TextColor="#AEAEB2"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,36" />
 
-                <Label Text="Регистрация"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="White"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,0,0,25" />
+            <Label Text="Регистрация"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#1C1C1E"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,28" />
 
-                <Label Text="Имейл"
-                       FontSize="13"
-                       TextColor="#BFDBFE"
-                       Margin="5,0,0,6" />
+            <!-- Email -->
+            <Label Text="Имейл"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="#6B7280"
+                   Margin="4,0,0,6" />
 
-                <Border StrokeShape="RoundRectangle 12"
-                        Stroke="#FFFFFF40"
-                        BackgroundColor="White"
-                        Padding="14,2"
-                        Margin="0,0,0,18">
-                    <Entry Text="{Binding Email}"
-                           Placeholder="example@mail.com"
-                           PlaceholderColor="#94A3B8"
-                           TextColor="#0F172A"
-                           Keyboard="Email"
+            <Border StrokeShape="RoundRectangle 14"
+                    Stroke="#E5E7EB"
+                    BackgroundColor="White"
+                    Padding="14,2"
+                    Margin="0,0,0,18">
+                <Entry Text="{Binding Email}"
+                       Placeholder="example@mail.com"
+                       PlaceholderColor="#C7C7CC"
+                       TextColor="#1C1C1E"
+                       Keyboard="Email"
+                       FontSize="15"
+                       BackgroundColor="Transparent" />
+            </Border>
+
+            <!-- Password -->
+            <Label Text="Парола"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="#6B7280"
+                   Margin="4,0,0,6" />
+
+            <Border StrokeShape="RoundRectangle 14"
+                    Stroke="#E5E7EB"
+                    BackgroundColor="White"
+                    Padding="14,2"
+                    Margin="0,0,0,10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry Grid.Column="0"
+                           Text="{Binding Password}"
+                           Placeholder="••••••••"
+                           PlaceholderColor="#C7C7CC"
+                           TextColor="#1C1C1E"
+                           IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
                            FontSize="15"
                            BackgroundColor="Transparent" />
-                </Border>
-
-                <Label Text="Парола"
-                       FontSize="13"
-                       TextColor="#BFDBFE"
-                       Margin="5,0,0,6" />
-
-                <Border StrokeShape="RoundRectangle 12"
-        Stroke="#FFFFFF40"
-        BackgroundColor="White"
-        Padding="14,2"
-        Margin="0,0,0,8">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry Grid.Column="0"
-               Text="{Binding Password}"
-               Placeholder="••••••••"
-               PlaceholderColor="#94A3B8"
-               TextColor="#0F172A"
-               IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
-               FontSize="15"
-               BackgroundColor="Transparent" />
-                        <Label Grid.Column="1"
-               Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
-               FontSize="18"
-               TextColor="#64748B"
-               VerticalOptions="Center"
-               Margin="0,0,10,0">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </Grid>
-                </Border>
-
-                <VerticalStackLayout Margin="5,2,0,18"
-                                     Spacing="3">
-
-                    <HorizontalStackLayout Spacing="5">
-                        <Label Text="{Binding HasMinLength, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="11"
-                               TextColor="{Binding HasMinLength, Converter={StaticResource BoolToColorConverter}}" />
-                        <Label Text="Минимум 8 символа"
-                               FontSize="11"
-                               TextColor="{Binding HasMinLength, Converter={StaticResource BoolToColorConverter}}" />
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout Spacing="5">
-                        <Label Text="{Binding HasUpperCase, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="11"
-                               TextColor="{Binding HasUpperCase, Converter={StaticResource BoolToColorConverter}}" />
-                        <Label Text="Главна буква (A-Z)"
-                               FontSize="11"
-                               TextColor="{Binding HasUpperCase, Converter={StaticResource BoolToColorConverter}}" />
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout Spacing="5">
-                        <Label Text="{Binding HasLowerCase, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="11"
-                               TextColor="{Binding HasLowerCase, Converter={StaticResource BoolToColorConverter}}" />
-                        <Label Text="Малка буква (a-z)"
-                               FontSize="11"
-                               TextColor="{Binding HasLowerCase, Converter={StaticResource BoolToColorConverter}}" />
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout Spacing="5">
-                        <Label Text="{Binding HasDigit, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="11"
-                               TextColor="{Binding HasDigit, Converter={StaticResource BoolToColorConverter}}" />
-                        <Label Text="Цифра (0-9)"
-                               FontSize="11"
-                               TextColor="{Binding HasDigit, Converter={StaticResource BoolToColorConverter}}" />
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout Spacing="5">
-                        <Label Text="{Binding HasSpecialChar, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="11"
-                               TextColor="{Binding HasSpecialChar, Converter={StaticResource BoolToColorConverter}}" />
-                        <Label Text="Специален символ (!@#$...)"
-                               FontSize="11"
-                               TextColor="{Binding HasSpecialChar, Converter={StaticResource BoolToColorConverter}}" />
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-
-                <Label Text="Потвърди парола"
-                       FontSize="13"
-                       TextColor="#BFDBFE"
-                       Margin="5,0,0,6" />
-
-                <Border StrokeShape="RoundRectangle 12"
-        Stroke="#FFFFFF40"
-        BackgroundColor="White"
-        Padding="14,2"
-        Margin="0,0,0,25">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry Grid.Column="0"
-               Text="{Binding ConfirmPassword}"
-               Placeholder="••••••••"
-               PlaceholderColor="#94A3B8"
-               TextColor="#0F172A"
-               IsPassword="{Binding IsConfirmPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
-               FontSize="15"
-               BackgroundColor="Transparent" />
-                        <Label Grid.Column="1"
-               Text="{Binding IsConfirmPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
-               FontSize="18"
-               TextColor="#64748B"
-               VerticalOptions="Center"
-               Margin="0,0,10,0">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ToggleConfirmPasswordVisibilityCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </Grid>
-                </Border>
-
-                <Label Text="{Binding ErrorMessage}"
-                       TextColor="#FCA5A5"
-                       FontSize="13"
-                       HorizontalTextAlignment="Center"
-                       IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
-                       Margin="0,0,0,10" />
-
-                <Button Text="Регистрация"
-                        Command="{Binding RegisterCommand}"
-                        FontSize="16"
-                        FontAttributes="Bold"
-                        TextColor="#0A1F3D"
-                        BackgroundColor="White"
-                        CornerRadius="25"
-                        HeightRequest="52"
-                        Margin="0,0,0,15"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
-
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   Color="White"
-                                   HeightRequest="30"
-                                   Margin="0,0,0,10" />
-
-                <Grid ColumnDefinitions="*,Auto,*"
-                      Margin="0,0,0,20">
-                    <BoxView Grid.Column="0"
-                             HeightRequest="1"
-                             Color="#FFFFFF30"
-                             VerticalOptions="Center" />
                     <Label Grid.Column="1"
-                           Text="или"
-                           TextColor="#93C5FD"
-                           FontSize="12"
-                           Margin="15,0" />
-                    <BoxView Grid.Column="2"
-                             HeightRequest="1"
-                             Color="#FFFFFF30"
-                             VerticalOptions="Center" />
-                </Grid>
-
-                <HorizontalStackLayout HorizontalOptions="Center"
-                                       Spacing="5"
-                                       Margin="0,0,0,20">
-                    <Label Text="Вече имаш акаунт?"
-                           TextColor="#BFDBFE"
-                           FontSize="14" />
-                    <Label Text="Влез"
-                           TextColor="White"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextDecorations="Underline">
+                           Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
+                           FontSize="18"
+                           TextColor="#AEAEB2"
+                           VerticalOptions="Center"
+                           Margin="0,0,10,0">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
+                            <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
+                </Grid>
+            </Border>
+
+            <!-- Password requirements -->
+            <VerticalStackLayout Margin="4,2,0,18"
+                                 Spacing="4">
+
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="{Binding HasMinLength, Converter={StaticResource BoolToIconConverter}}"
+                           FontSize="11"
+                           TextColor="{Binding HasMinLength, Converter={StaticResource BoolToColorConverter}}" />
+                    <Label Text="Минимум 8 символа"
+                           FontSize="11"
+                           TextColor="{Binding HasMinLength, Converter={StaticResource BoolToColorConverter}}" />
                 </HorizontalStackLayout>
 
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="{Binding HasUpperCase, Converter={StaticResource BoolToIconConverter}}"
+                           FontSize="11"
+                           TextColor="{Binding HasUpperCase, Converter={StaticResource BoolToColorConverter}}" />
+                    <Label Text="Главна буква (A-Z)"
+                           FontSize="11"
+                           TextColor="{Binding HasUpperCase, Converter={StaticResource BoolToColorConverter}}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="{Binding HasLowerCase, Converter={StaticResource BoolToIconConverter}}"
+                           FontSize="11"
+                           TextColor="{Binding HasLowerCase, Converter={StaticResource BoolToColorConverter}}" />
+                    <Label Text="Малка буква (a-z)"
+                           FontSize="11"
+                           TextColor="{Binding HasLowerCase, Converter={StaticResource BoolToColorConverter}}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="{Binding HasDigit, Converter={StaticResource BoolToIconConverter}}"
+                           FontSize="11"
+                           TextColor="{Binding HasDigit, Converter={StaticResource BoolToColorConverter}}" />
+                    <Label Text="Цифра (0-9)"
+                           FontSize="11"
+                           TextColor="{Binding HasDigit, Converter={StaticResource BoolToColorConverter}}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="{Binding HasSpecialChar, Converter={StaticResource BoolToIconConverter}}"
+                           FontSize="11"
+                           TextColor="{Binding HasSpecialChar, Converter={StaticResource BoolToColorConverter}}" />
+                    <Label Text="Специален символ (!@#$...)"
+                           FontSize="11"
+                           TextColor="{Binding HasSpecialChar, Converter={StaticResource BoolToColorConverter}}" />
+                </HorizontalStackLayout>
             </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
+
+            <!-- Confirm password -->
+            <Label Text="Потвърди парола"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="#6B7280"
+                   Margin="4,0,0,6" />
+
+            <Border StrokeShape="RoundRectangle 14"
+                    Stroke="#E5E7EB"
+                    BackgroundColor="White"
+                    Padding="14,2"
+                    Margin="0,0,0,28">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry Grid.Column="0"
+                           Text="{Binding ConfirmPassword}"
+                           Placeholder="••••••••"
+                           PlaceholderColor="#C7C7CC"
+                           TextColor="#1C1C1E"
+                           IsPassword="{Binding IsConfirmPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
+                           FontSize="15"
+                           BackgroundColor="Transparent" />
+                    <Label Grid.Column="1"
+                           Text="{Binding IsConfirmPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
+                           FontSize="18"
+                           TextColor="#AEAEB2"
+                           VerticalOptions="Center"
+                           Margin="0,0,10,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleConfirmPasswordVisibilityCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <!-- Error message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="#EF4444"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   Margin="0,0,0,10" />
+
+            <!-- Register button -->
+            <Button Text="Регистрация"
+                    Command="{Binding RegisterCommand}"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#3DB89E"
+                    CornerRadius="25"
+                    HeightRequest="52"
+                    Margin="0,0,0,14"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
+
+            <!-- Activity indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="#3DB89E"
+                               HeightRequest="30"
+                               Margin="0,0,0,10" />
+
+            <!-- Divider -->
+            <Grid ColumnDefinitions="*,Auto,*"
+                  Margin="0,0,0,20">
+                <BoxView Grid.Column="0"
+                         HeightRequest="1"
+                         Color="#E5E7EB"
+                         VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="или"
+                       TextColor="#AEAEB2"
+                       FontSize="12"
+                       Margin="15,0" />
+                <BoxView Grid.Column="2"
+                         HeightRequest="1"
+                         Color="#E5E7EB"
+                         VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Login link -->
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="5"
+                                   Margin="0,0,0,20">
+                <Label Text="Вече имаш акаунт?"
+                       TextColor="#AEAEB2"
+                       FontSize="14" />
+                <Label Text="Влез"
+                       TextColor="#3DB89E"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

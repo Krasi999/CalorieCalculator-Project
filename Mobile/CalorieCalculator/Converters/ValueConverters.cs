@@ -257,19 +257,6 @@ public class BoolToChevronConverter : IValueConverter
     }
 }
 
-public class BoolToSwitchTextConverter : IValueConverter
-{
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is true ? "ВКЛ" : "ИЗКЛ";
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
-
 public class BoolToSwitchColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -296,11 +283,14 @@ public class BoolToFontAttrConverter : IValueConverter
     }
 }
 
-public class BoolToDayColorConverter : IValueConverter
+/// <summary>
+/// Показва елемент само ако double стойността е > 0.
+/// </summary>
+public class DoubleToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Colors.White : Color.FromArgb("#64748B");
+        return value is double d && d > 0;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -309,11 +299,19 @@ public class BoolToDayColorConverter : IValueConverter
     }
 }
 
-public class BoolToDayBgConverter : IValueConverter
+/// <summary>
+/// Превръща прогрес (0.0-1.0) в размер на кръгче (0-28px).
+/// При 0% = 0px, при 50% = 14px, при 100% = 28px.
+/// </summary>
+public class ProgressToSizeConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#22C55E") : Colors.Transparent;
+        if (value is double progress)
+        {
+            return Math.Max(8, progress * 28); // минимум 8px за видимост
+        }
+        return 0;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -321,3 +319,22 @@ public class BoolToDayBgConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+public class BoolToThumbAlignConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is true ? LayoutOptions.End : LayoutOptions.Start;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToThumbMarginConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is true ? new Thickness(0, 0, 3, 0) : new Thickness(3, 0, 0, 0);
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+

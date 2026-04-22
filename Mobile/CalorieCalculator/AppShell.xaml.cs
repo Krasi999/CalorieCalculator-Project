@@ -21,5 +21,7 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute("ProfilePage", typeof(ProfilePage));
         Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
+
+        Routing.RegisterRoute("CalendarPage", typeof(CalendarPage));
     }
 }

@@ -9,7 +9,7 @@
             BackgroundColor="White"
             Padding="0"
             HeightRequest="56">
-        <Grid ColumnDefinitions="*,*,*"
+        <Grid ColumnDefinitions="*,*,*,*"
               HorizontalOptions="Fill">
 
             <VerticalStackLayout Grid.Column="0"
@@ -66,6 +66,23 @@
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
 
+            <VerticalStackLayout Grid.Column="3"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      Spacing="2">
+                <Image Source="calendar_outline.png"
+                    WidthRequest="24"
+                    HeightRequest="24"
+                    HorizontalOptions="Center"> 
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="{Binding ProgressColor}"/>
+                    </Image.Behaviors>
+                </Image>
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateCommand}"
+                               CommandParameter="calendar"/>
+                </VerticalStackLayout.GestureRecognizers>
+            </VerticalStackLayout>
         </Grid>
     </Border>
 
