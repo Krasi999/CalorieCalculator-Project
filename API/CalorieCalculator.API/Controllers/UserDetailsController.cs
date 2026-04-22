@@ -110,6 +110,43 @@ public class UserDetailsController : ControllerBase
         return Ok(new List<object>());
     }
 
+    [HttpGet("{userId:guid}/monthly-calories/{year:int}/{month:int}")]
+    public async Task<IActionResult> GetMonthlyCalories(Guid userId, int year, int month)
+    {
+        var details = await _services.Mediator.Send(new UserDetailsQuery
+        {
+            UserID = userId,
+            Includes = new string[] { }
+        });
+
+        if (details == null)
+            return NotFound();
+
+        // Целеви калории от TDEE
+        var tdee = details.CalculateTDEE();
+        var goal = details.CurrentGoal;
+        decimal targetCalories = tdee ?? 2000m;
+
+        // Корекция спрямо целта
+        targetCalories = goal switch
+        {
+            DataLayer.Enums.GoalType.WeightLoss => targetCalories - 500,
+            DataLayer.Enums.GoalType.WeightGain => targetCalories + 300,
+            DataLayer.Enums.GoalType.MuscleGain => targetCalories + 200,
+            _ => targetCalories
+        };
+
+        // TODO: Замени със заявка към реалната таблица за дневни калории
+        // когато Колега2 я направи
+        // Засега връщаме само целевите калории
+        return Ok(new
+        {
+            targetCalories = Math.Round(targetCalories),
+            // dailyCalories ще се попълни когато имаме таблица за записани храни
+            dailyCalories = new Dictionary<string, int>()
+        });
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]

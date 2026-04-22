@@ -9,7 +9,7 @@
             BackgroundColor="White"
             Padding="0"
             HeightRequest="56">
-        <Grid ColumnDefinitions="*,*,*"
+        <Grid ColumnDefinitions="*,*,*,*"
               HorizontalOptions="Fill">
 
             <VerticalStackLayout Grid.Column="0"
@@ -80,7 +80,7 @@
                 </Image>
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateCommand}"
-                               CommandParameter="calnedar"/>
+                               CommandParameter="calendar"/>
                 </VerticalStackLayout.GestureRecognizers>
             </VerticalStackLayout>
         </Grid>

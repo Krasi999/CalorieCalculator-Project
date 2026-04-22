@@ -1,9 +1,12 @@
-namespace CalorieCalculator.Views.MainView;
+using CalorieCalculator.ViewModels;
+
+namespace CalorieCalculator.Views;
 
 public partial class CalendarPage : ContentPage
 {
-	public CalendarPage()
-	{
-		InitializeComponent();
-	}
+    public CalendarPage(CalendarViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }

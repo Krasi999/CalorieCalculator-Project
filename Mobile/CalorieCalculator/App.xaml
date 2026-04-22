@@ -34,15 +34,8 @@
             <converters:BoolToSwitchTextConverter x:Key="BoolToSwitchTextConverter" />
             <converters:BoolToSwitchColorConverter x:Key="BoolToSwitchColorConverter" />
             <converters:BoolToFontAttrConverter x:Key="BoolToFontAttrConverter" />
-            <converters:BoolToDayColorConverter x:Key="BoolToDayColorConverter" />
-            <converters:BoolToDayBgConverter x:Key="BoolToDayBgConverter" />
-
-            <Style TargetType="TabBar">
-                <Setter Property="Shell.TabBarBackgroundColor" Value="White" />
-                <Setter Property="Shell.TabBarTitleColor" Value="#94A3B8" />
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#94A3B8" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="#22C55E" />
-            </Style>
+            <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" />
+            <converters:ProgressToSizeConverter x:Key="ProgressToSizeConverter" />
 
         </ResourceDictionary>
     </Application.Resources>
