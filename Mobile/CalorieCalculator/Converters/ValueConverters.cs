@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Microsoft.Maui.Controls.Shapes;
+using System.Globalization;
 
 namespace CalorieCalculator.Converters;
 public class StringToBoolConverter : IValueConverter
@@ -338,3 +339,127 @@ public class BoolToThumbMarginConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+
+public class ProgressToArcPathConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not double progress) return null;
+
+        // Параметри по подразбиране
+        double size = 34; // диаметър на пръстена
+        double strokeThickness = 3;
+
+        // Ако има параметър във формат "34,3" (size, thickness)
+        if (parameter is string paramStr)
+        {
+            var parts = paramStr.Split(',');
+            if (parts.Length >= 1) double.TryParse(parts[0], out size);
+            if (parts.Length >= 2) double.TryParse(parts[1], out strokeThickness);
+        }
+
+        // При прогрес >= 1.0 (или над цел) връщаме пълен кръг
+        if (progress >= 1.0)
+        {
+            return CreateFullCircleGeometry(size, strokeThickness);
+        }
+
+        // При прогрес <= 0 връщаме празно
+        if (progress <= 0.0)
+        {
+            return new PathGeometry();
+        }
+
+        return CreateArcGeometry(progress, size, strokeThickness);
+    }
+
+    private PathGeometry CreateArcGeometry(double progress, double size, double thickness)
+    {
+        double radius = (size - thickness) / 2;
+        double center = size / 2;
+
+        // Начална точка: 12 часа (top)
+        double startAngle = -90; // градуси
+        double sweepAngle = progress * 360;
+
+        // Преобразуване в радиани
+        double startRad = startAngle * Math.PI / 180;
+        double endRad = (startAngle + sweepAngle) * Math.PI / 180;
+
+        Point startPoint = new Point(
+            center + radius * Math.Cos(startRad),
+            center + radius * Math.Sin(startRad)
+        );
+
+        Point endPoint = new Point(
+            center + radius * Math.Cos(endRad),
+            center + radius * Math.Sin(endRad)
+        );
+
+        // Определяме дали дъгата е голяма (над 180 градуса)
+        bool isLargeArc = sweepAngle > 180;
+
+        var pathFigure = new PathFigure { StartPoint = startPoint };
+        pathFigure.Segments.Add(new ArcSegment
+        {
+            Point = endPoint,
+            Size = new Size(radius, radius),
+            IsLargeArc = isLargeArc,
+            SweepDirection = SweepDirection.Clockwise
+        });
+
+        var pathGeometry = new PathGeometry();
+        pathGeometry.Figures.Add(pathFigure);
+
+        return pathGeometry;
+    }
+
+    private PathGeometry CreateFullCircleGeometry(double size, double thickness)
+    {
+        double radius = (size - thickness) / 2;
+        double center = size / 2;
+
+        var pathGeometry = new PathGeometry();
+        var figure = new PathFigure
+        {
+            StartPoint = new Point(center, center - radius)
+        };
+
+        // Горна дясна четвърт
+        figure.Segments.Add(new ArcSegment
+        {
+            Point = new Point(center + radius, center),
+            Size = new Size(radius, radius),
+            SweepDirection = SweepDirection.Clockwise
+        });
+        // Долна дясна
+        figure.Segments.Add(new ArcSegment
+        {
+            Point = new Point(center, center + radius),
+            Size = new Size(radius, radius),
+            SweepDirection = SweepDirection.Clockwise
+        });
+        // Долна лява
+        figure.Segments.Add(new ArcSegment
+        {
+            Point = new Point(center - radius, center),
+            Size = new Size(radius, radius),
+            SweepDirection = SweepDirection.Clockwise
+        });
+        // Горна лява
+        figure.Segments.Add(new ArcSegment
+        {
+            Point = new Point(center, center - radius),
+            Size = new Size(radius, radius),
+            SweepDirection = SweepDirection.Clockwise
+        });
+
+        pathGeometry.Figures.Add(figure);
+        return pathGeometry;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
