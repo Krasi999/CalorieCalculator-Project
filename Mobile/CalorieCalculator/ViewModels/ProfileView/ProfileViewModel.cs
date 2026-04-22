@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Text.Json;
+using System.Windows.Input;
 
 namespace CalorieCalculator.ViewModels;
 
@@ -230,4 +231,13 @@ public partial class ProfileViewModel : ObservableObject
 
         await Shell.Current.GoToAsync("//Login");
     }
+
+    private bool _isAboutVisible = false;
+    public bool IsAboutVisible
+    {
+        get => _isAboutVisible;
+        set { _isAboutVisible = value; OnPropertyChanged(); }
+    }
+
+    public ICommand ToggleAboutCommand => new Command(() => IsAboutVisible = !IsAboutVisible);
 }

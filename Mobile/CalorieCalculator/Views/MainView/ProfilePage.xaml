@@ -159,29 +159,31 @@
                     </Grid>
                 </Border>
 
-                <!-- About -->
+                <!-- About row – tappable -->
                 <Border StrokeShape="RoundRectangle 16"
-                        Stroke="#E2E8F0" StrokeThickness="1"
-                        BackgroundColor="White" Padding="16">
+        Stroke="#E2E8F0" StrokeThickness="1"
+        BackgroundColor="White" Padding="16">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnAboutTapped" />
                     </Border.GestureRecognizers>
                     <Grid ColumnDefinitions="*,Auto">
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
                             <Label Text="За приложението"
-                                   FontSize="15" FontAttributes="Bold" TextColor="#1E293B" />
+                   FontSize="15" FontAttributes="Bold" TextColor="#1E293B" />
                             <Label Text="CalorieTracker v1.0"
-                                   FontSize="12" TextColor="#94A3B8" />
+                   FontSize="12" TextColor="#94A3B8" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="1" Text="›"
-                               FontSize="22" TextColor="#94A3B8" VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+               Text="{Binding IsAboutVisible, Converter={StaticResource BoolToChevronConverter}}"
+               FontSize="22" TextColor="#94A3B8" VerticalOptions="Center" />
                     </Grid>
                 </Border>
 
-                <!-- App description card -->
-                <Border StrokeShape="RoundRectangle 16"
-                        Stroke="#DBEAFE" StrokeThickness="1"
-                        Padding="0">
+                <!-- App description card – показва се само при натискане -->
+                <Border IsVisible="{Binding IsAboutVisible}"
+        StrokeShape="RoundRectangle 16"
+        Stroke="#DBEAFE" StrokeThickness="1"
+        Padding="0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="#EFF6FF" Offset="0.0" />
@@ -192,9 +194,9 @@
 
                         <VerticalStackLayout Spacing="4">
                             <Label Text="CalorieTracker"
-                                   FontSize="18" FontAttributes="Bold" TextColor="#1E40AF" />
+                   FontSize="18" FontAttributes="Bold" TextColor="#1E40AF" />
                             <Label Text="Твоят интелигентен хранителен дневник"
-                                   FontSize="12" TextColor="#3B82F6" FontAttributes="Italic" />
+                   FontSize="12" TextColor="#3B82F6" FontAttributes="Italic" />
                         </VerticalStackLayout>
 
                         <BoxView HeightRequest="1" Color="#BFDBFE" />
@@ -203,61 +205,61 @@
 
                             <Grid ColumnDefinitions="36,*" ColumnSpacing="12">
                                 <Border Grid.Column="0" StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0" BackgroundColor="#DBEAFE"
-                                        WidthRequest="36" HeightRequest="36">
+                        StrokeThickness="0" BackgroundColor="#DBEAFE"
+                        WidthRequest="36" HeightRequest="36">
                                     <Label Text="🔥" FontSize="16"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                           HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="Проследяване на калории"
-                                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
+                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
                                     <Label Text="Следи дневния си прием и оставащите калории в реално време."
-                                           FontSize="11" TextColor="#64748B" />
+                           FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
                             </Grid>
 
                             <Grid ColumnDefinitions="36,*" ColumnSpacing="12">
                                 <Border Grid.Column="0" StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0" BackgroundColor="#D1FAE5"
-                                        WidthRequest="36" HeightRequest="36">
+                        StrokeThickness="0" BackgroundColor="#D1FAE5"
+                        WidthRequest="36" HeightRequest="36">
                                     <Label Text="📷" FontSize="16"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                           HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="Сканиране на баркод"
-                                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
+                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
                                     <Label Text="Насочи камерата към продукт и получи хранителната информация мигновено."
-                                           FontSize="11" TextColor="#64748B" />
+                           FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
                             </Grid>
 
                             <Grid ColumnDefinitions="36,*" ColumnSpacing="12">
                                 <Border Grid.Column="0" StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0" BackgroundColor="#FEF3C7"
-                                        WidthRequest="36" HeightRequest="36">
+                        StrokeThickness="0" BackgroundColor="#FEF3C7"
+                        WidthRequest="36" HeightRequest="36">
                                     <Label Text="🎯" FontSize="16"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                           HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="Персонализирани цели"
-                                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
+                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
                                     <Label Text="Отслабване, поддържане или качване на тегло — планът се адаптира към теб."
-                                           FontSize="11" TextColor="#64748B" />
+                           FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
                             </Grid>
 
                             <Grid ColumnDefinitions="36,*" ColumnSpacing="12">
                                 <Border Grid.Column="0" StrokeShape="RoundRectangle 10"
-                                        StrokeThickness="0" BackgroundColor="#EDE9FE"
-                                        WidthRequest="36" HeightRequest="36">
+                        StrokeThickness="0" BackgroundColor="#EDE9FE"
+                        WidthRequest="36" HeightRequest="36">
                                     <Label Text="🔐" FontSize="16"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                           HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                     <Label Text="Биометрична сигурност"
-                                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
+                           FontSize="13" FontAttributes="Bold" TextColor="#1E293B" />
                                     <Label Text="Влизай бързо и сигурно с пръстов отпечатък или Face ID."
-                                           FontSize="11" TextColor="#64748B" />
+                           FontSize="11" TextColor="#64748B" />
                                 </VerticalStackLayout>
                             </Grid>
 
@@ -266,8 +268,8 @@
                         <BoxView HeightRequest="1" Color="#BFDBFE" />
 
                         <Label Text="Разработено от екип CalorieCalculator · 2026"
-                               FontSize="11" TextColor="#94A3B8"
-                               HorizontalTextAlignment="Center" FontAttributes="Italic" />
+               FontSize="11" TextColor="#94A3B8"
+               HorizontalTextAlignment="Center" FontAttributes="Italic" />
                     </VerticalStackLayout>
                 </Border>
 

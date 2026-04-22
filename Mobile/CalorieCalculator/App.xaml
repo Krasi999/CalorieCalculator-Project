@@ -30,6 +30,7 @@
             <converters:BoolToActiveBorderConverter x:Key="BoolToActiveBorderConverter" />
             <converters:BoolToToggleStrokeConverter x:Key="BoolToToggleStrokeConverter" />
             <converters:BoolToToggleActiveStrokeConverter x:Key="BoolToToggleActiveStrokeConverter" />
+            <converters:BoolToChevronConverter x:Key="BoolToChevronConverter" />
             <converters:BoolToSwitchColorConverter x:Key="BoolToSwitchColorConverter" />
             <converters:BoolToFontAttrConverter x:Key="BoolToFontAttrConverter" />
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" />
