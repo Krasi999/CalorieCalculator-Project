@@ -102,14 +102,6 @@ public class UserDetailsController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("calories/{userId:guid}")]
-    public async Task<IActionResult> GetCaloriesByDate(Guid userId, [FromQuery] int year, [FromQuery] int month)
-    {
-        // TODO: Колега2 трябва да имплементира реалното четене от таблицата с храни
-        // Засега връщаме празен списък — ще се попълни когато има данни
-        return Ok(new List<object>());
-    }
-
     [HttpGet("{userId:guid}/monthly-calories/{year:int}/{month:int}")]
     public async Task<IActionResult> GetMonthlyCalories(Guid userId, int year, int month)
     {
@@ -127,7 +119,6 @@ public class UserDetailsController : ControllerBase
         var goal = details.CurrentGoal;
         decimal targetCalories = tdee ?? 2000m;
 
-        // Корекция спрямо целта
         targetCalories = goal switch
         {
             DataLayer.Enums.GoalType.WeightLoss => targetCalories - 500,
@@ -136,15 +127,69 @@ public class UserDetailsController : ControllerBase
             _ => targetCalories
         };
 
-        // TODO: Замени със заявка към реалната таблица за дневни калории
-        // когато Колега2 я направи
-        // Засега връщаме само целевите калории
+        // Реални дневни калории от базата
+        var startDate = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endDate = startDate.AddMonths(1);
+
+        var dailyRecords = _services.Repository.SetNoTracking<DataLayer.Models.Users.DailyCalories>()
+            .Where(dc => dc.UserId == userId && dc.Date >= startDate && dc.Date < endDate)
+            .ToList();
+
+        var dailyCalories = dailyRecords.ToDictionary(
+            dc => dc.Date.ToString("yyyy-MM-dd"),
+            dc => dc.CaloriesEaten);
+
         return Ok(new
         {
             targetCalories = Math.Round(targetCalories),
-            // dailyCalories ще се попълни когато имаме таблица за записани храни
-            dailyCalories = new Dictionary<string, int>()
+            dailyCalories
         });
+    }
+
+    [HttpPost("daily-calories")]
+    public async Task<IActionResult> SaveDailyCalories([FromBody] SaveDailyCaloriesRequest request)
+    {
+        var existing = _services.Repository.Set<DataLayer.Models.Users.DailyCalories>()
+            .FirstOrDefault(dc => dc.UserId == request.UserId
+                && dc.Date.Date == request.Date.Date);
+
+        if (existing != null)
+        {
+            existing.SetCalories(request.CaloriesEaten);
+        }
+        else
+        {
+            var record = new DataLayer.Models.Users.DailyCalories(
+                request.UserId, request.Date, request.CaloriesEaten);
+            await _services.Repository.Add(record);
+        }
+
+        await _services.Repository.SaveChanges();
+        return Ok();
+    }
+
+    // Endpoint за добавяне на калории към деня (от MainPage при добавяне на храна)
+    [HttpPost("add-calories")]
+    public async Task<IActionResult> AddDailyCalories([FromBody] AddDailyCaloriesRequest request)
+    {
+        var today = DateTime.UtcNow.Date;
+
+        var existing = _services.Repository.Set<DataLayer.Models.Users.DailyCalories>()
+            .FirstOrDefault(dc => dc.UserId == request.UserId && dc.Date.Date == today);
+
+        if (existing != null)
+        {
+            existing.AddCalories(request.Calories);
+        }
+        else
+        {
+            var record = new DataLayer.Models.Users.DailyCalories(
+                request.UserId, today, request.Calories);
+            await _services.Repository.Add(record);
+        }
+
+        await _services.Repository.SaveChanges();
+        return Ok();
     }
 
     /*

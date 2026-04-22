@@ -1,5 +1,6 @@
 ﻿using DataLayer.Models;
 using DataLayer.Models.Common;
+using DataLayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Data;
@@ -21,6 +22,7 @@ public class AppDbContext : DbContext
     public DbSet<UserDetails> UserDetails { get; set; }
     public DbSet<UserGoal> UserGoals { get; set; }
     public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+    public DbSet<DailyCalories> DailyCalories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
