@@ -179,4 +179,6 @@ public class AuthApiService
     }
 
     private record RegisterResultDto(Guid UserId);
+
+
 }
