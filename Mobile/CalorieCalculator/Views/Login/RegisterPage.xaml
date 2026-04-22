@@ -15,7 +15,6 @@
             Spacing="0"
             HorizontalOptions="Fill">
 
-            <!-- Logo -->
             <Grid HeightRequest="90"
                   WidthRequest="90"
                   HorizontalOptions="Center"
@@ -51,7 +50,6 @@
                    HorizontalTextAlignment="Center"
                    Margin="0,0,0,28" />
 
-            <!-- Email -->
             <Label Text="Имейл"
                    FontSize="13"
                    FontAttributes="Bold"
@@ -72,7 +70,6 @@
                        BackgroundColor="Transparent" />
             </Border>
 
-            <!-- Password -->
             <Label Text="Парола"
                    FontSize="13"
                    FontAttributes="Bold"
@@ -106,7 +103,6 @@
                 </Grid>
             </Border>
 
-            <!-- Password requirements -->
             <VerticalStackLayout Margin="4,2,0,18"
                                  Spacing="4">
 
@@ -156,7 +152,6 @@
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
-            <!-- Confirm password -->
             <Label Text="Потвърди парола"
                    FontSize="13"
                    FontAttributes="Bold"
@@ -190,7 +185,6 @@
                 </Grid>
             </Border>
 
-            <!-- Error message -->
             <Label Text="{Binding ErrorMessage}"
                    TextColor="#EF4444"
                    FontSize="13"
@@ -198,7 +192,6 @@
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
                    Margin="0,0,0,10" />
 
-            <!-- Register button -->
             <Button Text="Регистрация"
                     Command="{Binding RegisterCommand}"
                     FontSize="16"
@@ -210,14 +203,12 @@
                     Margin="0,0,0,14"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
 
-            <!-- Activity indicator -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                Color="#3DB89E"
                                HeightRequest="30"
                                Margin="0,0,0,10" />
 
-            <!-- Divider -->
             <Grid ColumnDefinitions="*,Auto,*"
                   Margin="0,0,0,20">
                 <BoxView Grid.Column="0"
@@ -235,7 +226,6 @@
                          VerticalOptions="Center" />
             </Grid>
 
-            <!-- Login link -->
             <HorizontalStackLayout HorizontalOptions="Center"
                                    Spacing="5"
                                    Margin="0,0,0,20">
