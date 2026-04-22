@@ -54,16 +54,16 @@ public partial class CalendarViewModel : ObservableObject
 
         if (day.Date > _today)
         {
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} все още няма записани данни.";
+            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} все още няма записани данни!";
         }
         else if (day.CaloriesEaten > 0)
         {
-            var status = day.IsOverTarget ? "⚠️ Надвишен лимит!" : "✅ В рамките на целта";
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} си изял {day.CaloriesEaten} от {(int)_targetCalories} калории. {status}";
+            var status = day.IsOverTarget ? "Внимавай, превишил си дневния си лимит!" : "Поздравления, спазил си дневния силимит!";
+            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} си изял {day.CaloriesEaten} от {(int)_targetCalories} калории! {status}";
         }
         else
         {
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} няма записани калории.";
+            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} няма записани калории!";
         }
 
         OnPropertyChanged(nameof(SelectedDayInfo));
@@ -84,7 +84,6 @@ public partial class CalendarViewModel : ObservableObject
         var firstDayOfWeek = (int)firstDay.DayOfWeek;
         var mondayOffset = firstDayOfWeek == 0 ? 6 : firstDayOfWeek - 1;
 
-        // Дни от предишния месец
         var prevMonth = _currentMonth.AddMonths(-1);
         var daysInPrevMonth = DateTime.DaysInMonth(prevMonth.Year, prevMonth.Month);
         for (int i = mondayOffset - 1; i >= 0; i--)
@@ -93,7 +92,6 @@ public partial class CalendarViewModel : ObservableObject
             Days.Add(CreateDayItem(date, false));
         }
 
-        // Дни от текущия месец
         var daysInMonth = DateTime.DaysInMonth(_currentMonth.Year, _currentMonth.Month);
         for (int d = 1; d <= daysInMonth; d++)
         {
@@ -101,7 +99,6 @@ public partial class CalendarViewModel : ObservableObject
             Days.Add(CreateDayItem(date, true));
         }
 
-        // Попълваме до 42 клетки
         var remaining = 42 - Days.Count;
         var nextMonth = _currentMonth.AddMonths(1);
         for (int i = 1; i <= remaining; i++)
@@ -159,12 +156,12 @@ public partial class CalendarViewModel : ObservableObject
                                 day.CaloriesEaten = eaten;
                                 day.CaloriesProgress = Math.Min(eaten / (double)_targetCalories, 1.0);
                                 day.IsOverTarget = eaten > (int)_targetCalories;
-                                OnPropertyChanged(nameof(Days));
                             }
                         }
                     }
                 }
             }
+            OnPropertyChanged(nameof(Days));
         }
         catch (Exception ex)
         {
@@ -173,7 +170,7 @@ public partial class CalendarViewModel : ObservableObject
     }
 }
 
-public class CalendarDayItem : ObservableObject
+public partial class CalendarDayItem : ObservableObject
 {
     public DateTime Date { get; set; }
     public string DayNumber { get; set; } = string.Empty;
@@ -192,11 +189,13 @@ public class CalendarDayItem : ObservableObject
         get => _isSelected;
         set
         {
-            SetProperty(ref _isSelected, value);
-            OnPropertyChanged(nameof(TextColor));
-            OnPropertyChanged(nameof(DayBackgroundColor));
-            OnPropertyChanged(nameof(BorderColor));
-            OnPropertyChanged(nameof(BorderThickness));
+            if (SetProperty(ref _isSelected, value))
+            {
+                OnPropertyChanged(nameof(TextColor));
+                OnPropertyChanged(nameof(DayBackgroundColor));
+                OnPropertyChanged(nameof(SelectionRingColor));
+                OnPropertyChanged(nameof(SelectionRingThickness));
+            }
         }
     }
 
@@ -208,9 +207,12 @@ public class CalendarDayItem : ObservableObject
         get => _caloriesProgress;
         set
         {
-            SetProperty(ref _caloriesProgress, value);
-            OnPropertyChanged(nameof(HasCalories));
-            OnPropertyChanged(nameof(RingColor));
+            if (SetProperty(ref _caloriesProgress, value))
+            {
+                OnPropertyChanged(nameof(HasCalories));
+                OnPropertyChanged(nameof(CalorieRingColor));
+                OnPropertyChanged(nameof(ProgressForArc)); // уведомява конвертора
+            }
         }
     }
 
@@ -220,25 +222,36 @@ public class CalendarDayItem : ObservableObject
         get => _isOverTarget;
         set
         {
-            SetProperty(ref _isOverTarget, value);
-            OnPropertyChanged(nameof(RingColor));
+            if (SetProperty(ref _isOverTarget, value))
+            {
+                OnPropertyChanged(nameof(CalorieRingColor));
+                OnPropertyChanged(nameof(ProgressForArc));
+            }
         }
     }
 
     public bool HasCalories => CaloriesProgress > 0;
 
-    // Цвят на кръгчето
-    public Color RingColor => IsOverTarget ? Color.FromArgb("#EF4444") : Color.FromArgb("#22C55E");
+    // Това свойство подаваме на конвертора – при надвишаване връща 1.0
+    public double ProgressForArc => IsOverTarget ? 1.0 : CaloriesProgress;
 
-    // Цвят на текста
-    public Color TextColor => IsToday ? Colors.White
-        : IsCurrentMonth ? Color.FromArgb("#1E293B")
-        : Color.FromArgb("#CBD5E1");
+    public Color DayBackgroundColor => IsToday
+        ? Color.FromArgb("#3B82F6")
+        : Colors.Transparent;
 
-    // Фон на деня
-    public Color DayBackgroundColor => IsToday ? Color.FromArgb("#22C55E") : Colors.Transparent;
+    public Color TextColor => IsToday
+        ? Colors.White
+        : IsCurrentMonth
+            ? Color.FromArgb("#1E293B")
+            : Color.FromArgb("#CBD5E1");
 
-    // Рамка при селекция (зелен контур, без запълване)
-    public Color BorderColor => IsSelected ? Color.FromArgb("#22C55E") : Colors.Transparent;
-    public double BorderThickness => IsSelected ? 2 : 0;
+    public Color CalorieRingColor => IsOverTarget
+        ? Color.FromArgb("#EF4444")
+        : Color.FromArgb("#22C55E");
+
+    public Color SelectionRingColor => IsSelected
+        ? Color.FromArgb("#3B82F6")
+        : Colors.Transparent;
+
+    public double SelectionRingThickness => IsSelected ? 2 : 0;
 }

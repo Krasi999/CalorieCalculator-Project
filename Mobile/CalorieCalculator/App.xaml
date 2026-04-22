@@ -37,7 +37,7 @@
             <converters:ProgressToSizeConverter x:Key="ProgressToSizeConverter" />
             <converters:BoolToThumbAlignConverter  x:Key="BoolToThumbAlignConverter" />
             <converters:BoolToThumbMarginConverter x:Key="BoolToThumbMarginConverter" />
-
+            <converters:ProgressToArcPathConverter x:Key="ProgressToArcPathConverterr" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
