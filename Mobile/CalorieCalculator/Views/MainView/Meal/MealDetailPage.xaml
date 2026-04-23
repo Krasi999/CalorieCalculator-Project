@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="CalorieCalculator.Views.MainView.Meal.MealDetailPage"
              x:Name="ThisPage"
              BackgroundColor="#1A1A2E"
@@ -8,7 +9,6 @@
 
     <Grid RowDefinitions="Auto,Auto,*,Auto">
 
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*,Auto">
             <Button Grid.Column="0"
                     Text="←"
@@ -24,7 +24,6 @@
                    TextColor="White"
                    VerticalOptions="Center"/>
 
-            <!-- Add more food button -->
             <Label Grid.Column="2"
                    Text="+"
                    FontSize="28"
@@ -37,7 +36,6 @@
             </Label>
         </Grid>
 
-        <!-- Summary -->
         <Frame Grid.Row="1"
                Margin="20,5,20,10"
                Padding="15"
@@ -93,7 +91,6 @@
             </Grid>
         </Frame>
 
-        <!-- Food List -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Foods}"
                         Margin="10,0">
@@ -119,85 +116,56 @@
                            Padding="15"
                            Margin="10,5"
                            HasShadow="False"
-                           BorderColor="Transparent">
-                        <Grid RowDefinitions="Auto,Auto,Auto"
-                              ColumnDefinitions="*,Auto">
+                           BorderColor="Transparent">       
+                        <Grid ColumnDefinitions="*,Auto,Auto">
 
-                            <!-- Product Name and Calories -->
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="{Binding ProductName}"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="White"/>
+                            <VerticalStackLayout Grid.Column="0"
+                                     VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label FontSize="12"
+                                       TextColor="#888"
+                                       Margin="0,4,0,0">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} kcal  |  P: {1:F1}g  C: {2:F1}g  F: {3:F1}g  |  {4}g">
+                                            <Binding Path="Calories"/>
+                                            <Binding Path="Protein"/>
+                                            <Binding Path="Carbs"/>
+                                            <Binding Path="Fats"/>
+                                            <Binding Path="Weight"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
 
-                            <Label Grid.Row="0" Grid.Column="1"
-                                   Text="{Binding Calories, StringFormat='{0} kcal'}"
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   TextColor="#4DB6AC"
-                                   VerticalOptions="Center"/>
+                            <Image Grid.Column="1"
+                                   Source="pencil_icon.png"
+                                   WidthRequest="20"
+                                   HeightRequest="20"
+                                   VerticalOptions="Center"
+                                   Margin="10,0,8,0">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="#4DB6AC"/>
+                                </Image.Behaviors>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnEditWeightTapped"
+                                              CommandParameter="{Binding .}"/>
+                                </Image.GestureRecognizers>
+                            </Image>
 
-                            <!-- Macros -->
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                   FontSize="12"
-                                   TextColor="#888"
-                                   Margin="0,4,0,0">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="P: {0:F1}g  C: {1:F1}g  F: {2:F1}g  |  {3}g">
-                                        <Binding Path="Protein"/>
-                                        <Binding Path="Carbs"/>
-                                        <Binding Path="Fats"/>
-                                        <Binding Path="Weight"/>
-                                    </MultiBinding>
-                                </Label.Text>
+                            <Label Grid.Column="2"
+                                   Text="✕"
+                                   FontSize="20"
+                                   TextColor="#FF6B6B"
+                                   VerticalOptions="Center"
+                                   Margin="8,0,5,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnDeleteFoodTapped"
+                                              CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
                             </Label>
-
-                            <!-- Action Buttons -->
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                                   Spacing="15"
-                                                   Margin="0,10,0,0">
-
-                                <!-- Edit Weight -->
-                                <Frame BackgroundColor="#3D3D54"
-                                       CornerRadius="8"
-                                       Padding="12,6"
-                                       HasShadow="False"
-                                       BorderColor="Transparent">
-                                    <HorizontalStackLayout Spacing="5">
-                                        <Label Text="✏️" FontSize="14" VerticalOptions="Center"/>
-                                        <Label Text="Промени грамаж"
-                                               FontSize="12"
-                                               TextColor="White"
-                                               VerticalOptions="Center"/>
-                                    </HorizontalStackLayout>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding BindingContext.EditWeightCommand, Source={x:Reference ThisPage}}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-
-                                <!-- Delete -->
-                                <Frame BackgroundColor="#4A2030"
-                                       CornerRadius="8"
-                                       Padding="12,6"
-                                       HasShadow="False"
-                                       BorderColor="Transparent">
-                                    <HorizontalStackLayout Spacing="5">
-                                        <Label Text="🗑️" FontSize="14" VerticalOptions="Center"/>
-                                        <Label Text="Изтрий"
-                                               FontSize="12"
-                                               TextColor="#FF6B6B"
-                                               VerticalOptions="Center"/>
-                                    </HorizontalStackLayout>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding BindingContext.DeleteFoodCommand, Source={x:Reference ThisPage}}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-
-                            </HorizontalStackLayout>
 
                         </Grid>
                     </Frame>

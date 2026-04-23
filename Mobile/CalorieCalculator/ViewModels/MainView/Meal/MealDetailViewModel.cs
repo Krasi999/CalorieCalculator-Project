@@ -136,14 +136,6 @@ public class MealDetailViewModel : INotifyPropertyChanged
 
     private async Task DeleteFoodAsync(MealFoodDTO food)
     {
-        var confirm = await Shell.Current.DisplayAlert(
-            "Изтриване",
-            $"Сигурни ли сте, че искате да изтриете {food.Name}?",
-            "Изтрий",
-            "Отказ");
-
-        if (!confirm) return;
-
         try
         {
             await _apiService.PostAsync($"api/dailyprogram/meal/delete-food", food.MealFoodID);

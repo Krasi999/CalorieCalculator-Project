@@ -56,7 +56,7 @@ public class DailyProgramController : ControllerBase
     }
 
     [HttpPost("meal/delete-food")]
-    public async Task<IActionResult> RemoveFoodFromMeal(int mealFoodId)
+    public async Task<IActionResult> RemoveFoodFromMeal([FromBody] int mealFoodId)
     {
         var result = await _services.Mediator.Send(new FoodToMealDeleteCommand
         {

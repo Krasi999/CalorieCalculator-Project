@@ -1,3 +1,6 @@
+using CalorieCalculator.Models;
+using CalorieCalculator.ViewModels.MainView.Meal;
+
 namespace CalorieCalculator.Views.MainView.Meal;
 
 [QueryProperty(nameof(MealID), "MealID")]
@@ -22,5 +25,21 @@ public partial class MealDetailPage : ContentPage
     {
         base.OnAppearing();
         _viewModel.LoadCommand.Execute(null);
+    }
+
+    private void OnEditWeightTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is MealFoodDTO food)
+        {
+            _viewModel.EditWeightCommand.Execute(food);
+        }
+    }
+
+    private void OnDeleteFoodTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is MealFoodDTO food)
+        {
+            _viewModel.DeleteFoodCommand.Execute(food);
+        }
     }
 }

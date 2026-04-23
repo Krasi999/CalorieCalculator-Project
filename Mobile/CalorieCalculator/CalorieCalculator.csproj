@@ -73,6 +73,9 @@
 	  <Compile Update="Views\MainView\Food\CreateProductPage.xaml.cs">
 	    <DependentUpon>CreateProductPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\MainView\Meal\MealDetailPage.xaml.cs">
+	    <DependentUpon>MealDetailPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -97,7 +100,7 @@
 	  <MauiXaml Update="Views\MainView\Food\CreateProductPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MainView\Meal\MealDetail.xaml">
+	  <MauiXaml Update="Views\MainView\Meal\MealDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MainView\ProfilePage.xaml">
