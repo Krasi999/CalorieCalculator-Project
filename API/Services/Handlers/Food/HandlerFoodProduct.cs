@@ -51,8 +51,22 @@ public class HandlerFoodProduct :
     {
         using var transaction = await _services.Repository.BeginTransaction();
 
-        int mealId;
+        if (request.MealFoodID.HasValue && request.MealFoodID.Value > 0)
+        {
+            var existingMealFood = _services.Repository.Set<MealFood>()
+                .First(mf => mf.MealFoodID == request.MealFoodID.Value);
 
+            existingMealFood.Update(request.Weight);
+
+            _services.Repository.Save(existingMealFood, true);
+            await _services.Repository.SaveChanges();
+
+            transaction.Commit();
+
+            return existingMealFood.MealID;
+        }
+
+        int mealId;
         if (request.MealID.HasValue && request.MealID.Value > 0)
         {
             mealId = request.MealID.Value;
@@ -63,6 +77,7 @@ public class HandlerFoodProduct :
 
             await _services.Repository.Add(meal);
             await _services.Repository.SaveChanges();
+
             mealId = meal.MealID;
         }
 

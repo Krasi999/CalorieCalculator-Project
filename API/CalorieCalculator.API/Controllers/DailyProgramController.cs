@@ -44,6 +44,7 @@ public class DailyProgramController : ControllerBase
     {
         var mealId = await _services.Mediator.Send(new FoodToMealCommand
         {
+            MealFoodID = request.MealFoodID,
             ProgramID = request.ProgramID,
             MealType = request.MealType,
             MealID = request.MealID,
