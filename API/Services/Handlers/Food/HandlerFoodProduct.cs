@@ -1,5 +1,6 @@
 ﻿using DataLayer.Models;
 using MediatR;
+using Services.Queries;
 
 
 namespace Services.Handlers.Food;
@@ -7,9 +8,11 @@ namespace Services.Handlers.Food;
 public class HandlerFoodProduct :
     IRequestHandler<FoodProductCommand, Unit>,
     IRequestHandler<FoodToMealCommand, int>,
+    IRequestHandler<FoodToMealDeleteCommand, bool>,
     IRequestHandler<FoodProductQuery, FoodProduct?>,
     IRequestHandler<FoodProductsQuery, List<FoodProduct>>,
-    IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>
+    IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>,
+    IRequestHandler<MealFoodsQuery, List<MealFoodResponse>>
 {
     private readonly IServices _services;
 
@@ -73,6 +76,23 @@ public class HandlerFoodProduct :
         return mealId;
     }
 
+    public async Task<bool> Handle(FoodToMealDeleteCommand request, CancellationToken cancellationToken)
+    {
+        using var transaction = await _services.Repository.BeginTransaction();
+
+        var mealFood = _services.Repository.Set<MealFood>().FirstOrDefault(mf => mf.MealFoodID == request.MealFoodID);
+
+        if (mealFood == null)
+            return false;
+
+        _services.Repository.Delete(mealFood);
+        await _services.Repository.SaveChanges();
+
+        transaction.Commit();
+
+        return true;
+    }
+
     public async Task<FoodProduct?> Handle(FoodProductQuery request, CancellationToken cancellationToken)
     {
         return _services.Repository.SetNoTracking<FoodProduct>().Where(p => p.ProductID == request.ProductID).FirstOrDefault();
@@ -99,5 +119,23 @@ public class HandlerFoodProduct :
     public async Task<List<FoodCategory>> Handle(FoodCategoriesQuery request, CancellationToken cancellationToken)
     {
         return _services.Repository.SetNoTracking<FoodCategory>().OrderBy(recod => recod.Name).ToList();
+    }
+
+    public async Task<List<MealFoodResponse>> Handle(MealFoodsQuery request, CancellationToken cancellationToken)
+    {
+        return _services.Repository.SetNoTracking<MealFood>(nameof(MealFood.FoodProduct))
+            .Where(mf => mf.MealID == request.MealID)
+            .Select(mf => new MealFoodResponse
+            {
+                MealFoodID = mf.MealFoodID,
+                ProductID = mf.ProductID,
+                Name = mf.FoodProduct != null ? mf.FoodProduct.Name ?? "" : "",
+                Weight = mf.Weight,
+                Calories = (int)Math.Round((mf.FoodProduct != null ? mf.FoodProduct.Calories : 0) * mf.Weight / 100.0),
+                Protein = Math.Round((mf.FoodProduct != null ? mf.FoodProduct.Protein : 0) * mf.Weight / 100m, 1),
+                Carbs = Math.Round((mf.FoodProduct != null ? mf.FoodProduct.Carbs : 0) * mf.Weight / 100m, 1),
+                Fats = Math.Round((mf.FoodProduct != null ? mf.FoodProduct.Fats : 0) * mf.Weight / 100m, 1)
+            })
+            .ToList();
     }
 }

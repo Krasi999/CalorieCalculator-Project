@@ -177,7 +177,7 @@
                                            BackgroundColor="#F0F7F4"
                                            HasShadow="False"
                                            BorderColor="Transparent"
-                                           VerticalOptions="Center">
+                                           VerticalOptions="Center">                
                                         <Label Text="{Binding Icon}"
                                                FontSize="22"
                                                HorizontalOptions="Center"
@@ -185,30 +185,45 @@
                                     </Frame>
 
                                     <VerticalStackLayout Grid.Column="1"
-                                                         VerticalOptions="Center"
-                                                         Padding="10,0,0,0">
+                                     VerticalOptions="Center"
+                                     Padding="10,0,0,0">
                                         <Label Text="{Binding MealName}"
                                                FontSize="16"
                                                FontAttributes="Bold"
                                                TextColor="#1A1A2E"/>
-                                        <Label Text="{Binding TotalCalories, StringFormat='{0} Cal'}"
+                                                            <Label Text="{Binding TotalCalories, StringFormat='{0} Cal'}"
                                                FontSize="13"
                                                TextColor="#9E9E9E"/>
                                     </VerticalStackLayout>
 
-                                    <Button Grid.Column="2"
-                                            Text="+"
-                                            FontSize="20"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            CornerRadius="20"
-                                            BackgroundColor="#4DB6AC"
-                                            TextColor="White"
-                                            Padding="0"
-                                            VerticalOptions="Center"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddMealCommand}"
-                                            CommandParameter="{Binding .}"/>
+                                    <Frame Grid.Column="2"
+                                           WidthRequest="40"
+                                           HeightRequest="40"
+                                           CornerRadius="20"
+                                           BackgroundColor="#4DB6AC"
+                                           Padding="0"
+                                           HasShadow="False"
+                                           BorderColor="Transparent"
+                                           VerticalOptions="Center">
+                                        <Label Text="+"
+                                               FontSize="20"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding BindingContext.AddMealCommand, Source={x:Reference ThisPage}}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+
                                 </Grid>
+
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.ViewMealCommand, Source={x:Reference ThisPage}}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

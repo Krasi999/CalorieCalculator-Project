@@ -147,7 +147,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
 
             var request = new FoodToMealRequest(ProgramID, MealType, MealID, ProductID, (int)grams);
 
-            await _apiService.PostAsync<object>("api/dailyprogram/meal/add-food", request);
+            await _apiService.PostAsync<object>("api/dailyprogram/meal/food-to-meal", request);
 
             await Shell.Current.GoToAsync("//MainPage");
         }
