@@ -160,6 +160,18 @@ public partial class ProfileViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void CancelEditNickname()
+    {
+        editNickname = string.Empty;
+        OnPropertyChanged(nameof(EditNickname));
+        isEditingNickname = false;
+        OnPropertyChanged(nameof(IsEditingNickname));
+        errorMessage = string.Empty;
+        OnPropertyChanged(nameof(ErrorMessage));
+    }
+
+
+    [RelayCommand]
     private async Task SaveNicknameAsync()
     {
         if (string.IsNullOrWhiteSpace(editNickname) || editNickname.Length < 2)
