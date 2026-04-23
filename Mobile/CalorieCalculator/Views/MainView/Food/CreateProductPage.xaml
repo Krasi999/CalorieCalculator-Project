@@ -84,7 +84,7 @@
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
-                    <Label Text="Грамаж (g)"
+                    <Label Text="Грамаж (г)"
                            FontSize="13"
                            TextColor="#888"/>
                     <Frame BackgroundColor="#2D2D44"
@@ -103,7 +103,7 @@
                     </Frame>
                 </VerticalStackLayout>
 
-                <Label Text="Хранителни стойности (на 100g)"
+                <Label Text="Хранителни стойности (на 100г)"
                        FontSize="15"
                        FontAttributes="Bold"
                        TextColor="#4DB6AC"
@@ -130,7 +130,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Column="1" Spacing="5">
-                        <Label Text="Протеин (g)"
+                        <Label Text="Протеин (г)"
                                FontSize="13"
                                TextColor="#888"/>
                         <Frame BackgroundColor="#2D2D44"
@@ -151,7 +151,7 @@
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                     <VerticalStackLayout Grid.Column="0" Spacing="5">
-                        <Label Text="Въглехидрати (g)"
+                        <Label Text="Въглехидрати (г)"
                                FontSize="13"
                                TextColor="#888"/>
                         <Frame BackgroundColor="#2D2D44"
@@ -170,7 +170,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Column="1" Spacing="5">
-                        <Label Text="Мазнини (g)"
+                        <Label Text="Мазнини (г)"
                                FontSize="13"
                                TextColor="#888"/>
                         <Frame BackgroundColor="#2D2D44"

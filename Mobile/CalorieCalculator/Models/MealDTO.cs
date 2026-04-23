@@ -7,12 +7,13 @@ public class MealDTO
     public bool Exists { get; set; }
     public string MealName => MealType switch
     {
-        1 => "Breakfast",
-        2 => "Lunch",
-        3 => "Dinner",
-        4 => "Snacks",
-        _ => "Other"
+        1 => "Закуска",
+        2 => "Обяд",
+        3 => "Вечеря",
+        4 => "Снакс",
+        _ => "Ястие"
     };
+
     public string Icon => MealType switch
     {
         1 => "🥣",
@@ -21,6 +22,8 @@ public class MealDTO
         4 => "🍎",
         _ => "🍽"
     };
+
     public List<MealFoodDTO> Foods { get; set; } = new();
-    public int TotalCalories => Foods.Sum(f => f.Calories);
+
+    public int TotalCalories => Foods.Sum(food => food.Calories);
 }

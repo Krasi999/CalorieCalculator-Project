@@ -2,6 +2,7 @@
 using CalorieCalculator.Service;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -10,9 +11,31 @@ namespace CalorieCalculator.ViewModels;
 public class MainViewModel : INotifyPropertyChanged
 {
     private readonly ApiService _apiService;
+    private int _programId;
+    private DateTime _currentDate;
+
+    private string _dateDisplay = "Днес";
+    public string DateDisplay
+    {
+        get => _dateDisplay;
+        set { _dateDisplay = value; OnPropertyChanged(); }
+    }
+
+    private bool _hasPrevious;
+    public bool HasPrevious
+    {
+        get => _hasPrevious;
+        set { _hasPrevious = value; OnPropertyChanged(); }
+    }
+
+    private bool _hasNext;
+    public bool HasNext
+    {
+        get => _hasNext;
+        set { _hasNext = value; OnPropertyChanged(); }
+    }
 
     private int _caloriesPerDay;
-    private int _programId;
 
     public int CaloriesPerDay
     {
@@ -91,14 +114,19 @@ public class MainViewModel : INotifyPropertyChanged
     public ICommand LoadCommand { get; }
     public ICommand AddMealCommand { get; }
     public ICommand ViewMealCommand { get; }
+    public ICommand PreviousDayCommand { get; }
+    public ICommand NextDayCommand { get; }
 
     public MainViewModel(ApiService apiService)
     {
         _apiService = apiService;
+        _currentDate = DateTime.UtcNow.Date;
 
         LoadCommand = new Command(async () => await LoadDailyProgramAsync());
         AddMealCommand = new Command<MealDTO>(AddMeal);
         ViewMealCommand = new Command<MealDTO>(ViewMeal);
+        PreviousDayCommand = new Command(async () => await GoToPreviousDay());
+        NextDayCommand = new Command(async () => await GoToNextDay());
     }
 
     private async Task LoadDailyProgramAsync()
@@ -109,13 +137,31 @@ public class MainViewModel : INotifyPropertyChanged
             var userIdSessions = Preferences.Get("user_id", string.Empty);
 
             var userId = Guid.Parse(userIdSessions);
-            var program = await _apiService.GetAsyncT<DailyProgramDTO>($"api/dailyprogram/{userId}");
+            var dateParam = _currentDate.ToString("yyyy-MM-dd");
+            var program = await _apiService.GetAsyncT<DailyProgramDTO>($"api/dailyprogram/{userId}?date={dateParam}");
 
             if (program == null)
             {
                 return;
             }
+
             _programId = program.ProgramID;
+            HasPrevious = program.HasPrevious;
+            HasNext = program.HasNext;
+
+            if (_currentDate.Date == DateTime.UtcNow.Date)
+            {
+                DateDisplay = "Днес";
+            }
+            else if (_currentDate.Date == DateTime.UtcNow.Date.AddDays(-1))
+            {
+                DateDisplay = "Вчера";
+            }
+            else
+            {
+                DateDisplay = _currentDate.ToString("d MMMM", new CultureInfo("bg-BG"));
+            }
+
             CaloriesPerDay = program.CaloriesPerDay;
             CarbsGoal = program.CarbsPerDay;
             ProteinGoal = program.ProteinPerDay;
@@ -143,12 +189,24 @@ public class MainViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            await Shell.Current.DisplayAlert("Грешка", ex.Message, "OK");
         }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    private async Task GoToPreviousDay()
+    {
+        _currentDate = _currentDate.AddDays(-1);
+        await LoadDailyProgramAsync();
+    }
+
+    private async Task GoToNextDay()
+    {
+        _currentDate = _currentDate.AddDays(1);
+        await LoadDailyProgramAsync();
     }
 
     private async void AddMeal(MealDTO meal)

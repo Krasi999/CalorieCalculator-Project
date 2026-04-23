@@ -58,7 +58,7 @@
                                BackgroundColor="Transparent"
                                Placeholder="100"/>
                         <Label Grid.Row="1" Grid.Column="1"
-                               Text="g"
+                               Text="г"
                                FontSize="28"
                                TextColor="#888"
                                VerticalOptions="Center"/>
@@ -105,7 +105,7 @@
                                    FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalTextAlignment="Center"/>
-                            <Label Text="g"
+                            <Label Text="г"
                                    FontSize="12"
                                    TextColor="#888"
                                    HorizontalTextAlignment="Center"/>
@@ -128,7 +128,7 @@
                                    FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalTextAlignment="Center"/>
-                            <Label Text="g"
+                            <Label Text="г"
                                    FontSize="12"
                                    TextColor="#888"
                                    HorizontalTextAlignment="Center"/>
@@ -151,7 +151,7 @@
                                    FontAttributes="Bold"
                                    TextColor="White"
                                    HorizontalTextAlignment="Center"/>
-                            <Label Text="g"
+                            <Label Text="г"
                                    FontSize="12"
                                    TextColor="#888"
                                    HorizontalTextAlignment="Center"/>
@@ -177,17 +177,17 @@
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Text="Протеин" TextColor="#AAA" FontSize="14"/>
-                            <Label Grid.Column="1" Text="{Binding BaseProtein, StringFormat='{0}g'}"
+                            <Label Grid.Column="1" Text="{Binding BaseProtein, StringFormat='{0}г'}"
                                    TextColor="White" FontSize="14"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Text="Въглехидрати" TextColor="#AAA" FontSize="14"/>
-                            <Label Grid.Column="1" Text="{Binding BaseCarbs, StringFormat='{0}g'}"
+                            <Label Grid.Column="1" Text="{Binding BaseCarbs, StringFormat='{0}г'}"
                                    TextColor="White" FontSize="14"/>
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Text="Мазнини" TextColor="#AAA" FontSize="14"/>
-                            <Label Grid.Column="1" Text="{Binding BaseFats, StringFormat='{0}g'}"
+                            <Label Grid.Column="1" Text="{Binding BaseFats, StringFormat='{0}г'}"
                                    TextColor="White" FontSize="14"/>
                         </Grid>
                     </VerticalStackLayout>

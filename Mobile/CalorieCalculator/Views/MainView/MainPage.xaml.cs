@@ -36,4 +36,14 @@ public partial class MainPage : ContentPage
             _viewModel.AddMealCommand.Execute(meal);
         }
     }
+
+    private void OnPreviousDayTapped(object sender, TappedEventArgs e)
+    {
+        _viewModel.PreviousDayCommand.Execute(null);
+    }
+
+    private void OnNextDayTapped(object sender, TappedEventArgs e)
+    {
+        _viewModel.NextDayCommand.Execute(null);
+    }
 }

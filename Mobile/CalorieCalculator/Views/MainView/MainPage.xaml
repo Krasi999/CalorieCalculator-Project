@@ -11,10 +11,39 @@
         <ScrollView Grid.Row="0" Padding="20">
             <VerticalStackLayout Spacing="20">
 
-                <Label Text="Today"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   TextColor="#1A1A2E"/>
+                <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,5">
+
+                    <Label Grid.Column="0"
+                           Text="◀"
+                           FontSize="22"
+                           TextColor="#4DB6AC"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding HasPrevious}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPreviousDayTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Grid.Column="1"
+                           Text="{Binding DateDisplay}"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           TextColor="#1A1A2E"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"/>
+
+                    <Label Grid.Column="2"
+                           Text="▶"
+                           FontSize="22"
+                           TextColor="#4DB6AC"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding HasNext}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnNextDayTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </Grid>
 
                 <Frame BackgroundColor="White"
                    CornerRadius="20"
@@ -32,7 +61,7 @@
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"
                                TextColor="#1A1A2E"/>
-                            <Label Text="Total"
+                            <Label Text="Общо"
                                FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#9E9E9E"/>
@@ -63,7 +92,7 @@
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#1A1A2E"/>
-                                <Label Text="Eaten"
+                                <Label Text="Изядени"
                                    FontSize="12"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
@@ -78,7 +107,7 @@
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"
                                TextColor="#1A1A2E"/>
-                            <Label Text="Left"
+                            <Label Text="Остава"
                                FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#9E9E9E"/>
@@ -92,7 +121,7 @@
                             <VerticalStackLayout Grid.Column="0"
                                              HorizontalOptions="Center"
                                              Spacing="5">
-                                <Label Text="Carbs"
+                                <Label Text="Въглeхидрати"
                                    FontSize="13"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
@@ -103,7 +132,7 @@
                                    HorizontalTextAlignment="Center"
                                    TextColor="#1A1A2E">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                        <MultiBinding StringFormat="{}{0} / {1} г">
                                             <Binding Path="CarbsCurrent"/>
                                             <Binding Path="CarbsGoal"/>
                                         </MultiBinding>
@@ -114,7 +143,7 @@
                             <VerticalStackLayout Grid.Column="1"
                                              HorizontalOptions="Center"
                                              Spacing="5">
-                                <Label Text="Protein"
+                                <Label Text="Протеини"
                                    FontSize="13"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
@@ -125,7 +154,7 @@
                                    HorizontalTextAlignment="Center"
                                    TextColor="#1A1A2E">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                        <MultiBinding StringFormat="{}{0} / {1} г">
                                             <Binding Path="ProteinCurrent"/>
                                             <Binding Path="ProteinGoal"/>
                                         </MultiBinding>
@@ -136,7 +165,7 @@
                             <VerticalStackLayout Grid.Column="2"
                                              HorizontalOptions="Center"
                                              Spacing="5">
-                                <Label Text="Fat"
+                                <Label Text="Мазнини"
                                    FontSize="13"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
@@ -147,7 +176,7 @@
                                    HorizontalTextAlignment="Center"
                                    TextColor="#1A1A2E">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} / {1} g">
+                                        <MultiBinding StringFormat="{}{0} / {1} г">
                                             <Binding Path="FatCurrent"/>
                                             <Binding Path="FatGoal"/>
                                         </MultiBinding>
@@ -194,7 +223,7 @@
                                                    FontSize="16"
                                                    FontAttributes="Bold"
                                                    TextColor="#1A1A2E"/>
-                                            <Label Text="{Binding TotalCalories, StringFormat='{0} Cal'}"
+                                            <Label Text="{Binding TotalCalories, StringFormat='{0} kcal'}"
                                                    FontSize="13"
                                                    TextColor="#9E9E9E"/>
                                         </VerticalStackLayout>

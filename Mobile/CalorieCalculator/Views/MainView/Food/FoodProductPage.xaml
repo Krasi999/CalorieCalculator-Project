@@ -70,7 +70,7 @@
                                 <Label FontSize="11"
                            TextColor="#888">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="P: {0}g  C: {1}g  F: {2}g">
+                                        <MultiBinding StringFormat="П: {0}г  В: {1}г  М: {2}г">
                                             <Binding Path="Protein"/>
                                             <Binding Path="Carbs"/>
                                             <Binding Path="Fats"/>
