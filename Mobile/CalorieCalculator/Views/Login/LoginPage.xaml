@@ -7,212 +7,294 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="#F0F4F8">
 
-    <ScrollView VerticalOptions="Center"
+    <Grid>
+
+        <!-- Основно съдържание -->
+        <ScrollView VerticalOptions="Center"
+                    HorizontalOptions="Fill">
+            <VerticalStackLayout
+                Padding="0"
+                Margin="30,40"
+                Spacing="0"
                 HorizontalOptions="Fill">
-        <VerticalStackLayout
-            Padding="0"
-            Margin="30,40"
-            Spacing="0"
-            HorizontalOptions="Fill">
 
-            <Grid HeightRequest="90"
-                  WidthRequest="90"
-                  HorizontalOptions="Center"
-                  Margin="0,0,0,14">
-                <Ellipse Fill="#C8E6DF"
-                         WidthRequest="90"
-                         HeightRequest="90"
-                         HorizontalOptions="Center"
-                         VerticalOptions="Center" />
-                <Label Text="🔥"
-                       FontSize="42"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center" />
-            </Grid>
+                <Grid HeightRequest="90"
+                      WidthRequest="90"
+                      HorizontalOptions="Center"
+                      Margin="0,0,0,14">
+                    <Ellipse Fill="#C8E6DF"
+                             WidthRequest="90"
+                             HeightRequest="90"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+                    <Label Text="🔥"
+                           FontSize="42"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
 
-            <Label Text="CalorieTracker"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="#1C1C1E"
-                   HorizontalTextAlignment="Center"
-                   Margin="0,0,0,5" />
-
-            <Label Text="Твоят персонален хранителен дневник"
-                   FontSize="13"
-                   TextColor="#AEAEB2"
-                   HorizontalTextAlignment="Center"
-                   Margin="0,0,0,36" />
-
-            <Label Text="Вход"
-                   FontSize="22"
-                   FontAttributes="Bold"
-                   TextColor="#1C1C1E"
-                   HorizontalTextAlignment="Center"
-                   Margin="0,0,0,28" />
-
-            <Label Text="Имейл"
-                   FontSize="13"
-                   FontAttributes="Bold"
-                   TextColor="#6B7280"
-                   Margin="4,0,0,6" />
-
-            <Border StrokeShape="RoundRectangle 14"
-                    Stroke="#E5E7EB"
-                    BackgroundColor="White"
-                    Padding="14,2"
-                    Margin="0,0,0,18">
-                <Entry Text="{Binding Email}"
-                       Placeholder="example@mail.com"
-                       PlaceholderColor="#C7C7CC"
+                <Label Text="CalorieTracker"
+                       FontSize="26"
+                       FontAttributes="Bold"
                        TextColor="#1C1C1E"
-                       Keyboard="Email"
-                       FontSize="15"
-                       BackgroundColor="Transparent" />
-            </Border>
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,5" />
 
-            <Label Text="Парола"
-                   FontSize="13"
-                   FontAttributes="Bold"
-                   TextColor="#6B7280"
-                   Margin="4,0,0,6" />
+                <Label Text="Твоят персонален хранителен дневник"
+                       FontSize="13"
+                       TextColor="#AEAEB2"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,36" />
 
-            <Border StrokeShape="RoundRectangle 14"
-                    Stroke="#E5E7EB"
-                    BackgroundColor="White"
-                    Padding="14,2"
-                    Margin="0,0,0,10">
-                <Grid ColumnDefinitions="*,Auto">
-                    <Entry Grid.Column="0"
-                           Text="{Binding Password}"
-                           Placeholder="••••••••"
+                <Label Text="Вход"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1C1C1E"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,28" />
+
+                <Label Text="Имейл"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#6B7280"
+                       Margin="4,0,0,6" />
+
+                <Border StrokeShape="RoundRectangle 14"
+                        Stroke="#E5E7EB"
+                        BackgroundColor="White"
+                        Padding="14,2"
+                        Margin="0,0,0,18">
+                    <Entry Text="{Binding Email}"
+                           Placeholder="example@mail.com"
                            PlaceholderColor="#C7C7CC"
                            TextColor="#1C1C1E"
-                           IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
+                           Keyboard="Email"
                            FontSize="15"
                            BackgroundColor="Transparent" />
+                </Border>
+
+                <Label Text="Парола"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#6B7280"
+                       Margin="4,0,0,6" />
+
+                <Border StrokeShape="RoundRectangle 14"
+                        Stroke="#E5E7EB"
+                        BackgroundColor="White"
+                        Padding="14,2"
+                        Margin="0,0,0,10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Entry Grid.Column="0"
+                               Text="{Binding Password}"
+                               Placeholder="••••••••"
+                               PlaceholderColor="#C7C7CC"
+                               TextColor="#1C1C1E"
+                               IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertBoolConverter}}"
+                               FontSize="15"
+                               BackgroundColor="Transparent" />
+                        <Label Grid.Column="1"
+                               Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
+                               FontSize="18"
+                               TextColor="#AEAEB2"
+                               VerticalOptions="Center"
+                               Margin="0,0,10,0">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                </Border>
+
+                <Grid Margin="0,0,0,28"
+                      ColumnDefinitions="*,Auto">
+                    <HorizontalStackLayout Grid.Column="0"
+                                           Spacing="6"
+                                           VerticalOptions="Center">
+                        <CheckBox Color="#3DB89E"
+                                  IsChecked="{Binding RememberMe}"
+                                  VerticalOptions="Center"
+                                  Scale="0.85" />
+                        <Label Text="Запомни ме"
+                               TextColor="#6B7280"
+                               FontSize="12"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
                     <Label Grid.Column="1"
-                           Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToEyeIconConverter}}"
-                           FontSize="18"
-                           TextColor="#AEAEB2"
-                           VerticalOptions="Center"
-                           Margin="0,0,10,0">
+                           Text="Забравена парола?"
+                           TextColor="#3DB89E"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
+                            <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
                 </Grid>
-            </Border>
 
-            <Grid Margin="0,0,0,28"
-                  ColumnDefinitions="*,Auto">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#EF4444"
+                       FontSize="13"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                       Margin="0,0,0,10" />
 
-                <HorizontalStackLayout Grid.Column="0"
-                                       Spacing="6"
-                                       VerticalOptions="Center">
-                    <CheckBox Color="#3DB89E"
-                              IsChecked="{Binding RememberMe}"
-                              VerticalOptions="Center"
-                              Scale="0.85" />
-                    <Label Text="Запомни ме"
-                           TextColor="#6B7280"
+                <Button Text="Вход"
+                        Command="{Binding LoginCommand}"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        BackgroundColor="#3DB89E"
+                        CornerRadius="25"
+                        HeightRequest="52"
+                        Margin="0,0,0,14"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="#3DB89E"
+                                   HeightRequest="30"
+                                   Margin="0,0,0,10" />
+
+                <!-- Бутон за биометрия (показва се само ако е налична) -->
+                <Border StrokeShape="RoundRectangle 25"
+                        Stroke="#E5E7EB"
+                        BackgroundColor="White"
+                        HeightRequest="52"
+                        Margin="0,0,0,24"
+                        IsVisible="{Binding IsBiometricAvailable}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BiometricLoginCommand}" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           Spacing="10">
+                        <Label Text="👆"
+                               FontSize="20"
+                               VerticalOptions="Center" />
+                        <Label Text="Вход с пръстов отпечатък"
+                               TextColor="#1C1C1E"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,Auto,*"
+                      Margin="0,0,0,20">
+                    <BoxView Grid.Column="0"
+                             HeightRequest="1"
+                             Color="#E5E7EB"
+                             VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="или"
+                           TextColor="#AEAEB2"
                            FontSize="12"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
+                           Margin="15,0" />
+                    <BoxView Grid.Column="2"
+                             HeightRequest="1"
+                             Color="#E5E7EB"
+                             VerticalOptions="Center" />
+                </Grid>
 
-                <Label Grid.Column="1"
-                       Text="Забравена парола?"
-                       TextColor="#3DB89E"
-                       FontSize="12"
-                       FontAttributes="Bold"
-                       VerticalOptions="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </Grid>
-
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="#EF4444"
-                   FontSize="13"
-                   HorizontalTextAlignment="Center"
-                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
-                   Margin="0,0,0,10" />
-
-            <Button Text="Вход"
-                    Command="{Binding LoginCommand}"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    TextColor="White"
-                    BackgroundColor="#3DB89E"
-                    CornerRadius="25"
-                    HeightRequest="52"
-                    Margin="0,0,0,14"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="#3DB89E"
-                               HeightRequest="30"
-                               Margin="0,0,0,10" />
-
-            <Border StrokeShape="RoundRectangle 25"
-                    Stroke="#E5E7EB"
-                    BackgroundColor="White"
-                    HeightRequest="52"
-                    Margin="0,0,0,24"
-                    IsVisible="{Binding IsBiometricAvailable}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding BiometricLoginCommand}" />
-                </Border.GestureRecognizers>
                 <HorizontalStackLayout HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       Spacing="10">
-                    <Label Text="🔐"
-                           FontSize="20"
-                           VerticalOptions="Center" />
-                    <Label Text="Вход с биометрия"
-                           TextColor="#1C1C1E"
-                           FontSize="15"
+                                       Spacing="5"
+                                       Margin="0,0,0,20">
+                    <Label Text="Нямаш акаунт?"
+                           TextColor="#AEAEB2"
+                           FontSize="14" />
+                    <Label Text="Регистрирай се"
+                           TextColor="#3DB89E"
+                           FontSize="14"
                            FontAttributes="Bold"
-                           VerticalOptions="Center" />
+                           TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Биометричен Prompt Overlay -->
+        <Grid IsVisible="{Binding ShowBiometricPrompt}"
+              BackgroundColor="#00000060"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill">
+
+            <Border StrokeShape="RoundRectangle 24"
+                    Stroke="#E5E7EB"
+                    StrokeThickness="1"
+                    BackgroundColor="White"
+                    Padding="28"
+                    WidthRequest="320"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="18">
+
+                    <!-- Хиксче -->
+                    <Label Text="✕"
+                           FontSize="22"
+                           TextColor="#AEAEB2"
+                           HorizontalOptions="End"
+                           Margin="0,-8,-8,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DismissBiometricPromptCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Иконка -->
+                    <Grid WidthRequest="80" HeightRequest="80"
+                          HorizontalOptions="Center">
+                        <Ellipse Fill="#C8E6DF"
+                                 WidthRequest="80" HeightRequest="80"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center" />
+                        <Label Text="👆"
+                               FontSize="36"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                    <Label Text="Влезте с биометрия"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1C1C1E"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Използвайте пръстовия си отпечатък за бързо влизане в акаунта"
+                           FontSize="13"
+                           TextColor="#6B7280"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap" />
+
+                    <!-- Бутон за повторен опит -->
+                    <Button Text="Опитай отново"
+                            Command="{Binding BiometricLoginCommand}"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            BackgroundColor="#3DB89E"
+                            CornerRadius="22"
+                            HeightRequest="48" />
+
+                    <!-- Линк за вход с данни -->
+                    <Label Text="Влез с имейл и парола"
+                           FontSize="13"
+                           TextColor="#3DB89E"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding DismissBiometricPromptCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </VerticalStackLayout>
             </Border>
+        </Grid>
 
-            <Grid ColumnDefinitions="*,Auto,*"
-                  Margin="0,0,0,20">
-                <BoxView Grid.Column="0"
-                         HeightRequest="1"
-                         Color="#E5E7EB"
-                         VerticalOptions="Center" />
-                <Label Grid.Column="1"
-                       Text="или"
-                       TextColor="#AEAEB2"
-                       FontSize="12"
-                       Margin="15,0" />
-                <BoxView Grid.Column="2"
-                         HeightRequest="1"
-                         Color="#E5E7EB"
-                         VerticalOptions="Center" />
-            </Grid>
-
-            <HorizontalStackLayout HorizontalOptions="Center"
-                                   Spacing="5"
-                                   Margin="0,0,0,20">
-                <Label Text="Нямаш акаунт?"
-                       TextColor="#AEAEB2"
-                       FontSize="14" />
-                <Label Text="Регистрирай се"
-                       TextColor="#3DB89E"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextDecorations="Underline">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+    </Grid>
 </ContentPage>

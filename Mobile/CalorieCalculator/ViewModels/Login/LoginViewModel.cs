@@ -1,7 +1,6 @@
 ﻿using CalorieCalculator.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace CalorieCalculator.ViewModels;
 
@@ -16,25 +15,31 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty] private bool rememberMe = false;
     [ObservableProperty] private bool isBiometricAvailable = false;
     [ObservableProperty] private bool isPasswordVisible;
-
-    [RelayCommand]
-    private void TogglePasswordVisibility()
-    {
-        IsPasswordVisible = !IsPasswordVisible;
-    }
+    [ObservableProperty] private bool showBiometricPrompt = false;
 
     public LoginViewModel(AuthApiService authService)
     {
         _authService = authService;
-        _ = CheckBiometricAvailability();
         LoadSavedEmail();
+        _ = CheckAndShowBiometricAsync();
     }
 
-    private async Task CheckBiometricAvailability()
+    private async Task CheckAndShowBiometricAsync()
     {
         var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
         var userEnabled = Preferences.Get("biometric_enabled", false);
-        IsBiometricAvailable = deviceSupports && userEnabled;
+        isBiometricAvailable = deviceSupports && userEnabled;
+        OnPropertyChanged(nameof(IsBiometricAvailable));
+
+        // Ако биометрията е налична и не са минали 72 часа → показваме prompt
+        if (isBiometricAvailable && !AuthApiService.RequiresPasswordReauth())
+        {
+            showBiometricPrompt = true;
+            OnPropertyChanged(nameof(showBiometricPrompt));
+
+            // Автоматично стартираме биометрична автентикация
+            await BiometricLoginAsync();
+        }
     }
 
     private void LoadSavedEmail()
@@ -45,6 +50,19 @@ public partial class LoginViewModel : ObservableObject
             Email = savedEmail;
             RememberMe = true;
         }
+    }
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
+
+    [RelayCommand]
+    private void DismissBiometricPrompt()
+    {
+        showBiometricPrompt = false;
+        OnPropertyChanged(nameof(showBiometricPrompt));
     }
 
     [RelayCommand]
@@ -85,7 +103,7 @@ public partial class LoginViewModel : ObservableObject
             else
                 Preferences.Remove("saved_email");
 
-            await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
+            await Shell.Current.GoToAsync("//MainPage");
         }
         catch (Exception ex)
         {
@@ -106,17 +124,24 @@ public partial class LoginViewModel : ObservableObject
         if (AuthApiService.RequiresPasswordReauth())
         {
             ErrorMessage = "Изминаха 72 часа. Моля, влезте с имейл и парола.";
+            showBiometricPrompt = false;
+            OnPropertyChanged(nameof(showBiometricPrompt));
             return;
         }
 
         var result = await BiometricAuthenticator.AuthenticateAsync(
-            "Потвърди самоличността си");
+            "Влезте с пръстов отпечатък");
 
         if (!result)
         {
             ErrorMessage = "Биометричната автентикация е неуспешна.";
             return;
         }
+
+        // Успешна биометрична автентикация
+        Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
+        showBiometricPrompt = false;
+        OnPropertyChanged(nameof(showBiometricPrompt));
 
         await Shell.Current.GoToAsync("//MainPage");
     }

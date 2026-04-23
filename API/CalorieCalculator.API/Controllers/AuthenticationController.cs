@@ -109,13 +109,19 @@ public class AuthenticationController : ControllerBase
         return Ok();
     }
 
-    /* TODO да се добави подобна логика при желание за активиране на биометрия от потребителя
-    [HttpPatch("biometric")]
-    public async Task<IActionResult> SetBiometric([FromBody] UserSetBiometricCommand command)
+    [HttpPost("biometric")]
+    public async Task<IActionResult> SetBiometric([FromBody] SetBiometricRequest request)
     {
-        var success = await _services.Mediator.Send(command);
+        var user = _services.Repository.Set<DataLayer.Models.User>()
+            .FirstOrDefault(u => u.ID == request.UserId);
 
-        return success ? Ok() : NotFound();
+        if (user == null)
+            return NotFound();
+
+        user.SetBiometric(request.Enable);
+        await _services.Repository.SaveChanges();
+
+        return Ok();
     }
-    */
+
 }
