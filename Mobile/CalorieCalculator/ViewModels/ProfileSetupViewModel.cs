@@ -313,9 +313,55 @@ public partial class ProfileSetupViewModel : ObservableObject
                     OnPropertyChanged(nameof(ErrorMessage));
                     return false;
                 }
+
+                var currentWeightKg = isWeightInKg
+                    ? selectedWeightKgIndex + 30
+                    : (int)Math.Round((selectedWeightLbsIndex + 66) / 2.20462);
+
+                var targetWeightKg = isTargetWeightInKg
+                    ? selectedTargetWeightKgIndex + 30
+                    : (int)Math.Round((selectedTargetWeightLbsIndex + 66) / 2.20462);
+
+                switch (selectedGoalType)
+                {
+                    case 1: 
+                        if (targetWeightKg >= currentWeightKg)
+                        {
+                            errorMessage = $"При цел \"Загуба на тегло\" желаното тегло ({targetWeightKg} кг) трябва да е по-малко от текущото ({currentWeightKg} кг).";
+                            OnPropertyChanged(nameof(ErrorMessage));
+                            return false;
+                        }
+                        break;
+
+                    case 2: 
+                        if (targetWeightKg != currentWeightKg)
+                        {
+                            errorMessage = $"При цел \"Задържане на теглото\" желаното тегло трябва да е равно на текущото ({currentWeightKg} кг).";
+                            OnPropertyChanged(nameof(ErrorMessage));
+                            return false;
+                        }
+                        break;
+
+                    case 3: 
+                        if (targetWeightKg <= currentWeightKg)
+                        {
+                            errorMessage = $"При цел \"Качване на тегло\" желаното тегло ({targetWeightKg} кг) трябва да е по-голямо от текущото ({currentWeightKg} кг).";
+                            OnPropertyChanged(nameof(ErrorMessage));
+                            return false;
+                        }
+                        break;
+
+                    case 4: 
+                        if (targetWeightKg <= currentWeightKg)
+                        {
+                            errorMessage = $"При цел \"Качване на мускулна маса\" желаното тегло ({targetWeightKg} кг) трябва да е по-голямо от текущото ({currentWeightKg} кг).";
+                            OnPropertyChanged(nameof(ErrorMessage));
+                            return false;
+                        }
+                        break;
+                }
                 break;
         }
-
         return true;
     }
 

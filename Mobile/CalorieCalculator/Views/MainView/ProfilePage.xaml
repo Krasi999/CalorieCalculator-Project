@@ -60,7 +60,8 @@
                                 <Button Text="Запази" Command="{Binding SaveNicknameCommand}"
                                         FontSize="13" BackgroundColor="#22C55E" TextColor="White"
                                         CornerRadius="15" HeightRequest="34" Padding="15,0" />
-                                <Button Text="Откажи" Command="{Binding CancelEditNicknameCommand}"
+                                <Button Text="Откажи" 
+                                        Command="{Binding CancelEditNicknameCommand}"
                                         FontSize="13" BackgroundColor="#EF4444" TextColor="White"
                                         CornerRadius="15" HeightRequest="34" Padding="15,0" />
                             </HorizontalStackLayout>
@@ -270,6 +271,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="profile"/>
+        <components:NavBar Grid.Row="1" CurrentPage="profile" x:Name="NavBar"/>
     </Grid>
 </ContentPage>

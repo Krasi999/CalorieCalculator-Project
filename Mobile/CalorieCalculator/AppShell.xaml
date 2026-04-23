@@ -36,5 +36,5 @@
                   ContentTemplate="{DataTemplate views:ProgressPage}" />
     
     <ShellContent Route="CalendarPage"
-              ContentTemplate="{DataTemplate views:CalendarPage}" />
+                  ContentTemplate="{DataTemplate views:CalendarPage}" />
 </Shell>

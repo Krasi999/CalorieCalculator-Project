@@ -39,11 +39,12 @@ public class DailyProgramController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("meal/add-food")]
-    public async Task<IActionResult> AttachFoodToMeal([FromBody] FoodToMealRequest request)
+    [HttpPost("meal/food-to-meal")]
+    public async Task<IActionResult> FoodToMeal([FromBody] FoodToMealRequest request)
     {
         var mealId = await _services.Mediator.Send(new FoodToMealCommand
         {
+            MealFoodID = request.MealFoodID,
             ProgramID = request.ProgramID,
             MealType = request.MealType,
             MealID = request.MealID,
@@ -52,5 +53,27 @@ public class DailyProgramController : ControllerBase
         });
 
         return Ok(new { mealId });
+    }
+
+    [HttpPost("meal/delete-food")]
+    public async Task<IActionResult> RemoveFoodFromMeal([FromBody] int mealFoodId)
+    {
+        var result = await _services.Mediator.Send(new FoodToMealDeleteCommand
+        {
+            MealFoodID = mealFoodId
+        });
+
+        return Ok(new { removed = result });
+    }
+
+    [HttpGet("meal/{mealId}/foods")]
+    public async Task<IActionResult> GetMealFoods(int mealId)
+    {
+        var result = await _services.Mediator.Send(new MealFoodsQuery
+        {
+            MealID = mealId
+        });
+
+        return Ok(result);
     }
 }

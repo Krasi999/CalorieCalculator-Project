@@ -2,6 +2,8 @@
 
 public class FoodToMealCommand : IRequest<int>
 {
+    public int? MealFoodID { get; set; }
+
     public int ProgramID { get; set; }
 
     public int MealType { get; set; }

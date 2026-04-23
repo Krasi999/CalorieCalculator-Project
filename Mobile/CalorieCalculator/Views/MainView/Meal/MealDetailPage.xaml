@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="CalorieCalculator.Views.MainView.Meal.MealDetailPage"
+             x:Name="ThisPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Command="{Binding GoBackCommand}"/>
+
+            <Label Grid.Column="1"
+                   Text="{Binding MealName}"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+
+            <Label Grid.Column="2"
+                   Text="+"
+                   FontSize="28"
+                   TextColor="#4DB6AC"
+                   VerticalOptions="Center"
+                   Margin="0,0,10,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddMoreFoodCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <Frame Grid.Row="1"
+               Margin="20,5,20,10"
+               Padding="15"
+               CornerRadius="15"
+               BackgroundColor="#2D2D44"
+               HasShadow="False"
+               BorderColor="Transparent">
+            <Grid ColumnDefinitions="*,*,*,*">
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="3">
+                    <Label Text="{Binding TotalCalories}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#4DB6AC"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="kcal"
+                           FontSize="11"
+                           TextColor="#888"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="3">
+                    <Label Text="{Binding TotalProtein, StringFormat='{0:F1}'}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Протеин"
+                           FontSize="11"
+                           TextColor="#888"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="3">
+                    <Label Text="{Binding TotalCarbs, StringFormat='{0:F1}'}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Въглех."
+                           FontSize="11"
+                           TextColor="#888"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="3">
+                    <Label Text="{Binding TotalFats, StringFormat='{0:F1}'}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Мазнини"
+                           FontSize="11"
+                           TextColor="#888"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding Foods}"
+                        Margin="10,0">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="10"
+                                     Padding="20">
+                    <Label Text="Няма добавени храни"
+                           FontSize="18"
+                           TextColor="#888"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Натиснете + за да добавите"
+                           FontSize="14"
+                           TextColor="#555"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#2D2D44"
+                           CornerRadius="12"
+                           Padding="15"
+                           Margin="10,5"
+                           HasShadow="False"
+                           BorderColor="Transparent">       
+                        <Grid ColumnDefinitions="*,Auto,Auto">
+
+                            <VerticalStackLayout Grid.Column="0"
+                                     VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label FontSize="12"
+                                       TextColor="#888"
+                                       Margin="0,4,0,0">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} kcal  |  P: {1:F1}g  C: {2:F1}g  F: {3:F1}g  |  {4}g">
+                                            <Binding Path="Calories"/>
+                                            <Binding Path="Protein"/>
+                                            <Binding Path="Carbs"/>
+                                            <Binding Path="Fats"/>
+                                            <Binding Path="Weight"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Image Grid.Column="1"
+                                   Source="pencil_icon.png"
+                                   WidthRequest="20"
+                                   HeightRequest="20"
+                                   VerticalOptions="Center"
+                                   Margin="10,0,8,0">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="#4DB6AC"/>
+                                </Image.Behaviors>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnEditWeightTapped"
+                                              CommandParameter="{Binding .}"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+
+                            <Label Grid.Column="2"
+                                   Text="✕"
+                                   FontSize="20"
+                                   TextColor="#FF6B6B"
+                                   VerticalOptions="Center"
+                                   Margin="8,0,5,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnDeleteFoodTapped"
+                                              CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

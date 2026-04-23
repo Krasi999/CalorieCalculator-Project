@@ -17,4 +17,9 @@ public partial class ProfilePage : ContentPage
             vm.ToggleAboutCommand.Execute(null);
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        NavBar.CurrentPage = "profile";
+    }
 }

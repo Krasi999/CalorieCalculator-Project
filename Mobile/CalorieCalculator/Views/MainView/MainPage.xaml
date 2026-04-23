@@ -169,45 +169,62 @@
                                    BorderColor="Transparent">
                                 <Grid ColumnDefinitions="50,*,Auto">
 
-                                    <Frame Grid.Column="0"
-                                           WidthRequest="45"
-                                           HeightRequest="45"
-                                           CornerRadius="22"
+                                    <Grid Grid.Column="0" Grid.ColumnSpan="2"
+                                          ColumnDefinitions="50,*">
+
+                                        <Frame Grid.Column="0"
+                                               WidthRequest="45"
+                                               HeightRequest="45"
+                                               CornerRadius="22"
+                                               Padding="0"
+                                               BackgroundColor="#F0F7F4"
+                                               HasShadow="False"
+                                               BorderColor="Transparent"
+                                               VerticalOptions="Center">
+                                            <Label Text="{Binding Icon}"
+                                                   FontSize="22"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Frame>
+
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             VerticalOptions="Center"
+                                                             Padding="10,0,0,0">
+                                            <Label Text="{Binding MealName}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#1A1A2E"/>
+                                            <Label Text="{Binding TotalCalories, StringFormat='{0} Cal'}"
+                                                   FontSize="13"
+                                                   TextColor="#9E9E9E"/>
+                                        </VerticalStackLayout>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnMealTapped"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+
+                                    <Frame Grid.Column="2"
+                                           WidthRequest="40"
+                                           HeightRequest="40"
+                                           CornerRadius="20"
+                                           BackgroundColor="#4DB6AC"
                                            Padding="0"
-                                           BackgroundColor="#F0F7F4"
                                            HasShadow="False"
                                            BorderColor="Transparent"
                                            VerticalOptions="Center">
-                                        <Label Text="{Binding Icon}"
-                                               FontSize="22"
+                                        <Label Text="+"
+                                               FontSize="20"
+                                               TextColor="White"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnAddMealTapped"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
                                     </Frame>
 
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         VerticalOptions="Center"
-                                                         Padding="10,0,0,0">
-                                        <Label Text="{Binding MealName}"
-                                               FontSize="16"
-                                               FontAttributes="Bold"
-                                               TextColor="#1A1A2E"/>
-                                        <Label Text="{Binding TotalCalories, StringFormat='{0} Cal'}"
-                                               FontSize="13"
-                                               TextColor="#9E9E9E"/>
-                                    </VerticalStackLayout>
-
-                                    <Button Grid.Column="2"
-                                            Text="+"
-                                            FontSize="20"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            CornerRadius="20"
-                                            BackgroundColor="#4DB6AC"
-                                            TextColor="White"
-                                            Padding="0"
-                                            VerticalOptions="Center"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddMealCommand}"
-                                            CommandParameter="{Binding .}"/>
                                 </Grid>
                             </Frame>
                         </DataTemplate>
@@ -216,6 +233,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="home"/>
+        <components:NavBar Grid.Row="1" CurrentPage="home" x:Name="NavBar"/>
     </Grid>
 </ContentPage>
