@@ -198,17 +198,79 @@ public partial class ProfileViewModel : ObservableObject
     [RelayCommand]
     private async Task ToggleBiometricAsync()
     {
-        var newValue = !isBiometricEnabled;
-        var userId = Preferences.Get("user_id", string.Empty);
-
-        if (!string.IsNullOrEmpty(userId))
+        if (!isBiometricEnabled)
         {
-            var success = await _authService.SetBiometricAsync(Guid.Parse(userId), newValue);
-            if (success)
+            // Включване на биометрия
+            var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
+            if (!deviceSupports)
             {
-                isBiometricEnabled = newValue;
-                Preferences.Set("biometric_enabled", newValue);
-                OnPropertyChanged(nameof(IsBiometricEnabled));
+                await Shell.Current.DisplayAlert(
+                    "Недостъпно",
+                    "Устройството ви не поддържа биометрична автентикация.",
+                    "OK");
+                return;
+            }
+
+            var confirm = await Shell.Current.DisplayAlert(
+                "Биометричен вход",
+                "Искате ли да използвате пръстов отпечатък за влизане в акаунта си?",
+                "Да",
+                "Не");
+
+            if (!confirm) return;
+
+            // Искаме потребителя да потвърди с пръстов отпечатък
+            var authenticated = await BiometricAuthenticator.AuthenticateAsync(
+                "Потвърдете самоличността си с пръстов отпечатък");
+
+            if (!authenticated)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Неуспешно",
+                    "Биометричната автентикация е неуспешна. Опитайте отново.",
+                    "OK");
+                return;
+            }
+
+            // Записваме в Preferences и в базата
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var success = await _authService.SetBiometricAsync(Guid.Parse(userId), true);
+                if (success)
+                {
+                    isBiometricEnabled = true;
+                    Preferences.Set("biometric_enabled", true);
+                    OnPropertyChanged(nameof(IsBiometricEnabled));
+
+                    await Shell.Current.DisplayAlert(
+                        "Успех",
+                        "Биометричният вход е активиран успешно!",
+                        "OK");
+                }
+            }
+        }
+        else
+        {
+            // Изключване на биометрия
+            var confirm = await Shell.Current.DisplayAlert(
+                "Изключване",
+                "Сигурни ли сте, че искате да изключите биометричния вход?",
+                "Да",
+                "Не");
+
+            if (!confirm) return;
+
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var success = await _authService.SetBiometricAsync(Guid.Parse(userId), false);
+                if (success)
+                {
+                    isBiometricEnabled = false;
+                    Preferences.Set("biometric_enabled", false);
+                    OnPropertyChanged(nameof(IsBiometricEnabled));
+                }
             }
         }
     }

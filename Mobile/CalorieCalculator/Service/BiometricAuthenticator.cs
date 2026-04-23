@@ -6,21 +6,38 @@ public static class BiometricAuthenticator
     {
         try
         {
-            // Plugin.Fingerprint — ще го добавим в NuGet
+            var isAvailable = await IsAvailableAsync();
+            if (!isAvailable)
+                return false;
+
+            var request = new Plugin.Fingerprint.Abstractions.AuthenticationRequestConfiguration(
+                reason, reason)
+            {
+                AllowAlternativeAuthentication = false,
+                CancelTitle = "Отказ"
+            };
+
             var result = await Plugin.Fingerprint.CrossFingerprint.Current
-                .AuthenticateAsync(new Plugin.Fingerprint.Abstractions
-                    .AuthenticationRequestConfiguration(reason, reason));
+                .AuthenticateAsync(request);
 
             return result.Authenticated;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"Biometric error: {ex.Message}");
             return false;
         }
     }
 
     public static async Task<bool> IsAvailableAsync()
     {
-        return await Plugin.Fingerprint.CrossFingerprint.Current.IsAvailableAsync();
+        try
+        {
+            return await Plugin.Fingerprint.CrossFingerprint.Current.IsAvailableAsync();
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
