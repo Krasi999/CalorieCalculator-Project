@@ -17,12 +17,14 @@ public class DailyProgramController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    public async Task<IActionResult> DailyProgram(Guid userId)
+    public async Task<IActionResult> DailyProgram(Guid userId, [FromQuery] string? date)
     {
+        var targetDate = date != null? DateTime.Parse(date) : DateTime.UtcNow.Date;
+
         var result = await _services.Mediator.Send(new DailyProgramQuery
         {
             UserID = userId,
-            Date = DateTime.UtcNow.Date
+            Date = targetDate
         });
 
         if (result == null)
@@ -32,7 +34,7 @@ public class DailyProgramController : ControllerBase
             result = await _services.Mediator.Send(new DailyProgramQuery
             {
                 UserID = userId,
-                Date = DateTime.UtcNow.Date
+                Date = targetDate
             });
         }
 

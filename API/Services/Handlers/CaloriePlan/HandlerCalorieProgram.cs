@@ -70,13 +70,16 @@ public class HandlerCalorieProgram :
             return null;
         }
 
-        var existingMeals = program.CalorieProgramMeals.ToList();
+        var calorieProgram = _services.Repository.SetNoTracking<CalorieProgram>().Where(record => record.UserID == request.UserID).ToList();
+
+        var hasPrevious = calorieProgram.Any(p => p.ProgramDate.Date < request.Date.Date);
+        var hasNext = calorieProgram.Any(p => p.ProgramDate.Date > request.Date.Date && p.ProgramDate.Date <= DateTime.UtcNow.Date);
+
+        var existingMeals = _services.Repository.SetNoTracking<CalorieProgramMeal>().Where(m => m.CalorieProgramID == program.ProgramID).ToList();
 
         var mealIds = existingMeals.Select(m => m.MealID).ToList();
         var mealFoods = mealIds.Any()
-            ? _services.Repository.SetNoTracking<MealFood>(nameof(MealFood.FoodProduct))
-                .Where(mf => mealIds.Contains(mf.MealID))
-                .ToList()
+            ? _services.Repository.SetNoTracking<MealFood>(nameof(MealFood.FoodProduct)).Where(mf => mealIds.Contains(mf.MealID)).ToList()
             : new List<MealFood>();
 
         var allMealTypes = new[] { (int)MealTypes.Breakfast, (int)MealTypes.Lunch, (int)MealTypes.Dinner, (int)MealTypes.Snack };
@@ -115,6 +118,8 @@ public class HandlerCalorieProgram :
             CarbsPerDay = program.CarbsPerDay,
             ProteinPerDay = program.ProteinPerDay,
             FatsPerDay = program.FatsPerDay,
+            HasPrevious = hasPrevious,
+            HasNext = hasNext,
             Meals = meals
         };
     }

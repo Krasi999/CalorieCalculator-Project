@@ -15,6 +15,8 @@ public class DailyProgramResponse
     public int CarbsPerDay { get; set; }
     public int ProteinPerDay { get; set; }
     public int FatsPerDay { get; set; }
+    public bool HasPrevious { get; set; }
+    public bool HasNext { get; set; }
     public List<MealResponse> Meals { get; set; } = new();
 }
 
