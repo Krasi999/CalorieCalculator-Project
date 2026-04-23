@@ -16,6 +16,10 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     public int ProgramID { get; set; }
     public int MealType { get; set; }
     public int? MealID { get; set; }
+    public int? MealFoodID { get; set; }
+    public int? CurrentWeight { get; set; }
+
+    private int _categoryID;
 
     // Base values per 100g
     public int BaseCalories { get; private set; }
@@ -31,8 +35,6 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     }
 
     private string _grams = "100";
-
-    private int _categoryID;
 
     public string Grams
     {
@@ -73,6 +75,13 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         set { _calculatedFats = value; OnPropertyChanged(); }
     }
 
+    private string _buttonText = "Добави";
+    public string ButtonText
+    {
+        get => _buttonText;
+        set { _buttonText = value; OnPropertyChanged(); }
+    }
+
     public ICommand LoadCommand { get; }
     public ICommand AddToMealCommand { get; }
     public ICommand EditProductCommand { get; }
@@ -83,7 +92,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         _apiService = apiService;
 
         LoadCommand = new Command(async () => await LoadProductAsync());
-        AddToMealCommand = new Command(async () => await AddToMealAsync());
+        AddToMealCommand = new Command(async () => await SaveAsync());
         EditProductCommand = new Command(EditProduct);
         GoBackCommand = new Command(GoBack);
     }
@@ -108,7 +117,16 @@ public class FoodDetailViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(BaseCarbs));
             OnPropertyChanged(nameof(BaseFats));
 
-            Grams = "100";
+            if (CurrentWeight.HasValue)
+            {
+                ButtonText = "Запази промените";
+                Grams = CurrentWeight.Value.ToString();
+            }
+            else
+            {
+                ButtonText = "Добави";
+                Grams = "100";
+            }
         }
         catch (Exception ex)
         {
@@ -135,7 +153,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         CalculatedFats = BaseFats * multiplier;
     }
 
-    private async Task AddToMealAsync()
+    private async Task SaveAsync()
     {
         try
         {
@@ -145,7 +163,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var request = new FoodToMealRequest(null, ProgramID, MealType, MealID, ProductID, (int)grams);
+            var request = new FoodToMealRequest(MealFoodID, ProgramID, MealType, MealID, ProductID, (int)grams);
 
             await _apiService.PostAsync<object>("api/dailyprogram/meal/food-to-meal", request);
 

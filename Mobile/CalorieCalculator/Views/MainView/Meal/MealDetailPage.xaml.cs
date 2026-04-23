@@ -31,7 +31,8 @@ public partial class MealDetailPage : ContentPage
     {
         if (e.Parameter is MealFoodDTO food)
         {
-            _viewModel.EditWeightCommand.Execute(food);
+            _ = Shell.Current.GoToAsync(
+                $"food/details?ProductID={food.ProductID}&ProgramID={_viewModel.ProgramID}&MealType={_viewModel.MealType}&MealID={_viewModel.MealID}&MealFoodID={food.MealFoodID}&CurrentWeight={food.Weight}");
         }
     }
 

@@ -197,7 +197,7 @@
         </ScrollView>
 
         <Button Grid.Row="2"
-                Text="Добави към ястие"
+                Text="{Binding ButtonText}"
                 FontSize="18"
                 FontAttributes="Bold"
                 BackgroundColor="#4DB6AC"

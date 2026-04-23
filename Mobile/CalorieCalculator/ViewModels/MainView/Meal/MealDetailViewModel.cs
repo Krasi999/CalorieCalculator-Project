@@ -7,8 +7,6 @@ using System.Windows.Input;
 
 namespace CalorieCalculator.ViewModels.MainView.Meal;
 
-public record FoodToMealRequest(int? MealFoodID, int ProgramID, int MealType, int? MealID, int ProductID, int Weight);
-
 public class MealDetailViewModel : INotifyPropertyChanged
 {
     private readonly ApiService _apiService;
@@ -67,7 +65,6 @@ public class MealDetailViewModel : INotifyPropertyChanged
         _apiService = apiService;
 
         LoadCommand = new Command(async () => await LoadFoodsAsync());
-        EditWeightCommand = new Command<MealFoodDTO>(async (food) => await EditWeightAsync(food));
         DeleteFoodCommand = new Command<MealFoodDTO>(async (food) => await DeleteFoodAsync(food));
         AddMoreFoodCommand = new Command(AddMoreFood);
         GoBackCommand = new Command(GoBack);
@@ -86,8 +83,7 @@ public class MealDetailViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var foods = await _apiService.GetAsync<MealFoodDTO>(
-                $"api/dailyprogram/meal/{MealID}/foods");
+            var foods = await _apiService.GetAsync<MealFoodDTO>($"api/dailyprogram/meal/{MealID}/foods");
 
             Foods.Clear();
             foreach (var food in foods)
@@ -96,37 +92,6 @@ public class MealDetailViewModel : INotifyPropertyChanged
             }
 
             UpdateTotals();
-        }
-        catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlert("Грешка", ex.Message, "OK");
-        }
-    }
-
-    private async Task EditWeightAsync(MealFoodDTO food)
-    {
-        var result = await Shell.Current.DisplayPromptAsync(
-            "Промени грамаж",
-            $"Текущ грамаж: {food.Weight}g",
-            "Запази",
-            "Отказ",
-            placeholder: food.Weight.ToString());
-
-        if (result == null) return;
-
-        if (!int.TryParse(result, out var newWeight) || newWeight <= 0)
-        {
-            await Shell.Current.DisplayAlert("Грешка", "Въведете валиден грамаж", "OK");
-            return;
-        }
-
-        try
-        {
-            var request = new FoodToMealRequest(food.MealFoodID, ProgramID, MealType, MealID, food.ProductID, newWeight);
-
-            await _apiService.PostAsync<object>("api/dailyprogram/meal/food-to-meal", request);
-
-            await LoadFoodsAsync();
         }
         catch (Exception ex)
         {
