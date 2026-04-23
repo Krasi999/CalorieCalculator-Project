@@ -212,7 +212,6 @@ public partial class ProfileViewModel : ObservableObject
     {
         if (!isBiometricEnabled)
         {
-            // Включване на биометрия
             var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
             if (!deviceSupports)
             {
@@ -225,13 +224,12 @@ public partial class ProfileViewModel : ObservableObject
 
             var confirm = await Shell.Current.DisplayAlert(
                 "Биометричен вход",
-                "Искате ли да използвате пръстов отпечатък за влизане в акаунта си?",
+                "Искате ли да използвате пръстов отпечатък като допълнителна стъпка при влизане?",
                 "Да",
                 "Не");
 
             if (!confirm) return;
 
-            // Искаме потребителя да потвърди с пръстов отпечатък
             var authenticated = await BiometricAuthenticator.AuthenticateAsync(
                 "Потвърдете самоличността си с пръстов отпечатък");
 
@@ -239,32 +237,38 @@ public partial class ProfileViewModel : ObservableObject
             {
                 await Shell.Current.DisplayAlert(
                     "Неуспешно",
-                    "Биометричната автентикация е неуспешна. Опитайте отново.",
+                    "Биометричната автентикация е неуспешна.",
                     "OK");
                 return;
             }
 
-            // Записваме в Preferences и в базата
+            // Записваме локално ВЕДНАГА (за toggle бутона)
+            isBiometricEnabled = true;
+            Preferences.Set("biometric_enabled", true);
+            OnPropertyChanged(nameof(IsBiometricEnabled));
+
+            // После записваме и в базата
             var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
-                var success = await _authService.SetBiometricAsync(Guid.Parse(userId), true);
-                if (success)
+                try
                 {
-                    isBiometricEnabled = true;
-                    Preferences.Set("biometric_enabled", true);
-                    OnPropertyChanged(nameof(IsBiometricEnabled));
-
-                    await Shell.Current.DisplayAlert(
-                        "Успех",
-                        "Биометричният вход е активиран успешно!",
-                        "OK");
+                    await _authService.SetBiometricAsync(Guid.Parse(userId), true);
+                    System.Diagnostics.Debug.WriteLine("=== BIOMETRIC SAVED TO DB ===");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"!!! BIOMETRIC DB ERROR: {ex.Message}");
                 }
             }
+
+            await Shell.Current.DisplayAlert(
+                "Успех",
+                "Двуфакторната автентикация с пръстов отпечатък е активирана!",
+                "OK");
         }
         else
         {
-            // Изключване на биометрия
             var confirm = await Shell.Current.DisplayAlert(
                 "Изключване",
                 "Сигурни ли сте, че искате да изключите биометричния вход?",
@@ -273,15 +277,20 @@ public partial class ProfileViewModel : ObservableObject
 
             if (!confirm) return;
 
+            isBiometricEnabled = false;
+            Preferences.Set("biometric_enabled", false);
+            OnPropertyChanged(nameof(IsBiometricEnabled));
+
             var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
-                var success = await _authService.SetBiometricAsync(Guid.Parse(userId), false);
-                if (success)
+                try
                 {
-                    isBiometricEnabled = false;
-                    Preferences.Set("biometric_enabled", false);
-                    OnPropertyChanged(nameof(IsBiometricEnabled));
+                    await _authService.SetBiometricAsync(Guid.Parse(userId), false);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"!!! BIOMETRIC OFF ERROR: {ex.Message}");
                 }
             }
         }

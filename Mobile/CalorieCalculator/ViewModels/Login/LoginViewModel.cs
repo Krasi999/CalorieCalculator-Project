@@ -17,29 +17,14 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty] private bool isPasswordVisible;
     [ObservableProperty] private bool showBiometricPrompt = false;
 
+    // Временно съхраняваме login данните за след биометрията
+    private string? _pendingToken;
+    private string? _pendingUserId;
+
     public LoginViewModel(AuthApiService authService)
     {
         _authService = authService;
         LoadSavedEmail();
-        _ = CheckAndShowBiometricAsync();
-    }
-
-    private async Task CheckAndShowBiometricAsync()
-    {
-        var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
-        var userEnabled = Preferences.Get("biometric_enabled", false);
-        isBiometricAvailable = deviceSupports && userEnabled;
-        OnPropertyChanged(nameof(IsBiometricAvailable));
-
-        // Ако биометрията е налична и не са минали 72 часа → показваме prompt
-        if (isBiometricAvailable && !AuthApiService.RequiresPasswordReauth())
-        {
-            showBiometricPrompt = true;
-            OnPropertyChanged(nameof(showBiometricPrompt));
-
-            // Автоматично стартираме биометрична автентикация
-            await BiometricLoginAsync();
-        }
     }
 
     private void LoadSavedEmail()
@@ -62,7 +47,13 @@ public partial class LoginViewModel : ObservableObject
     private void DismissBiometricPrompt()
     {
         showBiometricPrompt = false;
-        OnPropertyChanged(nameof(showBiometricPrompt));
+        OnPropertyChanged(nameof(ShowBiometricPrompt));
+
+        // Ако потребителят откаже биометрията, пускаме го директно
+        if (!string.IsNullOrEmpty(_pendingToken) && !string.IsNullOrEmpty(_pendingUserId))
+        {
+            CompletLogin();
+        }
     }
 
     [RelayCommand]
@@ -94,16 +85,33 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            Preferences.Set("auth_token", data.Token);
-            Preferences.Set("user_id", data.UserId.ToString());
-            Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
+            // Запазваме данните временно
+            _pendingToken = data.Token;
+            _pendingUserId = data.UserId.ToString();
 
             if (RememberMe)
                 Preferences.Set("saved_email", Email);
             else
                 Preferences.Remove("saved_email");
 
-            await Shell.Current.GoToAsync("//MainPage");
+            // Проверяваме дали потребителят има включена биометрия
+            var biometricEnabled = Preferences.Get("biometric_enabled", false);
+            var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
+
+            if (biometricEnabled && deviceSupports)
+            {
+                // Показваме биометричен prompt като втора стъпка
+                showBiometricPrompt = true;
+                OnPropertyChanged(nameof(ShowBiometricPrompt));
+
+                // Автоматично стартираме fingerprint
+                await BiometricLoginAsync();
+            }
+            else
+            {
+                // Няма биометрия — влизаме директно
+                CompletLogin();
+            }
         }
         catch (Exception ex)
         {
@@ -121,29 +129,36 @@ public partial class LoginViewModel : ObservableObject
     {
         ErrorMessage = string.Empty;
 
-        if (AuthApiService.RequiresPasswordReauth())
-        {
-            ErrorMessage = "Изминаха 72 часа. Моля, влезте с имейл и парола.";
-            showBiometricPrompt = false;
-            OnPropertyChanged(nameof(showBiometricPrompt));
-            return;
-        }
-
         var result = await BiometricAuthenticator.AuthenticateAsync(
-            "Влезте с пръстов отпечатък");
+            "Потвърдете самоличността си с пръстов отпечатък");
 
         if (!result)
         {
-            ErrorMessage = "Биометричната автентикация е неуспешна.";
+            // Не затваряме prompt-а, потребителят може да опита отново
+            // или да натисне хиксчето/линка за вход с данни
             return;
         }
 
         // Успешна биометрична автентикация
-        Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
         showBiometricPrompt = false;
-        OnPropertyChanged(nameof(showBiometricPrompt));
+        OnPropertyChanged(nameof(ShowBiometricPrompt));
 
-        await Shell.Current.GoToAsync("//MainPage");
+        CompletLogin();
+    }
+
+    private async void CompletLogin()
+    {
+        if (!string.IsNullOrEmpty(_pendingToken) && !string.IsNullOrEmpty(_pendingUserId))
+        {
+            Preferences.Set("auth_token", _pendingToken);
+            Preferences.Set("user_id", _pendingUserId);
+            Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
+
+            _pendingToken = null;
+            _pendingUserId = null;
+
+            await Shell.Current.GoToAsync("//MainPage");
+        }
     }
 
     [RelayCommand]
