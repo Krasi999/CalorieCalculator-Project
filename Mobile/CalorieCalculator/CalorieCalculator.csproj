@@ -42,6 +42,10 @@
 		<UserSecretsId>4a76ead9-b895-4a54-a2aa-5e1ff784407a</UserSecretsId>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
