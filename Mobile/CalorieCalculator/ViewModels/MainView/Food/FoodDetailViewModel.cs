@@ -31,6 +31,9 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     }
 
     private string _grams = "100";
+
+    private int _categoryID;
+
     public string Grams
     {
         get => _grams;
@@ -72,6 +75,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
 
     public ICommand LoadCommand { get; }
     public ICommand AddToMealCommand { get; }
+    public ICommand EditProductCommand { get; }
     public ICommand GoBackCommand { get; }
 
     public FoodDetailViewModel(ApiService apiService)
@@ -80,6 +84,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
 
         LoadCommand = new Command(async () => await LoadProductAsync());
         AddToMealCommand = new Command(async () => await AddToMealAsync());
+        EditProductCommand = new Command(EditProduct);
         GoBackCommand = new Command(GoBack);
     }
 
@@ -92,6 +97,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
             if (product == null) return;
 
             ProductName = product.Name;
+            _categoryID = product.CategoryID;
             BaseCalories = product.Calories;
             BaseProtein = product.Protein;
             BaseCarbs = product.Carbs;
@@ -106,7 +112,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            await Shell.Current.DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -149,6 +155,12 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         {
             await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
         }
+    }
+
+    private async void EditProduct()
+    {
+        await Shell.Current.GoToAsync(
+            $"food/create?ProductID={ProductID}&CategoryID={_categoryID}");
     }
 
     private async void GoBack()

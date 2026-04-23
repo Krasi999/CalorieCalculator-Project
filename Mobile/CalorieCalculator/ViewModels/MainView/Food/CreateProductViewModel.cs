@@ -15,6 +15,14 @@ public class CreateProductViewModel : INotifyPropertyChanged
     private readonly ApiService _apiService;
 
     public int? PreselectedCategoryID { get; set; }
+    public int? EditProductID { get; set; }
+
+    private string _pageTitle = "Нов продукт";
+    public string PageTitle
+    {
+        get => _pageTitle;
+        set { _pageTitle = value; OnPropertyChanged(); }
+    }
 
     private string _productName = "";
     public string ProductName
@@ -65,6 +73,13 @@ public class CreateProductViewModel : INotifyPropertyChanged
         set { _weight = value; OnPropertyChanged(); }
     }
 
+    private string _saveButtonText = "Запази продукт";
+    public string SaveButtonText
+    {
+        get => _saveButtonText;
+        set { _saveButtonText = value; OnPropertyChanged(); }
+    }
+
     public ObservableCollection<FoodCategoryDTO> Categories { get; set; } = new();
 
     private FoodCategoryDTO? _selectedCategory;
@@ -94,15 +109,42 @@ public class CreateProductViewModel : INotifyPropertyChanged
             var categories = await _apiService.GetAsync<FoodCategoryDTO>("api/food/foodcategory");
 
             Categories.Clear();
-            foreach (var cat in categories)
+            foreach (var category in categories)
             {
-                Categories.Add(cat);
+                Categories.Add(category);
             }
 
-            if (PreselectedCategoryID.HasValue)
+            if (EditProductID.HasValue)
             {
-                SelectedCategory = Categories.FirstOrDefault(
-                    c => c.CategoryID == PreselectedCategoryID.Value);
+                PageTitle = "Редактиране";
+                SaveButtonText = "Запази промените";
+
+                var product = await _apiService.GetAsyncT<FoodProductDTO>(
+                    $"api/food/{EditProductID.Value}");
+
+                if (product != null)
+                {
+                    ProductName = product.Name;
+                    Description = product.Description ?? "";
+                    Calories = product.Calories.ToString();
+                    Protein = product.Protein.ToString();
+                    Carbs = product.Carbs.ToString();
+                    Fats = product.Fats.ToString();
+                    Weight = "100";
+                    SelectedCategory = Categories.FirstOrDefault(c => c.CategoryID == product.CategoryID);
+                }
+            }
+            else
+            {
+                PageTitle = "Нов продукт";
+                SaveButtonText = "Запази продукт";
+                ClearForm();
+
+                if (PreselectedCategoryID.HasValue)
+                {
+                    SelectedCategory = Categories.FirstOrDefault(
+                        c => c.CategoryID == PreselectedCategoryID.Value);
+                }
             }
         }
         catch (Exception ex)
@@ -134,11 +176,11 @@ public class CreateProductViewModel : INotifyPropertyChanged
             }
 
             var request = new FoodProductRequest(
-                null, 
+                EditProductID, 
                 ProductName, 
                 Description, 
                 calories, 
-                int.TryParse(Weight, out var w) ? w : 100,
+                100,
                 decimal.TryParse(Fats, out var f) ? f : 0,
                 decimal.TryParse(Protein, out var p) ? p : 0,
                 decimal.TryParse(Carbs, out var c) ? c : 0,
@@ -146,14 +188,25 @@ public class CreateProductViewModel : INotifyPropertyChanged
             );
 
             await _apiService.PostAsync<object>("api/food/create", request);
-
-            await Shell.Current.DisplayAlert("Успех", "Продуктът е записан", "OK");
             await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Грешка", ex.Message, "OK");
         }
+    }
+
+    private void ClearForm()
+    {
+        ProductName = "";
+        Description = "";
+        Calories = "";
+        Protein = "";
+        Carbs = "";
+        Fats = "";
+        Weight = "100";
+        SelectedCategory = null;
+        EditProductID = null;
     }
 
     private async void GoBack()
