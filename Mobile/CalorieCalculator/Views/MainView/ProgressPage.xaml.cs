@@ -6,4 +6,10 @@ public partial class ProgressPage : ContentPage
     {
         InitializeComponent();
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        NavBar.CurrentPage = "progress";
+    }
 }

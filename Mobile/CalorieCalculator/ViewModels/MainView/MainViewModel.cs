@@ -90,6 +90,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     public ICommand LoadCommand { get; }
     public ICommand AddMealCommand { get; }
+    public ICommand ViewMealCommand { get; }
 
     public MainViewModel(ApiService apiService)
     {
@@ -97,6 +98,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         LoadCommand = new Command(async () => await LoadDailyProgramAsync());
         AddMealCommand = new Command<MealDTO>(AddMeal);
+        ViewMealCommand = new Command<MealDTO>(ViewMeal);
     }
 
     private async Task LoadDailyProgramAsync()
@@ -153,6 +155,12 @@ public class MainViewModel : INotifyPropertyChanged
     {
         await Shell.Current.GoToAsync(
             $"food/categories?ProgramID={_programId}&MealType={meal.MealType}&MealID={meal.MealID}");
+    }
+
+    private async void ViewMeal(MealDTO meal)
+    {
+        await Shell.Current.GoToAsync(
+            $"meal/detail?MealID={meal.MealID}&MealType={meal.MealType}&ProgramID={_programId}");
     }
 
     private void UpdateRemaining()

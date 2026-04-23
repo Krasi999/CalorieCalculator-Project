@@ -1,5 +1,7 @@
 ﻿public class FoodToMealRequest
 {
+    public int? MealFoodID { get; set; }
+
     public int ProgramID { get; set; }
 
     public int MealType { get; set; }

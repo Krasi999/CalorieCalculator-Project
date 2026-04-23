@@ -4,6 +4,7 @@ namespace CalorieCalculator.Views.MainView.Food;
 
 
 [QueryProperty(nameof(CategoryID), "CategoryID")]
+[QueryProperty(nameof(ProductID), "ProductID")]
 public partial class CreateProductPage : ContentPage
 {
     private readonly CreateProductViewModel _viewModel;
@@ -14,6 +15,15 @@ public partial class CreateProductPage : ContentPage
         {
             if (int.TryParse(value, out var id))
                 _viewModel.PreselectedCategoryID = id;
+        }
+    }
+
+    public string ProductID
+    {
+        set
+        {
+            if (int.TryParse(value, out var id))
+                _viewModel.EditProductID = id;
         }
     }
 

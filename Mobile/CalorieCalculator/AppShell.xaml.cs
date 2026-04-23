@@ -1,5 +1,6 @@
 ﻿using CalorieCalculator.Views;
 using CalorieCalculator.Views.MainView.Food;
+using CalorieCalculator.Views.MainView.Meal;
 
 namespace CalorieCalculator;
 
@@ -18,6 +19,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("food/products", typeof(FoodProductPage));
         Routing.RegisterRoute("food/details", typeof(FoodDetailsPage));
         Routing.RegisterRoute("food/create", typeof(CreateProductPage));
+
+        Routing.RegisterRoute("meal/detail", typeof(MealDetailPage));
 
         Routing.RegisterRoute("ProfilePage", typeof(ProfilePage));
         Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));

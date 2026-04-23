@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace DataLayer.Models;
 
@@ -30,4 +32,9 @@ public class MealFood
     public FoodProduct? FoodProduct { get; set; }
 
     public int Weight { get; private set; }
+
+    public void Update(int weight)
+    {
+        Weight = weight;
+    }
 }

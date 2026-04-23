@@ -16,7 +16,7 @@
                     Command="{Binding GoBackCommand}"/>
 
             <Label Grid.Column="1"
-                   Text="Нов продукт"
+                   Text="{Binding PageTitle}"
                    FontSize="24"
                    FontAttributes="Bold"
                    TextColor="White"
@@ -93,6 +93,7 @@
                            HasShadow="False"
                            BorderColor="Transparent">
                         <Entry Text="{Binding Weight}"
+                               IsReadOnly="True"
                                Placeholder="100"
                                PlaceholderColor="#555"
                                TextColor="White"
@@ -192,7 +193,7 @@
         </ScrollView>
 
         <Button Grid.Row="2"
-                Text="Запази продукт"
+                Text="{Binding SaveButtonText}"
                 FontSize="18"
                 FontAttributes="Bold"
                 BackgroundColor="#4DB6AC"

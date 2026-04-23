@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace CalorieCalculator.ViewModels.MainView.Food;
 
-public record FoodToMealRequest(int ProgramID, int MealType, int? MealID, int ProductID, int Weight);
+public record FoodToMealRequest(int? MealFoodID, int ProgramID, int MealType, int? MealID, int ProductID, int Weight);
 
 public class FoodDetailViewModel : INotifyPropertyChanged
 {
@@ -16,6 +16,10 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     public int ProgramID { get; set; }
     public int MealType { get; set; }
     public int? MealID { get; set; }
+    public int? MealFoodID { get; set; }
+    public int? CurrentWeight { get; set; }
+
+    private int _categoryID;
 
     // Base values per 100g
     public int BaseCalories { get; private set; }
@@ -31,6 +35,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
     }
 
     private string _grams = "100";
+
     public string Grams
     {
         get => _grams;
@@ -70,8 +75,16 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         set { _calculatedFats = value; OnPropertyChanged(); }
     }
 
+    private string _buttonText = "Добави";
+    public string ButtonText
+    {
+        get => _buttonText;
+        set { _buttonText = value; OnPropertyChanged(); }
+    }
+
     public ICommand LoadCommand { get; }
     public ICommand AddToMealCommand { get; }
+    public ICommand EditProductCommand { get; }
     public ICommand GoBackCommand { get; }
 
     public FoodDetailViewModel(ApiService apiService)
@@ -79,7 +92,8 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         _apiService = apiService;
 
         LoadCommand = new Command(async () => await LoadProductAsync());
-        AddToMealCommand = new Command(async () => await AddToMealAsync());
+        AddToMealCommand = new Command(async () => await SaveAsync());
+        EditProductCommand = new Command(EditProduct);
         GoBackCommand = new Command(GoBack);
     }
 
@@ -92,6 +106,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
             if (product == null) return;
 
             ProductName = product.Name;
+            _categoryID = product.CategoryID;
             BaseCalories = product.Calories;
             BaseProtein = product.Protein;
             BaseCarbs = product.Carbs;
@@ -102,11 +117,20 @@ public class FoodDetailViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(BaseCarbs));
             OnPropertyChanged(nameof(BaseFats));
 
-            Grams = "100";
+            if (CurrentWeight.HasValue)
+            {
+                ButtonText = "Запази промените";
+                Grams = CurrentWeight.Value.ToString();
+            }
+            else
+            {
+                ButtonText = "Добави";
+                Grams = "100";
+            }
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            await Shell.Current.DisplayAlert("Грешка", ex.Message, "OK");
         }
     }
 
@@ -129,7 +153,7 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         CalculatedFats = BaseFats * multiplier;
     }
 
-    private async Task AddToMealAsync()
+    private async Task SaveAsync()
     {
         try
         {
@@ -139,9 +163,9 @@ public class FoodDetailViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var request = new FoodToMealRequest(ProgramID, MealType, MealID, ProductID, (int)grams);
+            var request = new FoodToMealRequest(MealFoodID, ProgramID, MealType, MealID, ProductID, (int)grams);
 
-            await _apiService.PostAsync<object>("api/dailyprogram/meal/add-food", request);
+            await _apiService.PostAsync<object>("api/dailyprogram/meal/food-to-meal", request);
 
             await Shell.Current.GoToAsync("//MainPage");
         }
@@ -149,6 +173,12 @@ public class FoodDetailViewModel : INotifyPropertyChanged
         {
             await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
         }
+    }
+
+    private async void EditProduct()
+    {
+        await Shell.Current.GoToAsync(
+            $"food/create?ProductID={ProductID}&CategoryID={_categoryID}");
     }
 
     private async void GoBack()

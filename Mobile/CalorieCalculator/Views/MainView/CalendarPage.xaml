@@ -143,6 +143,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="calendar"/>
+        <components:NavBar Grid.Row="1" CurrentPage="calendar" x:Name="NavBar"/>
     </Grid>
 </ContentPage>
