@@ -271,6 +271,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="profile"/>
+        <components:NavBar Grid.Row="1" CurrentPage="profile" x:Name="NavBar"/>
     </Grid>
 </ContentPage>

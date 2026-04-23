@@ -21,6 +21,6 @@
                    HorizontalTextAlignment="Center"/>
         </VerticalStackLayout>
 
-        <components:NavBar Grid.Row="1" CurrentPage="progress"/>
+        <components:NavBar Grid.Row="1" CurrentPage="progress" x:Name="NavBar"/>
     </Grid>
 </ContentPage>

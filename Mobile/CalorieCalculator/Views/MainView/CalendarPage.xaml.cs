@@ -9,4 +9,10 @@ public partial class CalendarPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        NavBar.CurrentPage = "calendar";
+    }
 }

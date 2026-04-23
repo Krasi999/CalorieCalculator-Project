@@ -20,7 +20,13 @@ public partial class NavBar : ContentView
     public Color ProfileColor => CurrentPage == "profile" ? ActiveColor : InactiveColor;
     public Color HomeColor => CurrentPage == "home" ? ActiveColor : InactiveColor;
     public Color ProgressColor => CurrentPage == "progress" ? ActiveColor : InactiveColor;
+
     public Color CalendarColor => CurrentPage == "calendar" ? ActiveColor : InactiveColor;
+
+    public string ProfileIcon => CurrentPage == "profile" ? "person_teal.png" : "person_gray.png";
+    public string HomeIcon => CurrentPage == "home" ? "home_teal.png" : "home_gray.png";
+    public string ProgressIcon => CurrentPage == "progress" ? "chart_teal.png" : "chart_gray.png";
+    public string CalendarIcon => CurrentPage == "calendar" ? "calendar_teal.png" : "calendar_gray.png";
 
     public ICommand NavigateCommand { get; }
 
@@ -59,5 +65,9 @@ public partial class NavBar : ContentView
         navBar.OnPropertyChanged(nameof(HomeColor));
         navBar.OnPropertyChanged(nameof(ProgressColor));
         navBar.OnPropertyChanged(nameof(CalendarColor));
+        navBar.OnPropertyChanged(nameof(ProfileIcon));
+        navBar.OnPropertyChanged(nameof(HomeIcon));
+        navBar.OnPropertyChanged(nameof(ProgressIcon));
+        navBar.OnPropertyChanged(nameof(CalendarIcon));
     }
 }

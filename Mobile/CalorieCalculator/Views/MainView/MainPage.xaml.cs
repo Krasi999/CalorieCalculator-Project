@@ -18,6 +18,7 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
         _viewModel.LoadCommand.Execute(null);
+        NavBar.CurrentPage = "home";
     }
 
     private async void OnMealTapped(object sender, TappedEventArgs e)

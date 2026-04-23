@@ -233,6 +233,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <components:NavBar Grid.Row="1" CurrentPage="home"/>
+        <components:NavBar Grid.Row="1" CurrentPage="home" x:Name="NavBar"/>
     </Grid>
 </ContentPage>
