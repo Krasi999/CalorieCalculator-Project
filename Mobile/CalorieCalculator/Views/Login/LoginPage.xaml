@@ -157,30 +157,6 @@
                                    HeightRequest="30"
                                    Margin="0,0,0,10" />
 
-                <!-- Бутон за биометрия (показва се само ако е налична) -->
-                <Border StrokeShape="RoundRectangle 25"
-                        Stroke="#E5E7EB"
-                        BackgroundColor="White"
-                        HeightRequest="52"
-                        Margin="0,0,0,24"
-                        IsVisible="{Binding IsBiometricAvailable}">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BiometricLoginCommand}" />
-                    </Border.GestureRecognizers>
-                    <HorizontalStackLayout HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Spacing="10">
-                        <Label Text="👆"
-                               FontSize="20"
-                               VerticalOptions="Center" />
-                        <Label Text="Вход с пръстов отпечатък"
-                               TextColor="#1C1C1E"
-                               FontSize="15"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                </Border>
-
                 <Grid ColumnDefinitions="*,Auto,*"
                       Margin="0,0,0,20">
                     <BoxView Grid.Column="0"
