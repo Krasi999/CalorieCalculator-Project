@@ -322,16 +322,16 @@
         </ScrollView>
 
         <Button Grid.Row="2"
-                Text="Продължи"
-                Command="{Binding ContinueCommand}"
-                FontSize="16"
-                FontAttributes="Bold"
-                TextColor="White"
-                BackgroundColor="#3DB89E"
-                CornerRadius="25"
-                HeightRequest="52"
-                Margin="0,15,0,0"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
+        Text="{Binding IsEditMode, Converter={StaticResource BoolToSaveButtonTextConverter}}"
+        Command="{Binding ContinueCommand}"
+        FontSize="16"
+        FontAttributes="Bold"
+        TextColor="White"
+        BackgroundColor="#3DB89E"
+        CornerRadius="25"
+        HeightRequest="52"
+        Margin="0,15,0,0"
+        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}" />
 
     </Grid>
 

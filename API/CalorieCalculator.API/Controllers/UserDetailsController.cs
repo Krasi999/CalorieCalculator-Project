@@ -192,6 +192,21 @@ public class UserDetailsController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("update-field")]
+    public async Task<IActionResult> UpdateField([FromBody] UpdateFieldRequest request)
+    {
+        var userDetails = _services.Repository.Set<DataLayer.Models.UserDetails>()
+            .FirstOrDefault(ud => ud.UserID == request.UserID);
+
+        if (userDetails == null)
+            return NotFound();
+
+        userDetails.UpdateField(request.FieldName, request.Value);
+        await _services.Repository.SaveChanges();
+
+        return Ok();
+    }
+
     /*
     // GET api/userdetails/{userId}
     [HttpGet("{userId:guid}")]

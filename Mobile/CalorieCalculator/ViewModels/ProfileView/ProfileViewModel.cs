@@ -431,4 +431,228 @@ public partial class ProfileViewModel : ObservableObject
         hasProfileImage = false;
         OnPropertyChanged(nameof(HasProfileImage));
     }
+
+    [RelayCommand]
+    private async Task EditProfileAsync()
+    {
+        await Shell.Current.GoToAsync("//ProfileSetup?edit=true");
+    }
+
+    [RelayCommand]
+    private async Task EditHeightAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Ръст",
+            "Въведете ръст в сантиметри:",
+            "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: heightText.Replace(" см", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (decimal.TryParse(result, out var newHeight) && newHeight >= 100 && newHeight <= 250)
+        {
+            await UpdateProfileFieldAsync("HeightCm", newHeight);
+            heightText = $"{newHeight:F0} см";
+            OnPropertyChanged(nameof(HeightText));
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валиден ръст (100-250 см).", "OK");
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditWeightAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Тегло",
+            "Въведете тегло в килограми:",
+            "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: weightText.Replace(" кг", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (decimal.TryParse(result, out var newWeight) && newWeight >= 30 && newWeight <= 250)
+        {
+            await UpdateProfileFieldAsync("WeightKg", newWeight);
+            weightText = $"{newWeight:F0} кг";
+            OnPropertyChanged(nameof(WeightText));
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно тегло (30-250 кг).", "OK");
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditTargetWeightAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Желано тегло",
+            "Въведете желано тегло в килограми:",
+            "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: targetWeightText.Replace(" кг", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (!decimal.TryParse(result, out var newTarget) || newTarget < 30 || newTarget > 250)
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно тегло (30-250 кг).", "OK");
+            return;
+        }
+
+        var currentWeight = decimal.Parse(weightText.Replace(" кг", ""));
+        var validationError = ValidateWeightVsGoal(currentWeight, newTarget);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync("TargetWeightKg", newTarget);
+        targetWeightText = $"{newTarget:F0} кг";
+        OnPropertyChanged(nameof(TargetWeightText));
+    }
+
+    [RelayCommand]
+    private async Task EditActivityAsync()
+    {
+        var result = await Shell.Current.DisplayActionSheet(
+            "Ниво на активност",
+            "Отказ",
+            null,
+            "Заседнал",
+            "Леко активен",
+            "Умерено активен",
+            "Много активен",
+            "Изключително активен");
+
+        if (string.IsNullOrEmpty(result) || result == "Отказ") return;
+
+        var level = result switch
+        {
+            "Заседнал" => 1,
+            "Леко активен" => 2,
+            "Умерено активен" => 3,
+            "Много активен" => 4,
+            "Изключително активен" => 5,
+            _ => 1
+        };
+
+        await UpdateProfileFieldAsync("ActivityLevel", level);
+        activityText = result;
+        OnPropertyChanged(nameof(ActivityText));
+    }
+
+    [RelayCommand]
+    private async Task EditGoalAsync()
+    {
+        var result = await Shell.Current.DisplayActionSheet(
+            "Цел",
+            "Отказ",
+            null,
+            "Загуба на тегло",
+            "Задържане на теглото",
+            "Качване на тегло",
+            "Качване на мускулна маса");
+
+        if (string.IsNullOrEmpty(result) || result == "Отказ") return;
+
+        var goal = result switch
+        {
+            "Загуба на тегло" => 1,
+            "Задържане на теглото" => 2,
+            "Качване на тегло" => 3,
+            "Качване на мускулна маса" => 4,
+            _ => 2
+        };
+
+        // Проверка спрямо текущото и желаното тегло
+        var currentWeight = decimal.Parse(weightText.Replace(" кг", ""));
+        var targetWeight = decimal.Parse(targetWeightText.Replace(" кг", ""));
+        var validationError = ValidateGoalVsWeights(goal, currentWeight, targetWeight);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync("CurrentGoal", goal);
+        goalText = result;
+        OnPropertyChanged(nameof(GoalText));
+    }
+
+    private string? ValidateWeightVsGoal(decimal currentWeight, decimal targetWeight)
+    {
+        // Определяме текущата цел
+        var goalCode = goalText switch
+        {
+            "Загуба на тегло" => 1,
+            "Задържане на теглото" => 2,
+            "Качване на тегло" => 3,
+            "Качване на мускулна маса" => 4,
+            _ => 0
+        };
+
+        return ValidateGoalVsWeights(goalCode, currentWeight, targetWeight);
+    }
+
+    /// <summary>
+    /// Проверява дали целта е съвместима с теглата.
+    /// </summary>
+    private string? ValidateGoalVsWeights(int goalCode, decimal currentWeight, decimal targetWeight)
+    {
+        switch (goalCode)
+        {
+            case 1: // Загуба на тегло
+                if (targetWeight >= currentWeight)
+                    return $"При цел \"Загуба на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-малко от текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 2: // Задържане на теглото
+                if (targetWeight != currentWeight)
+                    return $"При цел \"Задържане на теглото\" желаното тегло трябва да е равно на текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 3: // Качване на тегло
+                if (targetWeight <= currentWeight)
+                    return $"При цел \"Качване на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 4: // Качване на мускулна маса
+                if (targetWeight <= currentWeight)
+                    return $"При цел \"Качване на мускулна маса\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
+                break;
+        }
+
+        return null; // Няма грешка
+    }
+
+    /// <summary>
+    /// Обновява едно поле в базата данни.
+    /// </summary>
+    private async Task UpdateProfileFieldAsync(string fieldName, object value)
+    {
+        try
+        {
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (string.IsNullOrEmpty(userId)) return;
+
+            await _api.PostAsync("api/UserDetails/update-field",
+                new
+                {
+                    UserID = Guid.Parse(userId),
+                    FieldName = fieldName,
+                    Value = value.ToString()
+                });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Update field error: {ex.Message}");
+            await Shell.Current.DisplayAlert("Грешка", "Неуспешно обновяване на данните.", "OK");
+        }
+    }
 }

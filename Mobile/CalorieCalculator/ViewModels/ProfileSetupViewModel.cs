@@ -72,6 +72,8 @@ public partial class ProfileSetupViewModel : ObservableObject
     [ObservableProperty] private int selectedTargetWeightKgIndex = 35;
     [ObservableProperty] private int selectedTargetWeightLbsIndex = 77;
 
+    [ObservableProperty] private bool isEditMode;
+
     public List<string> AgeOptions { get; } = Enumerable.Range(14, 87)
         .Select(a => $"{a} години").ToList();
 
@@ -476,8 +478,15 @@ public partial class ProfileSetupViewModel : ObservableObject
                 OnPropertyChanged(nameof(ErrorMessage));
                 return;
             }
-
-            await Shell.Current.GoToAsync("//MainPage?UserID={userId}");
+            if (isEditMode)
+            {
+                await Shell.Current.DisplayAlert("Успех", "Профилът е обновен успешно!", "OK");
+                await Shell.Current.GoToAsync("//ProfilePage");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync("//MainPage");
+            }
         }
         catch (Exception ex)
         {
@@ -498,5 +507,82 @@ public partial class ProfileSetupViewModel : ObservableObject
         int ft = 3 + (index / 12);
         int inch = index % 12;
         return ft + (inch / 12.0m);
+    }
+
+    public async Task LoadExistingProfileAsync()
+    {
+        isEditMode = true;
+        OnPropertyChanged(nameof(IsEditMode));
+
+        try
+        {
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (string.IsNullOrEmpty(userId)) return;
+
+            var response = await _api.GetSingleAsync<System.Text.Json.JsonElement>(
+                $"api/UserDetails/{userId}");
+
+            if (response.ValueKind == System.Text.Json.JsonValueKind.Undefined) return;
+
+            // Попълваме полетата с текущите стойности
+            nickname = response.GetProperty("nickname").GetString() ?? string.Empty;
+            OnPropertyChanged(nameof(Nickname));
+
+            var gender = response.GetProperty("gender").GetInt32();
+            selectedGender = gender;
+            OnPropertyChanged(nameof(SelectedGender));
+            if (gender == 1) { isMaleSelected = true; isFemaleSelected = false; }
+            else { isMaleSelected = false; isFemaleSelected = true; }
+            OnPropertyChanged(nameof(IsMaleSelected));
+            OnPropertyChanged(nameof(IsFemaleSelected));
+
+            var dob = DateTime.Parse(response.GetProperty("dateOfBirth").GetString() ?? "");
+            var age = DateTime.UtcNow.Year - dob.Year;
+            selectedAgeIndex = Math.Max(0, age - 14);
+            OnPropertyChanged(nameof(SelectedAgeIndex));
+
+            var heightCm = response.GetProperty("heightCm").GetDecimal();
+            selectedHeightCmIndex = Math.Max(0, (int)heightCm - 100);
+            OnPropertyChanged(nameof(SelectedHeightCmIndex));
+
+            var weightKg = response.GetProperty("weightKg").GetDecimal();
+            selectedWeightKgIndex = Math.Max(0, (int)weightKg - 30);
+            OnPropertyChanged(nameof(SelectedWeightKgIndex));
+
+            var activity = response.GetProperty("activityLevel").GetInt32();
+            selectedActivityLevel = activity;
+            OnPropertyChanged(nameof(SelectedActivityLevel));
+            // Обновяваме bool-овете за визуална селекция
+            isSedentarySelected = activity == 1;
+            isLightlyActiveSelected = activity == 2;
+            isModerateActiveSelected = activity == 3;
+            isVeryActiveSelected = activity == 4;
+            isExtraActiveSelected = activity == 5;
+            OnPropertyChanged(nameof(IsSedentarySelected));
+            OnPropertyChanged(nameof(IsLightlyActiveSelected));
+            OnPropertyChanged(nameof(IsModerateActiveSelected));
+            OnPropertyChanged(nameof(IsVeryActiveSelected));
+            OnPropertyChanged(nameof(IsExtraActiveSelected));
+
+            var goal = response.GetProperty("currentGoal").GetInt32();
+            selectedGoalType = goal;
+            OnPropertyChanged(nameof(SelectedGoalType));
+            isWeightLossSelected = goal == 1;
+            isMaintenanceSelected = goal == 2;
+            isWeightGainSelected = goal == 3;
+            isMuscleGainSelected = goal == 4;
+            OnPropertyChanged(nameof(IsWeightLossSelected));
+            OnPropertyChanged(nameof(IsMaintenanceSelected));
+            OnPropertyChanged(nameof(IsWeightGainSelected));
+            OnPropertyChanged(nameof(IsMuscleGainSelected));
+
+            var targetKg = response.GetProperty("targetWeightKg").GetDecimal();
+            selectedTargetWeightKgIndex = Math.Max(0, (int)targetKg - 30);
+            OnPropertyChanged(nameof(SelectedTargetWeightKgIndex));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Load profile error: {ex.Message}");
+        }
     }
 }
