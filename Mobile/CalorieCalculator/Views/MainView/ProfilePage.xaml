@@ -25,13 +25,58 @@
                         BackgroundColor="White" Padding="20">
                     <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
 
-                        <Grid WidthRequest="90" HeightRequest="90" HorizontalOptions="Center">
+                        <!-- Аватар -->
+                        <Grid WidthRequest="100" HeightRequest="100"
+      HorizontalOptions="Center">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ChangePhotoCommand}" />
+                            </Grid.GestureRecognizers>
+
+                            <!-- Кръг с буква (показва се когато НЯМА снимка) -->
                             <Ellipse Fill="{Binding ProfileColor}"
-                                     WidthRequest="90" HeightRequest="90"
-                                     HorizontalOptions="Center" VerticalOptions="Center" />
+             WidthRequest="100" HeightRequest="100"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             IsVisible="{Binding HasProfileImage, Converter={StaticResource InvertBoolConverter}}" />
                             <Label Text="{Binding ProfileInitial}"
-                                   FontSize="36" FontAttributes="Bold" TextColor="White"
-                                   HorizontalOptions="Center" VerticalOptions="Center" />
+           FontSize="40"
+           FontAttributes="Bold"
+           TextColor="White"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           IsVisible="{Binding HasProfileImage, Converter={StaticResource InvertBoolConverter}}" />
+
+                            <!-- Снимка (показва се когато ИМА снимка) -->
+                            <Border StrokeShape="RoundRectangle 50"
+            StrokeThickness="0"
+            WidthRequest="100"
+            HeightRequest="100"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            IsVisible="{Binding HasProfileImage}">
+                                <Image Source="{Binding ProfileImage}"
+               Aspect="AspectFill"
+               WidthRequest="100"
+               HeightRequest="100" />
+                            </Border>
+
+                            <!-- Камера иконка (винаги видима) -->
+                            <Grid WidthRequest="32" HeightRequest="32"
+          HorizontalOptions="End"
+          VerticalOptions="End">
+                                <Ellipse Fill="#3DB89E"
+                 WidthRequest="32" HeightRequest="32"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center">
+                                    <Ellipse.Shadow>
+                                        <Shadow Brush="Black" Offset="0,1" Radius="2" Opacity="0.2" />
+                                    </Ellipse.Shadow>
+                                </Ellipse>
+                                <Label Text="📷"
+               FontSize="16"
+               HorizontalOptions="Center"
+               VerticalOptions="Center" />
+                            </Grid>
                         </Grid>
 
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="8"
