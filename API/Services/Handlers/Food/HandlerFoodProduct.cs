@@ -1,6 +1,7 @@
 ﻿using DataLayer.Models;
 using MediatR;
 using Services.Queries;
+using System.Net.Http.Json;
 
 
 namespace Services.Handlers.Food;
@@ -12,7 +13,8 @@ public class HandlerFoodProduct :
     IRequestHandler<FoodProductQuery, FoodProduct?>,
     IRequestHandler<FoodProductsQuery, List<FoodProduct>>,
     IRequestHandler<FoodCategoriesQuery, List<FoodCategory>>,
-    IRequestHandler<MealFoodsQuery, List<MealFoodResponse>>
+    IRequestHandler<MealFoodsQuery, List<MealFoodResponse>>,
+    IRequestHandler<FoodProductByBarcodeQuery, BarcodeProductResponse>
 {
     private readonly IServices _services;
 
@@ -37,7 +39,8 @@ public class HandlerFoodProduct :
             request.Fats,
             request.Protein,
             request.Carbs,
-            request.Category);
+            request.Category,
+            request.Barcode);
 
         _services.Repository.Save(product, request.ProductID.HasValue);
         await _services.Repository.SaveChanges();
@@ -152,5 +155,67 @@ public class HandlerFoodProduct :
                 Fats = Math.Round((mf.FoodProduct != null ? mf.FoodProduct.Fats : 0) * mf.Weight / 100m, 1)
             })
             .ToList();
+    }
+
+    public async Task<BarcodeProductResponse> Handle(FoodProductByBarcodeQuery request, CancellationToken cancellationToken)
+    {
+        var local = _services.Repository.SetNoTracking<FoodProduct>().FirstOrDefault(p => p.Barcode == request.Barcode);
+
+        if (local != null)
+        {
+            return new BarcodeProductResponse
+            {
+                Found = true,
+                FromLocal = true,
+                ProductID = local.ProductID,
+                ProductName = local.Name ?? "",
+                Description = local.Description ?? "",
+                Calories = local.Calories,
+                Protein = local.Protein,
+                Carbs = local.Carbs,
+                Fats = local.Fats,
+                Weight = local.Weight,
+                CategoryID = local.CategoryID,
+                Barcode = request.Barcode
+            };
+        }
+
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("CalorieCalculator/1.0");
+
+        var response = await httpClient.GetAsync($"https://world.openfoodfacts.org/api/v2/product/{request.Barcode}.json", cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadFromJsonAsync<OpenFoodFactsResponse>(
+                cancellationToken: cancellationToken);
+
+            if (json?.Status == 1 && json.Product != null)
+            {
+                var nutriments = json.Product.Nutriments;
+
+                return new BarcodeProductResponse
+                {
+                    Found = true,
+                    FromLocal = false,
+                    ProductID = null,
+                    ProductName = json.Product.ProductName ?? "",
+                    Description = json.Product.Brands ?? "",
+                    Calories = (int)(nutriments?.EnergyKcal100g ?? 0),
+                    Protein = (decimal)(nutriments?.Proteins100g ?? 0),
+                    Carbs = (decimal)(nutriments?.Carbohydrates100g ?? 0),
+                    Fats = (decimal)(nutriments?.Fat100g ?? 0),
+                    Weight = 100,
+                    CategoryID = 0,
+                    Barcode = request.Barcode
+                };
+            }
+        }
+
+        return new BarcodeProductResponse
+        {
+            Found = false,
+            Barcode = request.Barcode
+        };
     }
 }

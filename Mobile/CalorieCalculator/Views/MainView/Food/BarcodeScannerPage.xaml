@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="CalorieCalculator.Views.MainView.Food.BarcodeScannerPage"
+             BackgroundColor="#1A1A2E"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid Grid.Row="0" Padding="20,50,20,10" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0"
+                    Text="←"
+                    FontSize="24"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    Clicked="OnBackClicked"/>
+            <Label Grid.Column="1"
+                   Text="Сканирай баркод"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+        </Grid>
+
+        <zxing:CameraBarcodeReaderView Grid.Row="1"
+                                        x:Name="BarcodeReader"
+                                        BarcodesDetected="OnBarcodesDetected"
+                                        IsDetecting="True"
+                                        Margin="20"/>
+
+        <Frame Grid.Row="2"
+               Margin="20,10,20,30"
+               Padding="15"
+               CornerRadius="15"
+               BackgroundColor="#2D2D44"
+               HasShadow="False"
+               BorderColor="Transparent">
+            <Label Text="Насочете камерата към баркода на продукта"
+                   FontSize="14"
+                   TextColor="#888"
+                   HorizontalTextAlignment="Center"/>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>

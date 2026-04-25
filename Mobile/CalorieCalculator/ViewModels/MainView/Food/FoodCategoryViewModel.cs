@@ -50,6 +50,7 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
     public ICommand SelectCategoryCommand { get; }
     public ICommand GoBackCommand { get; }
     public ICommand CreateProductCommand { get; }
+    public ICommand ScanBarcodeCommand { get; }
 
     public FoodCategoryViewModel(ApiService apiService)
     {
@@ -59,6 +60,7 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
         SelectCategoryCommand = new Command<FoodCategoryDisplayItem>(SelectCategory);
         GoBackCommand = new Command(GoBack);
         CreateProductCommand = new Command(CreateProduct);
+        ScanBarcodeCommand = new Command(ScanBarcode);
     }
 
     private async Task LoadCategoriesAsync()
@@ -114,6 +116,12 @@ public class FoodCategoryViewModel : INotifyPropertyChanged
     private async void CreateProduct()
     {
         await Shell.Current.GoToAsync("food/create");
+    }
+
+    private async void ScanBarcode()
+    {
+        await Shell.Current.GoToAsync(
+            $"barcode/scan?ProgramID={ProgramID}&MealType={MealType}&MealID={MealID}");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

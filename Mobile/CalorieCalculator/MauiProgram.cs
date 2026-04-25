@@ -1,7 +1,8 @@
 ﻿using CalorieCalculator.Service;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
-using CommunityToolkit.Maui;
+using ZXing.Net.Maui.Controls;
 
 namespace CalorieCalculator
 {
@@ -12,6 +13,7 @@ namespace CalorieCalculator
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseBarcodeReader()
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {

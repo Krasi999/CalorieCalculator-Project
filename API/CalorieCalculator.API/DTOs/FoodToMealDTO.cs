@@ -17,4 +17,6 @@
     public decimal Carbs { get; set; }
 
     public int CategoryID { get; set; }
+
+    public string? Barcode { get; set; }
 }

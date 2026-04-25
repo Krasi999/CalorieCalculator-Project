@@ -10,10 +10,8 @@ public class ApiService
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(DeviceInfo.Platform == DevicePlatform.Android
-               // ? "http://192.168.115.136:5083"
-                ? "http://192.168.115.203:5083"
-                : "http://localhost:5083")
+            // for testing comment the row below DO NOT DELETE IT and make one for your IP address
+            BaseAddress = new Uri("http://10.30.180.181:5083")
         };
     }
 

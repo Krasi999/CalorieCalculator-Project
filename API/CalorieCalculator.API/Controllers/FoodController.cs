@@ -64,9 +64,21 @@ public class FoodController : ControllerBase
             Fats = request.Fats,
             Protein = request.Protein,
             Carbs = request.Carbs,
-            Category = (FoodCategories)request.CategoryID
+            Category = (FoodCategories)request.CategoryID,
+            Barcode = request.Barcode
         });
 
         return Ok(new { message = "Продукта е запазен успешно" });
+    }
+
+    [HttpGet("barcode/{barcode}")]
+    public async Task<IActionResult> GetByBarcode(string barcode)
+    {
+        var result = await _services.Mediator.Send(new FoodProductByBarcodeQuery
+        {
+            Barcode = barcode
+        });
+
+        return Ok(result);
     }
 }

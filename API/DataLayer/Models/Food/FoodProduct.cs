@@ -32,6 +32,8 @@ public class FoodProduct
     [ForeignKey("CategoryID")]
     public FoodCategory? Category { get; set; }
 
+    public string? Barcode { get; private set; }
+
 
     public void Update(
         string name, 
@@ -41,7 +43,8 @@ public class FoodProduct
         decimal fats, 
         decimal protein, 
         decimal carbs,
-        FoodCategories categoryId)
+        FoodCategories categoryId,
+        string barcode)
     {
         Name = name;
         Description = description;
@@ -51,5 +54,6 @@ public class FoodProduct
         Protein = protein;
         Carbs = carbs;
         CategoryID = (int)categoryId;
+        Barcode = barcode;
     }
 }
