@@ -284,8 +284,8 @@ public partial class ProfileViewModel : ObservableObject
             var confirm = await Shell.Current.DisplayAlert(
                 "Изключване",
                 "Сигурни ли сте, че искате да изключите биометричния вход?",
-                "Да",
-                "Не");
+                "Не",
+                "Да");
 
             if (!confirm) return;
 
@@ -314,8 +314,8 @@ public partial class ProfileViewModel : ObservableObject
         var confirm = await Shell.Current.DisplayAlert(
             "Изход",
             "Сигурни ли сте, че искате да излезете от профила си?",
-            "Да",
-            "Не");
+            "Не",
+            "Да");
 
         if (!confirm) return;
 
