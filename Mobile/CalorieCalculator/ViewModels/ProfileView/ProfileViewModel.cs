@@ -1,4 +1,5 @@
 ﻿using CalorieCalculator.Service;
+using CalorieCalculator.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Text.Json;
@@ -51,7 +52,10 @@ public partial class ProfileViewModel : ObservableObject
     [ObservableProperty] private bool isDay5Today;
     [ObservableProperty] private bool isDay6Today;
     [ObservableProperty] private bool isDay7Today;
-    
+
+    [ObservableProperty] private ImageSource profileImage;
+    [ObservableProperty] private bool hasProfileImage;
+
 
 
     private async Task LoadProfileAsync()
@@ -131,6 +135,14 @@ public partial class ProfileViewModel : ObservableObject
             isBiometricEnabled = Preferences.Get("biometric_enabled", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
+            var photoPath = Preferences.Get("profile_photo_path", string.Empty);
+            if (!string.IsNullOrEmpty(photoPath) && File.Exists(photoPath))
+            {
+                profileImage = ImageSource.FromFile(photoPath);
+                OnPropertyChanged(nameof(ProfileImage));
+                hasProfileImage = true;
+                OnPropertyChanged(nameof(HasProfileImage));
+            }
         }
         catch (Exception ex)
         {
@@ -310,7 +322,7 @@ public partial class ProfileViewModel : ObservableObject
         Preferences.Remove("auth_token");
         Preferences.Remove("user_id");
         Preferences.Remove("last_password_login");
-        Preferences.Remove("biometric_enabled");
+        //Preferences.Remove("biometric_enabled");
 
         await Shell.Current.GoToAsync("//Login");
     }
@@ -323,4 +335,100 @@ public partial class ProfileViewModel : ObservableObject
     }
 
     public ICommand ToggleAboutCommand => new Command(() => IsAboutVisible = !IsAboutVisible);
+
+
+    [RelayCommand]
+    private async Task ChangePhotoAsync()
+    {
+        var action = await Shell.Current.DisplayActionSheet(
+            "Профилна снимка",
+            "Отказ",
+            null,
+            "Направи селфи",
+            "Премахни снимката");
+
+        if (action == "Направи селфи")
+        {
+            await TakePhotoAsync();
+        }
+        else if (action == "Премахни снимката")
+        {
+            RemovePhoto();
+        }
+    }
+
+    private async Task TakePhotoAsync()
+    {
+        try
+        {
+            if (!MediaPicker.Default.IsCaptureSupported)
+            {
+                await Shell.Current.DisplayAlert("Грешка", "Камерата не е налична.", "OK");
+                return;
+            }
+
+            var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
+            {
+                Title = "Направи селфи"
+            });
+
+            if (photo != null)
+            {
+                // Уникално име с timestamp за да не кешира MAUI старата снимка
+                var timestamp = DateTime.Now.Ticks;
+                var fileName = $"profile_{Preferences.Get("user_id", "default")}_{timestamp}.jpg";
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+                // Изтриваме старата снимка ако съществува
+                var oldPath = Preferences.Get("profile_photo_path", string.Empty);
+                if (!string.IsNullOrEmpty(oldPath) && File.Exists(oldPath))
+                {
+                    try { File.Delete(oldPath); } catch { }
+                }
+
+                // Копираме новата снимка
+                using (var stream = await photo.OpenReadAsync())
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    await stream.CopyToAsync(fileStream);
+                }
+
+                // Запазваме пътя
+                Preferences.Set("profile_photo_path", filePath);
+
+                // Обновяваме UI с нов ImageSource
+                profileImage = ImageSource.FromFile(filePath);
+                OnPropertyChanged(nameof(ProfileImage));
+                hasProfileImage = true;
+                OnPropertyChanged(nameof(HasProfileImage));
+            }
+        }
+        catch (PermissionException)
+        {
+            await Shell.Current.DisplayAlert(
+                "Разрешение",
+                "Моля, разрешете достъп до камерата от настройките на телефона.",
+                "OK");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Camera error: {ex.Message}");
+            await Shell.Current.DisplayAlert("Грешка", "Неуспешно заснемане на снимка.", "OK");
+        }
+    }
+
+    private void RemovePhoto()
+    {
+        var filePath = Preferences.Get("profile_photo_path", string.Empty);
+        if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        Preferences.Remove("profile_photo_path");
+        profileImage = null;
+        OnPropertyChanged(nameof(ProfileImage));
+        hasProfileImage = false;
+        OnPropertyChanged(nameof(HasProfileImage));
+    }
 }
