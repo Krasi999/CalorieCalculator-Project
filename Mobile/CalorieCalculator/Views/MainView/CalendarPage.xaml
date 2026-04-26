@@ -69,45 +69,60 @@
 
                         <CollectionView ItemsSource="{Binding Days}"
                                         ItemsLayout="VerticalGrid, 7"
-                                        HeightRequest="300"
+                                        HeightRequest="360"
                                         SelectionMode="None">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:CalendarDayItem">
-                                    <VerticalStackLayout Spacing="3"
-                                                         Padding="1"
-                                                         HorizontalOptions="Center"
-                                                         WidthRequest="46">
+                                    <VerticalStackLayout Spacing="0"
+                             Padding="0"
+                             HorizontalOptions="Center"
+                             WidthRequest="50"
+                             HeightRequest="50">
                                         <VerticalStackLayout.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CalendarViewModel}}, Path=SelectDayCommand}"
-                                                                  CommandParameter="{Binding .}" />
+                                      CommandParameter="{Binding .}" />
                                         </VerticalStackLayout.GestureRecognizers>
 
-                                        <Grid WidthRequest="38" HeightRequest="38"
-                                              HorizontalOptions="Center">
+                                        <Grid WidthRequest="44" HeightRequest="44"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
 
+                                            <!-- Фон на деня (днес = син) -->
                                             <Ellipse Fill="{Binding DayBackgroundColor}"
-                                                     WidthRequest="30" HeightRequest="30"
-                                                     HorizontalOptions="Center" VerticalOptions="Center" />
+                         WidthRequest="32" HeightRequest="32"
+                         HorizontalOptions="Center" VerticalOptions="Center" />
 
-                                            <Ellipse WidthRequest="30" HeightRequest="30"
-                                                     HorizontalOptions="Center" VerticalOptions="Center"
-                                                     Fill="Transparent"
-                                                     Stroke="{Binding SelectionRingColor}"
-                                                     StrokeThickness="{Binding SelectionRingThickness}" />
+                                            <!-- Селекция (синя рамка при избор) -->
+                                            <Ellipse WidthRequest="32" HeightRequest="32"
+                         HorizontalOptions="Center" VerticalOptions="Center"
+                         Fill="Transparent"
+                         Stroke="{Binding SelectionRingColor}"
+                         StrokeThickness="{Binding SelectionRingThickness}" />
 
-                                            <Ellipse WidthRequest="36" HeightRequest="36"
-                                                     HorizontalOptions="Center" VerticalOptions="Center"
-                                                     Fill="Transparent"
-                                                     Stroke="{Binding CalorieRingColor}"
-                                                     StrokeThickness="2"
-                                                     IsVisible="{Binding HasCalories}" />
+                                            <!-- Сив фонов пръстен — НЕ за днешния ден -->
+                                            <Ellipse WidthRequest="40" HeightRequest="40"
+         HorizontalOptions="Center" VerticalOptions="Center"
+         Fill="Transparent"
+         Stroke="#E2E8F0"
+         StrokeThickness="2.5"
+         IsVisible="{Binding ShowGrayRing}" />
 
+                                            <!-- Калориен пръстен — дъга -->
+                                            <Path Stroke="{Binding CalorieRingColor}"
+      StrokeThickness="2.5"
+      StrokeLineCap="Round"
+      Fill="Transparent"
+      Data="{Binding ProgressForArc, Converter={StaticResource ProgressToArcPathConverter}, ConverterParameter='40,3'}"
+      WidthRequest="40" HeightRequest="40"
+      HorizontalOptions="Center" VerticalOptions="Center"
+      IsVisible="{Binding ShowCalorieRing}" />
+
+                                            <!-- Число на деня -->
                                             <Label Text="{Binding DayNumber}"
-                                                   FontSize="13"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{Binding TextColor}"
-                                                   HorizontalOptions="Center" VerticalOptions="Center" />
-
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="{Binding TextColor}"
+                       HorizontalOptions="Center" VerticalOptions="Center" />
                                         </Grid>
                                     </VerticalStackLayout>
                                 </DataTemplate>
