@@ -480,6 +480,8 @@ public partial class ProfileSetupViewModel : ObservableObject
             }
             // Уверяваме се, че биометрията е изключена за нов потребител
             Preferences.Set("biometric_enabled", false);
+            Preferences.Set("height_unit", isHeightInCm ? "cm" : "ft");
+            Preferences.Set("weight_unit", isWeightInKg ? "kg" : "lbs");
 
             try
             {

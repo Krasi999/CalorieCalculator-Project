@@ -68,34 +68,33 @@
                         </VerticalStackLayout>
 
                         <Grid Grid.Column="1"
-                          WidthRequest="140"
-                          HeightRequest="140">
+                             WidthRequest="130"
+                             HeightRequest="130">
 
-                            <BoxView CornerRadius="70"
-                                 WidthRequest="140"
-                                 HeightRequest="140"
-                                 Color="#E8F5F0"
+                            <!-- Външен пръстен -->
+                            <Ellipse Fill="#E8F5F0"
+                            WidthRequest="130" HeightRequest="130"
                                  HorizontalOptions="Center"
-                                 VerticalOptions="Center"/>
+                                 VerticalOptions="Center" />
 
-                            <BoxView CornerRadius="55"
-                                 WidthRequest="110"
-                                 HeightRequest="110"
-                                 Color="White"
+                            <!-- Вътрешен бял кръг -->
+                            <Ellipse Fill="White"
+                                 WidthRequest="100" HeightRequest="100"
                                  HorizontalOptions="Center"
-                                 VerticalOptions="Center"/>
+                                 VerticalOptions="Center" />
 
+                            <!-- Текст -->
                             <VerticalStackLayout HorizontalOptions="Center"
-                                             VerticalOptions="Center">
+                                         VerticalOptions="Center">
                                 <Label Text="{Binding CaloriesEaten}"
-                                   FontSize="28"
-                                   FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="#1A1A2E"/>
+                               FontSize="26"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#1A1A2E"/>
                                 <Label Text="Изядени"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="#9E9E9E"/>
+                               FontSize="11"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#9E9E9E"/>
                             </VerticalStackLayout>
                         </Grid>
 
@@ -122,7 +121,7 @@
                                              HorizontalOptions="Center"
                                              Spacing="5">
                                 <Label Text="Въглeхидрати"
-                                   FontSize="13"
+                                   FontSize="11"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
                                 <ProgressBar Progress="{Binding CarbsProgress}"
@@ -144,7 +143,7 @@
                                              HorizontalOptions="Center"
                                              Spacing="5">
                                 <Label Text="Протеини"
-                                   FontSize="13"
+                                   FontSize="11"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
                                 <ProgressBar Progress="{Binding ProteinProgress}"
@@ -166,7 +165,7 @@
                                              HorizontalOptions="Center"
                                              Spacing="5">
                                 <Label Text="Мазнини"
-                                   FontSize="13"
+                                   FontSize="11"
                                    HorizontalTextAlignment="Center"
                                    TextColor="#9E9E9E"/>
                                 <ProgressBar Progress="{Binding FatProgress}"

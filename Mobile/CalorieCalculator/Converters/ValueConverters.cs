@@ -69,7 +69,7 @@ public class BoolToStepColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+        return value is true ? Color.FromArgb("#3DB89E") : Color.FromArgb("#E5E7EB");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -82,7 +82,7 @@ public class BoolToStepInactiveConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is false ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+        return value is false ? Color.FromArgb("#3DB89E") : Color.FromArgb("#E5E7EB");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

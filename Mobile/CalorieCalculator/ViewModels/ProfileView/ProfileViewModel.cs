@@ -95,11 +95,31 @@ public partial class ProfileViewModel : ObservableObject
                 OnPropertyChanged(nameof(AgeText));
 
                 var heightCm = response.GetProperty("heightCm").GetDecimal();
-                heightText = $"{heightCm:F0} см";
+                var heightFt = response.GetProperty("heightFt").GetDecimal();
+                var heightUnit = Preferences.Get("height_unit", "cm");
+                if (heightUnit == "ft" && heightFt > 0)
+                {
+                    var feet = (int)heightFt;
+                    var inches = (int)Math.Round((heightFt - feet) * 12);
+                    heightText = $"{feet}'{inches}\"";
+                }
+                else
+                {
+                    heightText = $"{heightCm:F0} см";
+                }
                 OnPropertyChanged(nameof(HeightText));
 
                 var weightKg = response.GetProperty("weightKg").GetDecimal();
-                weightText = $"{weightKg:F0} кг";
+                var weightLbs = response.GetProperty("weightLbs").GetDecimal();
+                var weightUnit = Preferences.Get("weight_unit", "kg");
+                if (weightUnit == "lbs" && weightLbs > 0)
+                {
+                    weightText = $"{weightLbs:F0} lbs";
+                }
+                else
+                {
+                    weightText = $"{weightKg:F0} кг";
+                }
                 OnPropertyChanged(nameof(WeightText));
 
                 var activity = response.GetProperty("activityLevel").GetInt32();
@@ -126,7 +146,15 @@ public partial class ProfileViewModel : ObservableObject
                 OnPropertyChanged(nameof(GoalText));
 
                 var targetKg = response.GetProperty("targetWeightKg").GetDecimal();
-                targetWeightText = $"{targetKg:F0} кг";
+                var targetLbs = response.GetProperty("targetWeightLbs").GetDecimal();
+                if (weightUnit == "lbs" && targetLbs > 0)
+                {
+                    targetWeightText = $"{targetLbs:F0} lbs";
+                }
+                else
+                {
+                    targetWeightText = $"{targetKg:F0} кг";
+                }
                 OnPropertyChanged(nameof(TargetWeightText));
             }
 
@@ -457,79 +485,141 @@ public partial class ProfileViewModel : ObservableObject
     [RelayCommand]
     private async Task EditHeightAsync()
     {
-        var result = await Shell.Current.DisplayPromptAsync(
-            "Ръст",
-            "Въведете ръст в сантиметри:",
-            "OK", "Отказ",
-            keyboard: Microsoft.Maui.Keyboard.Numeric,
-            initialValue: heightText.Replace(" см", ""));
+        var heightUnit = Preferences.Get("height_unit", "cm");
+        var currentValue = heightText.Replace(" см", "").Replace("\"", "").Replace("'", " ").Trim();
 
-        if (string.IsNullOrEmpty(result)) return;
-
-        if (decimal.TryParse(result, out var newHeight) && newHeight >= 100 && newHeight <= 250)
+        string prompt, unit;
+        if (heightUnit == "ft")
         {
-            await UpdateProfileFieldAsync("HeightCm", newHeight);
-            heightText = $"{newHeight:F0} см";
-            OnPropertyChanged(nameof(HeightText));
+            prompt = "Въведете ръст във футове:";
+            unit = "ft";
         }
         else
         {
-            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валиден ръст (100-250 см).", "OK");
+            prompt = "Въведете ръст в сантиметри:";
+            unit = "cm";
+        }
+
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Ръст", prompt, "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric);
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (decimal.TryParse(result, out var newValue))
+        {
+            if (unit == "cm" && newValue >= 100 && newValue <= 250)
+            {
+                await UpdateProfileFieldAsync("HeightCm", newValue);
+                heightText = $"{newValue:F0} см";
+                OnPropertyChanged(nameof(HeightText));
+            }
+            else if (unit == "ft" && newValue >= 3 && newValue <= 8)
+            {
+                await UpdateProfileFieldAsync("HeightFt", newValue);
+                var feet = (int)newValue;
+                var inches = (int)Math.Round((newValue - feet) * 12);
+                heightText = $"{feet}'{inches}\"";
+                OnPropertyChanged(nameof(HeightText));
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валиден ръст.", "OK");
+            }
         }
     }
 
     [RelayCommand]
     private async Task EditWeightAsync()
     {
+        var weightUnit = Preferences.Get("weight_unit", "kg");
+        var prompt = weightUnit == "lbs"
+            ? "Въведете тегло в паундове:"
+            : "Въведете тегло в килограми:";
+
         var result = await Shell.Current.DisplayPromptAsync(
-            "Тегло",
-            "Въведете тегло в килограми:",
-            "OK", "Отказ",
+            "Тегло", prompt, "OK", "Отказ",
             keyboard: Microsoft.Maui.Keyboard.Numeric,
-            initialValue: weightText.Replace(" кг", ""));
+            initialValue: weightText.Replace(" кг", "").Replace(" lbs", ""));
 
         if (string.IsNullOrEmpty(result)) return;
 
-        if (decimal.TryParse(result, out var newWeight) && newWeight >= 30 && newWeight <= 250)
+        if (!decimal.TryParse(result, out var newWeight))
         {
-            await UpdateProfileFieldAsync("WeightKg", newWeight);
-            weightText = $"{newWeight:F0} кг";
-            OnPropertyChanged(nameof(WeightText));
-        }
-        else
-        {
-            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно тегло (30-250 кг).", "OK");
-        }
-    }
-
-    [RelayCommand]
-    private async Task EditTargetWeightAsync()
-    {
-        var result = await Shell.Current.DisplayPromptAsync(
-            "Желано тегло",
-            "Въведете желано тегло в килограми:",
-            "OK", "Отказ",
-            keyboard: Microsoft.Maui.Keyboard.Numeric,
-            initialValue: targetWeightText.Replace(" кг", ""));
-
-        if (string.IsNullOrEmpty(result)) return;
-
-        if (!decimal.TryParse(result, out var newTarget) || newTarget < 30 || newTarget > 250)
-        {
-            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно тегло (30-250 кг).", "OK");
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно число.", "OK");
             return;
         }
 
-        var currentWeight = decimal.Parse(weightText.Replace(" кг", ""));
-        var validationError = ValidateWeightVsGoal(currentWeight, newTarget);
+        var fieldName = weightUnit == "lbs" ? "WeightLbs" : "WeightKg";
+        var min = weightUnit == "lbs" ? 66m : 30m;
+        var max = weightUnit == "lbs" ? 550m : 250m;
+
+        if (newWeight < min || newWeight > max)
+        {
+            await Shell.Current.DisplayAlert("Грешка", $"Моля, въведете валидно тегло ({min}-{max}).", "OK");
+            return;
+        }
+
+        // Валидация спрямо целта
+        var currentTarget = decimal.Parse(targetWeightText.Replace(" кг", "").Replace(" lbs", ""));
+        var currentWeightKg = weightUnit == "lbs" ? newWeight / 2.20462m : newWeight;
+        var targetWeightKg = weightUnit == "lbs" ? currentTarget / 2.20462m : currentTarget;
+        var validationError = ValidateWeightVsGoal(currentWeightKg, targetWeightKg);
         if (validationError != null)
         {
             await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
             return;
         }
 
-        await UpdateProfileFieldAsync("TargetWeightKg", newTarget);
-        targetWeightText = $"{newTarget:F0} кг";
+        await UpdateProfileFieldAsync(fieldName, newWeight);
+        weightText = weightUnit == "lbs" ? $"{newWeight:F0} lbs" : $"{newWeight:F0} кг";
+        OnPropertyChanged(nameof(WeightText));
+    }
+
+    [RelayCommand]
+    private async Task EditTargetWeightAsync()
+    {
+        var weightUnit = Preferences.Get("weight_unit", "kg");
+        var prompt = weightUnit == "lbs"
+            ? "Въведете желано тегло в паундове:"
+            : "Въведете желано тегло в килограми:";
+
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Желано тегло", prompt, "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: targetWeightText.Replace(" кг", "").Replace(" lbs", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (!decimal.TryParse(result, out var newTarget))
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно число.", "OK");
+            return;
+        }
+
+        var fieldName = weightUnit == "lbs" ? "TargetWeightLbs" : "TargetWeightKg";
+        var min = weightUnit == "lbs" ? 66m : 30m;
+        var max = weightUnit == "lbs" ? 550m : 250m;
+
+        if (newTarget < min || newTarget > max)
+        {
+            await Shell.Current.DisplayAlert("Грешка", $"Моля, въведете валидно тегло ({min}-{max}).", "OK");
+            return;
+        }
+
+        // Валидация спрямо целта
+        var currentWeight = decimal.Parse(weightText.Replace(" кг", "").Replace(" lbs", ""));
+        var currentWeightKg = weightUnit == "lbs" ? currentWeight / 2.20462m : currentWeight;
+        var targetWeightKg = weightUnit == "lbs" ? newTarget / 2.20462m : newTarget;
+        var validationError = ValidateWeightVsGoal(currentWeightKg, targetWeightKg);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync(fieldName, newTarget);
+        targetWeightText = weightUnit == "lbs" ? $"{newTarget:F0} lbs" : $"{newTarget:F0} кг";
         OnPropertyChanged(nameof(TargetWeightText));
     }
 

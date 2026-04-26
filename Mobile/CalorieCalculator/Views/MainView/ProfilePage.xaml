@@ -64,7 +64,7 @@
                             <Grid WidthRequest="32" HeightRequest="32"
           HorizontalOptions="End"
           VerticalOptions="End">
-                                <Ellipse Fill="#3DB89E"
+                                <Ellipse Fill="#F2F0EF"
                  WidthRequest="32" HeightRequest="32"
                  HorizontalOptions="Center"
                  VerticalOptions="Center">
@@ -214,7 +214,7 @@
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
                             <Label Text="Биометричен вход"
                                    FontSize="15" FontAttributes="Bold" TextColor="#1E293B" />
-                            <Label Text="Пръстов отпечатък / Face ID"
+                            <Label Text="Пръстов отпечатък"
                                    FontSize="12" TextColor="#94A3B8" />
                         </VerticalStackLayout>
 
@@ -352,7 +352,7 @@
                     </HorizontalStackLayout>
                 </Border>
 
-                <BoxView HeightRequest="20" Color="Transparent" />
+                <BoxView HeightRequest="0.1" Color="Transparent" />
             </VerticalStackLayout>
         </ScrollView>
 
