@@ -132,10 +132,10 @@ public partial class ProfileViewModel : ObservableObject
 
             isBiometricAvailable = await BiometricAuthenticator.IsAvailableAsync();
             OnPropertyChanged(nameof(IsBiometricAvailable));
-            isBiometricEnabled = Preferences.Get("biometric_enabled", false);
+            isBiometricEnabled = Preferences.Get($"biometric_enabled_{userId}", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            var photoPath = Preferences.Get("profile_photo_path", string.Empty);
+            var photoPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
             if (!string.IsNullOrEmpty(photoPath) && File.Exists(photoPath))
             {
                 profileImage = ImageSource.FromFile(photoPath);
@@ -256,11 +256,10 @@ public partial class ProfileViewModel : ObservableObject
 
             // Записваме локално ВЕДНАГА (за toggle бутона)
             isBiometricEnabled = true;
-            Preferences.Set("biometric_enabled", true);
+            var userId = Preferences.Get("user_id", string.Empty);
+            Preferences.Set($"biometric_enabled_{userId}", true);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            // После записваме и в базата
-            var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
                 try
@@ -284,16 +283,16 @@ public partial class ProfileViewModel : ObservableObject
             var confirm = await Shell.Current.DisplayAlert(
                 "Изключване",
                 "Сигурни ли сте, че искате да изключите биометричния вход?",
-                "Не",
-                "Да");
+                "Да",
+                "Не");
 
             if (!confirm) return;
 
             isBiometricEnabled = false;
-            Preferences.Set("biometric_enabled", false);
+            var userId = Preferences.Get("user_id", string.Empty);
+            Preferences.Set($"biometric_enabled_{userId}", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
                 try
@@ -314,8 +313,8 @@ public partial class ProfileViewModel : ObservableObject
         var confirm = await Shell.Current.DisplayAlert(
             "Изход",
             "Сигурни ли сте, че искате да излезете от профила си?",
-            "Не",
-            "Да");
+            "Да",
+            "Не");
 
         if (!confirm) return;
 
@@ -367,41 +366,44 @@ public partial class ProfileViewModel : ObservableObject
                 return;
             }
 
-            var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
-            {
-                Title = "Направи селфи"
-            });
+            var photo = await MediaPicker.Default.CapturePhotoAsync();
 
-            if (photo != null)
-            {
-                // Уникално име с timestamp за да не кешира MAUI старата снимка
-                var timestamp = DateTime.Now.Ticks;
-                var fileName = $"profile_{Preferences.Get("user_id", "default")}_{timestamp}.jpg";
-                var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+            if (photo == null) return;
 
-                // Изтриваме старата снимка ако съществува
-                var oldPath = Preferences.Get("profile_photo_path", string.Empty);
+            var userId = Preferences.Get("user_id", "default");
+            var timestamp = DateTime.Now.Ticks;
+            var fileName = $"profile_{userId}_{timestamp}.jpg";
+            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+            // Изтриваме старата снимка ако съществува
+            try
+            {
+                var oldPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
                 if (!string.IsNullOrEmpty(oldPath) && File.Exists(oldPath))
                 {
-                    try { File.Delete(oldPath); } catch { }
+                    File.Delete(oldPath);
                 }
+            }
+            catch { /* игнорираме грешки при изтриване */ }
 
-                // Копираме новата снимка
-                using (var stream = await photo.OpenReadAsync())
-                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-                {
-                    await stream.CopyToAsync(fileStream);
-                }
+            // Копираме новата снимка
+            using (var sourceStream = await photo.OpenReadAsync())
+            using (var destStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                await sourceStream.CopyToAsync(destStream);
+            }
 
-                // Запазваме пътя
-                Preferences.Set("profile_photo_path", filePath);
+            // Запазваме пътя
+            Preferences.Set($"profile_photo_path_{userId}", filePath);
 
-                // Обновяваме UI с нов ImageSource
+            // Обновяваме UI на главния thread
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
                 profileImage = ImageSource.FromFile(filePath);
                 OnPropertyChanged(nameof(ProfileImage));
                 hasProfileImage = true;
                 OnPropertyChanged(nameof(HasProfileImage));
-            }
+            });
         }
         catch (PermissionException)
         {
@@ -412,20 +414,23 @@ public partial class ProfileViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Camera error: {ex.Message}");
-            await Shell.Current.DisplayAlert("Грешка", "Неуспешно заснемане на снимка.", "OK");
+            System.Diagnostics.Debug.WriteLine($"!!! Camera error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"!!! Stack: {ex.StackTrace}");
+            // НЕ показваме DisplayAlert тук — може да предизвика навигация
         }
     }
 
     private void RemovePhoto()
     {
-        var filePath = Preferences.Get("profile_photo_path", string.Empty);
+        var userId = Preferences.Get("user_id", "default");
+        var filePath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
+
         if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
         {
-            File.Delete(filePath);
+            try { File.Delete(filePath); } catch { }
         }
 
-        Preferences.Remove("profile_photo_path");
+        Preferences.Remove($"profile_photo_path_{userId}");
         profileImage = null;
         OnPropertyChanged(nameof(ProfileImage));
         hasProfileImage = false;

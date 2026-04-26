@@ -478,6 +478,9 @@ public partial class ProfileSetupViewModel : ObservableObject
                 OnPropertyChanged(nameof(ErrorMessage));
                 return;
             }
+            // Уверяваме се, че биометрията е изключена за нов потребител
+            Preferences.Set("biometric_enabled", false);
+
             if (isEditMode)
             {
                 await Shell.Current.DisplayAlert("Успех", "Профилът е обновен успешно!", "OK");

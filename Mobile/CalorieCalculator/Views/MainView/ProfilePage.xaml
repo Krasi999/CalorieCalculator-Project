@@ -129,22 +129,22 @@
 
                         <BoxView HeightRequest="1" Color="#F1F5F9" />
 
-                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto"
-      RowSpacing="10" ColumnSpacing="10" Padding="4">
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+      RowSpacing="12" ColumnSpacing="10" Padding="4">
 
-                            <!-- Пол — не е редактируем -->
+                            <!-- Пол -->
                             <VerticalStackLayout Grid.Row="0" Grid.Column="0">
                                 <Label Text="Пол" FontSize="11" TextColor="#94A3B8" />
                                 <Label Text="{Binding GenderText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
                             </VerticalStackLayout>
 
-                            <!-- Възраст — не е редактируема -->
+                            <!-- Възраст -->
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1">
                                 <Label Text="Възраст" FontSize="11" TextColor="#94A3B8" />
                                 <Label Text="{Binding AgeText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
                             </VerticalStackLayout>
 
-                            <!-- Ръст — редактируем -->
+                            <!-- Ръст -->
                             <VerticalStackLayout Grid.Row="1" Grid.Column="0">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding EditHeightCommand}" />
@@ -155,7 +155,7 @@
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Тегло — редактируем -->
+                            <!-- Тегло -->
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding EditWeightCommand}" />
@@ -166,30 +166,32 @@
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Активност — редактируем -->
-                            <VerticalStackLayout Grid.Row="2" Grid.Column="0">
+                            <!-- Активност — цял ред -->
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding EditActivityCommand}" />
                                 </VerticalStackLayout.GestureRecognizers>
                                 <Label Text="Активност" FontSize="11" TextColor="#94A3B8" />
                                 <HorizontalStackLayout Spacing="4">
-                                    <Label Text="{Binding ActivityText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                    <Label Text="{Binding ActivityText}" FontSize="14" FontAttributes="Bold"
+                   TextColor="#1E293B" LineBreakMode="WordWrap" />
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Цел — редактируем -->
-                            <VerticalStackLayout Grid.Row="2" Grid.Column="1">
+                            <!-- Цел — цял ред -->
+                            <VerticalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding EditGoalCommand}" />
                                 </VerticalStackLayout.GestureRecognizers>
                                 <Label Text="Цел" FontSize="11" TextColor="#94A3B8" />
                                 <HorizontalStackLayout Spacing="4">
-                                    <Label Text="{Binding GoalText}" FontSize="14" FontAttributes="Bold" TextColor="#1E293B" />
+                                    <Label Text="{Binding GoalText}" FontSize="14" FontAttributes="Bold"
+                   TextColor="#1E293B" LineBreakMode="WordWrap" />
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Желано тегло — редактируем -->
-                            <VerticalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                            <!-- Желано тегло — цял ред -->
+                            <VerticalStackLayout Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding EditTargetWeightCommand}" />
                                 </VerticalStackLayout.GestureRecognizers>

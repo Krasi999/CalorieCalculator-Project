@@ -13,13 +13,7 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty] private string errorMessage = string.Empty;
     [ObservableProperty] private bool isBusy = false;
     [ObservableProperty] private bool rememberMe = false;
-    [ObservableProperty] private bool isBiometricAvailable = false;
     [ObservableProperty] private bool isPasswordVisible;
-    [ObservableProperty] private bool showBiometricPrompt = false;
-
-    // Временно съхраняваме login данните за след биометрията
-    private string? _pendingToken;
-    private string? _pendingUserId;
 
     public LoginViewModel(AuthApiService authService)
     {
@@ -41,19 +35,6 @@ public partial class LoginViewModel : ObservableObject
     private void TogglePasswordVisibility()
     {
         IsPasswordVisible = !IsPasswordVisible;
-    }
-
-    [RelayCommand]
-    private void DismissBiometricPrompt()
-    {
-        showBiometricPrompt = false;
-        OnPropertyChanged(nameof(ShowBiometricPrompt));
-
-        // Ако потребителят откаже биометрията, пускаме го директно
-        if (!string.IsNullOrEmpty(_pendingToken) && !string.IsNullOrEmpty(_pendingUserId))
-        {
-            CompletLogin();
-        }
     }
 
     [RelayCommand]
@@ -85,33 +66,33 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            // Запазваме данните временно
-            _pendingToken = data.Token;
-            _pendingUserId = data.UserId.ToString();
-
             if (RememberMe)
                 Preferences.Set("saved_email", Email);
             else
                 Preferences.Remove("saved_email");
 
-            // Проверяваме дали потребителят има включена биометрия
-            var biometricEnabled = Preferences.Get("biometric_enabled", false);
+            // Проверяваме за двуфакторна автентикация
+            var biometricEnabled = Preferences.Get($"biometric_enabled_{data.UserId}", false);
             var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
 
             if (biometricEnabled && deviceSupports)
             {
-                // Показваме биометричен prompt като втора стъпка
-                showBiometricPrompt = true;
-                OnPropertyChanged(nameof(ShowBiometricPrompt));
+                var fingerResult = await BiometricAuthenticator.AuthenticateAsync(
+                    "Потвърдете самоличността си с пръстов отпечатък");
 
-                // Автоматично стартираме fingerprint
-                await BiometricLoginAsync();
+                if (!fingerResult)
+                {
+                    ErrorMessage = "Биометричната автентикация е неуспешна. Опитайте отново.";
+                    return;
+                }
             }
-            else
-            {
-                // Няма биометрия — влизаме директно
-                CompletLogin();
-            }
+
+            // Успешен вход
+            Preferences.Set("auth_token", data.Token);
+            Preferences.Set("user_id", data.UserId.ToString());
+            Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
+
+            await Shell.Current.GoToAsync("//MainPage");
         }
         catch (Exception ex)
         {
@@ -121,43 +102,6 @@ public partial class LoginViewModel : ObservableObject
         finally
         {
             IsBusy = false;
-        }
-    }
-
-    [RelayCommand]
-    private async Task BiometricLoginAsync()
-    {
-        ErrorMessage = string.Empty;
-
-        var result = await BiometricAuthenticator.AuthenticateAsync(
-            "Потвърдете самоличността си с пръстов отпечатък");
-
-        if (!result)
-        {
-            // Не затваряме prompt-а, потребителят може да опита отново
-            // или да натисне хиксчето/линка за вход с данни
-            return;
-        }
-
-        // Успешна биометрична автентикация
-        showBiometricPrompt = false;
-        OnPropertyChanged(nameof(ShowBiometricPrompt));
-
-        CompletLogin();
-    }
-
-    private async void CompletLogin()
-    {
-        if (!string.IsNullOrEmpty(_pendingToken) && !string.IsNullOrEmpty(_pendingUserId))
-        {
-            Preferences.Set("auth_token", _pendingToken);
-            Preferences.Set("user_id", _pendingUserId);
-            Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));
-
-            _pendingToken = null;
-            _pendingUserId = null;
-
-            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 
