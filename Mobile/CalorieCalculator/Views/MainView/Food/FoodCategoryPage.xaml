@@ -27,7 +27,7 @@
            FontSize="22"
            TextColor="#4DB6AC"
            VerticalOptions="Center"
-           HorizontalTextAlignment="Center">
+           HorizontalTextAlignment="End">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ScanBarcodeCommand}"/>
                 </Label.GestureRecognizers>
