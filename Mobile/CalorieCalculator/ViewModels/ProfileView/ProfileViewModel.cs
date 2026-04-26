@@ -95,11 +95,31 @@ public partial class ProfileViewModel : ObservableObject
                 OnPropertyChanged(nameof(AgeText));
 
                 var heightCm = response.GetProperty("heightCm").GetDecimal();
-                heightText = $"{heightCm:F0} см";
+                var heightFt = response.GetProperty("heightFt").GetDecimal();
+                var heightUnit = Preferences.Get("height_unit", "cm");
+                if (heightUnit == "ft" && heightFt > 0)
+                {
+                    var feet = (int)heightFt;
+                    var inches = (int)Math.Round((heightFt - feet) * 12);
+                    heightText = $"{feet}'{inches}\"";
+                }
+                else
+                {
+                    heightText = $"{heightCm:F0} см";
+                }
                 OnPropertyChanged(nameof(HeightText));
 
                 var weightKg = response.GetProperty("weightKg").GetDecimal();
-                weightText = $"{weightKg:F0} кг";
+                var weightLbs = response.GetProperty("weightLbs").GetDecimal();
+                var weightUnit = Preferences.Get("weight_unit", "kg");
+                if (weightUnit == "lbs" && weightLbs > 0)
+                {
+                    weightText = $"{weightLbs:F0} lbs";
+                }
+                else
+                {
+                    weightText = $"{weightKg:F0} кг";
+                }
                 OnPropertyChanged(nameof(WeightText));
 
                 var activity = response.GetProperty("activityLevel").GetInt32();
@@ -126,16 +146,24 @@ public partial class ProfileViewModel : ObservableObject
                 OnPropertyChanged(nameof(GoalText));
 
                 var targetKg = response.GetProperty("targetWeightKg").GetDecimal();
-                targetWeightText = $"{targetKg:F0} кг";
+                var targetLbs = response.GetProperty("targetWeightLbs").GetDecimal();
+                if (weightUnit == "lbs" && targetLbs > 0)
+                {
+                    targetWeightText = $"{targetLbs:F0} lbs";
+                }
+                else
+                {
+                    targetWeightText = $"{targetKg:F0} кг";
+                }
                 OnPropertyChanged(nameof(TargetWeightText));
             }
 
             isBiometricAvailable = await BiometricAuthenticator.IsAvailableAsync();
             OnPropertyChanged(nameof(IsBiometricAvailable));
-            isBiometricEnabled = Preferences.Get("biometric_enabled", false);
+            isBiometricEnabled = Preferences.Get($"biometric_enabled_{userId}", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            var photoPath = Preferences.Get("profile_photo_path", string.Empty);
+            var photoPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
             if (!string.IsNullOrEmpty(photoPath) && File.Exists(photoPath))
             {
                 profileImage = ImageSource.FromFile(photoPath);
@@ -254,13 +282,11 @@ public partial class ProfileViewModel : ObservableObject
                 return;
             }
 
-            // Записваме локално ВЕДНАГА (за toggle бутона)
             isBiometricEnabled = true;
-            Preferences.Set("biometric_enabled", true);
+            var userId = Preferences.Get("user_id", string.Empty);
+            Preferences.Set($"biometric_enabled_{userId}", true);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            // После записваме и в базата
-            var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
                 try
@@ -290,10 +316,10 @@ public partial class ProfileViewModel : ObservableObject
             if (!confirm) return;
 
             isBiometricEnabled = false;
-            Preferences.Set("biometric_enabled", false);
+            var userId = Preferences.Get("user_id", string.Empty);
+            Preferences.Set($"biometric_enabled_{userId}", false);
             OnPropertyChanged(nameof(IsBiometricEnabled));
 
-            var userId = Preferences.Get("user_id", string.Empty);
             if (!string.IsNullOrEmpty(userId))
             {
                 try
@@ -349,6 +375,25 @@ public partial class ProfileViewModel : ObservableObject
 
         if (action == "Направи селфи")
         {
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+                if (status != PermissionStatus.Granted)
+                {
+                    status = await Permissions.RequestAsync<Permissions.Camera>();
+                    if (status != PermissionStatus.Granted)
+                    {
+                        await Shell.Current.DisplayAlert(
+                            "Разрешение",
+                            "Моля, разрешете достъп до камерата от настройките.",
+                            "OK");
+                        return;
+                    }
+                    await Task.Delay(1000);
+                }
+            }
+            catch { }
+
             await TakePhotoAsync();
         }
         else if (action == "Премахни снимката")
@@ -367,68 +412,354 @@ public partial class ProfileViewModel : ObservableObject
                 return;
             }
 
-            var photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
-            {
-                Title = "Направи селфи"
-            });
+            var photo = await MediaPicker.Default.CapturePhotoAsync();
 
-            if (photo != null)
-            {
-                // Уникално име с timestamp за да не кешира MAUI старата снимка
-                var timestamp = DateTime.Now.Ticks;
-                var fileName = $"profile_{Preferences.Get("user_id", "default")}_{timestamp}.jpg";
-                var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+            if (photo == null) return;
 
-                // Изтриваме старата снимка ако съществува
-                var oldPath = Preferences.Get("profile_photo_path", string.Empty);
+            var userId = Preferences.Get("user_id", "default");
+            var timestamp = DateTime.Now.Ticks;
+            var fileName = $"profile_{userId}_{timestamp}.jpg";
+            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+            try
+            {
+                var oldPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
                 if (!string.IsNullOrEmpty(oldPath) && File.Exists(oldPath))
                 {
-                    try { File.Delete(oldPath); } catch { }
+                    File.Delete(oldPath);
                 }
+            }
+            catch { }
 
-                // Копираме новата снимка
-                using (var stream = await photo.OpenReadAsync())
-                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-                {
-                    await stream.CopyToAsync(fileStream);
-                }
+            using (var sourceStream = await photo.OpenReadAsync())
+            using (var destStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                await sourceStream.CopyToAsync(destStream);
+            }
 
-                // Запазваме пътя
-                Preferences.Set("profile_photo_path", filePath);
+            Preferences.Set($"profile_photo_path_{userId}", filePath);
 
-                // Обновяваме UI с нов ImageSource
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
                 profileImage = ImageSource.FromFile(filePath);
                 OnPropertyChanged(nameof(ProfileImage));
                 hasProfileImage = true;
                 OnPropertyChanged(nameof(HasProfileImage));
-            }
-        }
-        catch (PermissionException)
-        {
-            await Shell.Current.DisplayAlert(
-                "Разрешение",
-                "Моля, разрешете достъп до камерата от настройките на телефона.",
-                "OK");
+            });
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Camera error: {ex.Message}");
-            await Shell.Current.DisplayAlert("Грешка", "Неуспешно заснемане на снимка.", "OK");
+            System.Diagnostics.Debug.WriteLine($"!!! Camera error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"!!! Stack: {ex.StackTrace}");
         }
     }
 
     private void RemovePhoto()
     {
-        var filePath = Preferences.Get("profile_photo_path", string.Empty);
+        var userId = Preferences.Get("user_id", "default");
+        var filePath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
+
         if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
         {
-            File.Delete(filePath);
+            try { File.Delete(filePath); } catch { }
         }
 
-        Preferences.Remove("profile_photo_path");
+        Preferences.Remove($"profile_photo_path_{userId}");
         profileImage = null;
         OnPropertyChanged(nameof(ProfileImage));
         hasProfileImage = false;
         OnPropertyChanged(nameof(HasProfileImage));
+    }
+
+    [RelayCommand]
+    private async Task EditProfileAsync()
+    {
+        await Shell.Current.GoToAsync("//ProfileSetup?edit=true");
+    }
+
+    [RelayCommand]
+    private async Task EditHeightAsync()
+    {
+        var heightUnit = Preferences.Get("height_unit", "cm");
+        var currentValue = heightText.Replace(" см", "").Replace("\"", "").Replace("'", " ").Trim();
+
+        string prompt, unit;
+        if (heightUnit == "ft")
+        {
+            prompt = "Въведете ръст във футове:";
+            unit = "ft";
+        }
+        else
+        {
+            prompt = "Въведете ръст в сантиметри:";
+            unit = "cm";
+        }
+
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Ръст", prompt, "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric);
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (decimal.TryParse(result, out var newValue))
+        {
+            if (unit == "cm" && newValue >= 100 && newValue <= 250)
+            {
+                await UpdateProfileFieldAsync("HeightCm", newValue);
+                heightText = $"{newValue:F0} см";
+                OnPropertyChanged(nameof(HeightText));
+            }
+            else if (unit == "ft" && newValue >= 3 && newValue <= 8)
+            {
+                await UpdateProfileFieldAsync("HeightFt", newValue);
+                var feet = (int)newValue;
+                var inches = (int)Math.Round((newValue - feet) * 12);
+                heightText = $"{feet}'{inches}\"";
+                OnPropertyChanged(nameof(HeightText));
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валиден ръст.", "OK");
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditWeightAsync()
+    {
+        var weightUnit = Preferences.Get("weight_unit", "kg");
+        var prompt = weightUnit == "lbs"
+            ? "Въведете тегло в паундове:"
+            : "Въведете тегло в килограми:";
+
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Тегло", prompt, "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: weightText.Replace(" кг", "").Replace(" lbs", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (!decimal.TryParse(result, out var newWeight))
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно число.", "OK");
+            return;
+        }
+
+        var fieldName = weightUnit == "lbs" ? "WeightLbs" : "WeightKg";
+        var min = weightUnit == "lbs" ? 66m : 30m;
+        var max = weightUnit == "lbs" ? 550m : 250m;
+
+        if (newWeight < min || newWeight > max)
+        {
+            await Shell.Current.DisplayAlert("Грешка", $"Моля, въведете валидно тегло ({min}-{max}).", "OK");
+            return;
+        }
+
+        var currentTarget = decimal.Parse(targetWeightText.Replace(" кг", "").Replace(" lbs", ""));
+        var currentWeightKg = weightUnit == "lbs" ? newWeight / 2.20462m : newWeight;
+        var targetWeightKg = weightUnit == "lbs" ? currentTarget / 2.20462m : currentTarget;
+        var validationError = ValidateWeightVsGoal(currentWeightKg, targetWeightKg);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync(fieldName, newWeight);
+        weightText = weightUnit == "lbs" ? $"{newWeight:F0} lbs" : $"{newWeight:F0} кг";
+        OnPropertyChanged(nameof(WeightText));
+    }
+
+    [RelayCommand]
+    private async Task EditTargetWeightAsync()
+    {
+        var weightUnit = Preferences.Get("weight_unit", "kg");
+        var prompt = weightUnit == "lbs"
+            ? "Въведете желано тегло в паундове:"
+            : "Въведете желано тегло в килограми:";
+
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Желано тегло", prompt, "OK", "Отказ",
+            keyboard: Microsoft.Maui.Keyboard.Numeric,
+            initialValue: targetWeightText.Replace(" кг", "").Replace(" lbs", ""));
+
+        if (string.IsNullOrEmpty(result)) return;
+
+        if (!decimal.TryParse(result, out var newTarget))
+        {
+            await Shell.Current.DisplayAlert("Грешка", "Моля, въведете валидно число.", "OK");
+            return;
+        }
+
+        var fieldName = weightUnit == "lbs" ? "TargetWeightLbs" : "TargetWeightKg";
+        var min = weightUnit == "lbs" ? 66m : 30m;
+        var max = weightUnit == "lbs" ? 550m : 250m;
+
+        if (newTarget < min || newTarget > max)
+        {
+            await Shell.Current.DisplayAlert("Грешка", $"Моля, въведете валидно тегло ({min}-{max}).", "OK");
+            return;
+        }
+
+        var currentWeight = decimal.Parse(weightText.Replace(" кг", "").Replace(" lbs", ""));
+        var currentWeightKg = weightUnit == "lbs" ? currentWeight / 2.20462m : currentWeight;
+        var targetWeightKg = weightUnit == "lbs" ? newTarget / 2.20462m : newTarget;
+        var validationError = ValidateWeightVsGoal(currentWeightKg, targetWeightKg);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync(fieldName, newTarget);
+        targetWeightText = weightUnit == "lbs" ? $"{newTarget:F0} lbs" : $"{newTarget:F0} кг";
+        OnPropertyChanged(nameof(TargetWeightText));
+    }
+
+    [RelayCommand]
+    private void ReloadPhoto()
+    {
+        var userId = Preferences.Get("user_id", string.Empty);
+        if (string.IsNullOrEmpty(userId)) return;
+
+        var photoPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
+        if (!string.IsNullOrEmpty(photoPath) && File.Exists(photoPath))
+        {
+            profileImage = ImageSource.FromFile(photoPath);
+            OnPropertyChanged(nameof(ProfileImage));
+            hasProfileImage = true;
+            OnPropertyChanged(nameof(HasProfileImage));
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditActivityAsync()
+    {
+        var result = await Shell.Current.DisplayActionSheet(
+            "Ниво на активност",
+            "Отказ",
+            null,
+            "Заседнал",
+            "Леко активен",
+            "Умерено активен",
+            "Много активен",
+            "Изключително активен");
+
+        if (string.IsNullOrEmpty(result) || result == "Отказ") return;
+
+        var level = result switch
+        {
+            "Заседнал" => 1,
+            "Леко активен" => 2,
+            "Умерено активен" => 3,
+            "Много активен" => 4,
+            "Изключително активен" => 5,
+            _ => 1
+        };
+
+        await UpdateProfileFieldAsync("ActivityLevel", level);
+        activityText = result;
+        OnPropertyChanged(nameof(ActivityText));
+    }
+
+    [RelayCommand]
+    private async Task EditGoalAsync()
+    {
+        var result = await Shell.Current.DisplayActionSheet(
+            "Цел",
+            "Отказ",
+            null,
+            "Загуба на тегло",
+            "Задържане на теглото",
+            "Качване на тегло",
+            "Качване на мускулна маса");
+
+        if (string.IsNullOrEmpty(result) || result == "Отказ") return;
+
+        var goal = result switch
+        {
+            "Загуба на тегло" => 1,
+            "Задържане на теглото" => 2,
+            "Качване на тегло" => 3,
+            "Качване на мускулна маса" => 4,
+            _ => 2
+        };
+
+        var currentWeight = decimal.Parse(weightText.Replace(" кг", ""));
+        var targetWeight = decimal.Parse(targetWeightText.Replace(" кг", ""));
+        var validationError = ValidateGoalVsWeights(goal, currentWeight, targetWeight);
+        if (validationError != null)
+        {
+            await Shell.Current.DisplayAlert("Грешка", validationError, "OK");
+            return;
+        }
+
+        await UpdateProfileFieldAsync("CurrentGoal", goal);
+        goalText = result;
+        OnPropertyChanged(nameof(GoalText));
+    }
+
+    private string? ValidateWeightVsGoal(decimal currentWeight, decimal targetWeight)
+    {
+        var goalCode = goalText switch
+        {
+            "Загуба на тегло" => 1,
+            "Задържане на теглото" => 2,
+            "Качване на тегло" => 3,
+            "Качване на мускулна маса" => 4,
+            _ => 0
+        };
+
+        return ValidateGoalVsWeights(goalCode, currentWeight, targetWeight);
+    }
+
+    private string? ValidateGoalVsWeights(int goalCode, decimal currentWeight, decimal targetWeight)
+    {
+        switch (goalCode)
+        {
+            case 1: 
+                if (targetWeight >= currentWeight)
+                    return $"При цел \"Загуба на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-малко от текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 2: 
+                if (targetWeight != currentWeight)
+                    return $"При цел \"Задържане на теглото\" желаното тегло трябва да е равно на текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 3: 
+                if (targetWeight <= currentWeight)
+                    return $"При цел \"Качване на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
+                break;
+
+            case 4: 
+                if (targetWeight <= currentWeight)
+                    return $"При цел \"Качване на мускулна маса\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
+                break;
+        }
+
+        return null; 
+    }
+
+    private async Task UpdateProfileFieldAsync(string fieldName, object value)
+    {
+        try
+        {
+            var userId = Preferences.Get("user_id", string.Empty);
+            if (string.IsNullOrEmpty(userId)) return;
+
+            await _api.PostAsync("api/UserDetails/update-field",
+                new
+                {
+                    UserID = Guid.Parse(userId),
+                    FieldName = fieldName,
+                    Value = value.ToString()
+                });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Update field error: {ex.Message}");
+            await Shell.Current.DisplayAlert("Грешка", "Неуспешно обновяване на данните.", "OK");
+        }
     }
 }

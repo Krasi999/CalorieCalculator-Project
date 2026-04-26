@@ -37,3 +37,10 @@ public class UpdateNicknameRequest
     public Guid UserID { get; set; }
     public string Nickname { get; set; }
 }
+
+public class UpdateFieldRequest
+{
+    public Guid UserID { get; set; }
+    public string FieldName { get; set; }
+    public string Value { get; set; }
+}

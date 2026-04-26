@@ -66,7 +66,6 @@ public class AuthenticationController : ControllerBase
             return NotFound();
         }
 
-        // TODO: По-късно — пращане на кода по имейл вместо връщане в response-а
         return Ok(new { success = true, code });
     }
 

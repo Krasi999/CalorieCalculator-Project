@@ -108,6 +108,7 @@ public partial class RegisterViewModel : ObservableObject
             }
 
             Preferences.Set("user_id", userId.ToString()!);
+            Preferences.Set($"biometric_enabled_{userId}", false);
 
             await Shell.Current.GoToAsync("//ProfileSetup");
         }

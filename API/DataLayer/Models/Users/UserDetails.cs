@@ -113,5 +113,63 @@ public class UserDetails
         Nickname = newNickname.Trim();
         UpdatedAt = DateTime.UtcNow;
     }
+
+    public void UpdateField(string fieldName, string value)
+    {
+        switch (fieldName)
+        {
+            case "HeightCm":
+                if (decimal.TryParse(value, out var h))
+                {
+                    HeightCm = h;
+                    HeightFt = Math.Round(h / 30.48m, 2);
+                }
+                break;
+            case "HeightFt":
+                if (decimal.TryParse(value, out var hf))
+                {
+                    HeightFt = hf;
+                    HeightCm = Math.Round(hf * 30.48m, 2);
+                }
+                break;
+            case "WeightKg":
+                if (decimal.TryParse(value, out var w))
+                {
+                    WeightKg = w;
+                    WeightLbs = Math.Round(w * 2.20462m, 2);
+                }
+                break;
+            case "WeightLbs":
+                if (decimal.TryParse(value, out var wl))
+                {
+                    WeightLbs = wl;
+                    WeightKg = Math.Round(wl / 2.20462m, 2);
+                }
+                break;
+            case "TargetWeightKg":
+                if (decimal.TryParse(value, out var tw))
+                {
+                    TargetWeightKg = tw;
+                    TargetWeightLbs = Math.Round(tw * 2.20462m, 2);
+                }
+                break;
+            case "TargetWeightLbs":
+                if (decimal.TryParse(value, out var twl))
+                {
+                    TargetWeightLbs = twl;
+                    TargetWeightKg = Math.Round(twl / 2.20462m, 2);
+                }
+                break;
+            case "ActivityLevel":
+                if (int.TryParse(value, out var al))
+                    ActivityLevel = (Enums.ActivityLevel)al;
+                break;
+            case "CurrentGoal":
+                if (int.TryParse(value, out var cg))
+                    CurrentGoal = (Enums.GoalType)cg;
+                break;
+        }
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
 

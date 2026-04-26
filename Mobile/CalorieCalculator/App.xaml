@@ -38,6 +38,7 @@
             <converters:BoolToThumbAlignConverter  x:Key="BoolToThumbAlignConverter" />
             <converters:BoolToThumbMarginConverter x:Key="BoolToThumbMarginConverter" />
             <converters:ProgressToArcPathConverter x:Key="ProgressToArcPathConverterr" />
+            <converters:BoolToSaveButtonTextConverter x:Key="BoolToSaveButtonTextConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

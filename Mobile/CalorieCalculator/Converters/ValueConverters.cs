@@ -69,7 +69,7 @@ public class BoolToStepColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+        return value is true ? Color.FromArgb("#3DB89E") : Color.FromArgb("#E5E7EB");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -82,7 +82,7 @@ public class BoolToStepInactiveConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is false ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#FFFFFF30");
+        return value is false ? Color.FromArgb("#3DB89E") : Color.FromArgb("#E5E7EB");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -284,7 +284,6 @@ public class BoolToFontAttrConverter : IValueConverter
     }
 }
 
-// Показва елемент само ако double стойността е > 0.
 public class DoubleToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -298,8 +297,6 @@ public class DoubleToVisibilityConverter : IValueConverter
     }
 }
 
-// Превръща прогрес (0.0-1.0) в размер на кръгче (0-28px).
-// При 0% = 0px, при 50% = 14px, при 100% = 28px.
 public class ProgressToSizeConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -336,17 +333,29 @@ public class BoolToThumbMarginConverter : IValueConverter
 }
 
 
+
+public class BoolToSaveButtonTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? "Запази промените" : "Продължи";
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public class ProgressToArcPathConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not double progress) return null;
 
-        // Параметри по подразбиране
-        double size = 34; // диаметър на пръстена
+        double size = 34; 
         double strokeThickness = 3;
 
-        // Ако има параметър във формат "34,3" (size, thickness)
         if (parameter is string paramStr)
         {
             var parts = paramStr.Split(',');
@@ -354,13 +363,11 @@ public class ProgressToArcPathConverter : IValueConverter
             if (parts.Length >= 2) double.TryParse(parts[1], out strokeThickness);
         }
 
-        // При прогрес >= 1.0 (или над цел) връщаме пълен кръг
         if (progress >= 1.0)
         {
             return CreateFullCircleGeometry(size, strokeThickness);
         }
 
-        // При прогрес <= 0 връщаме празно
         if (progress <= 0.0)
         {
             return new PathGeometry();
@@ -374,11 +381,9 @@ public class ProgressToArcPathConverter : IValueConverter
         double radius = (size - thickness) / 2;
         double center = size / 2;
 
-        // Начална точка: 12 часа (top)
-        double startAngle = -90; // градуси
+        double startAngle = -90; 
         double sweepAngle = progress * 360;
 
-        // Преобразуване в радиани
         double startRad = startAngle * Math.PI / 180;
         double endRad = (startAngle + sweepAngle) * Math.PI / 180;
 
@@ -392,7 +397,6 @@ public class ProgressToArcPathConverter : IValueConverter
             center + radius * Math.Sin(endRad)
         );
 
-        // Определяме дали дъгата е голяма (над 180 градуса)
         bool isLargeArc = sweepAngle > 180;
 
         var pathFigure = new PathFigure { StartPoint = startPoint };
@@ -421,28 +425,24 @@ public class ProgressToArcPathConverter : IValueConverter
             StartPoint = new Point(center, center - radius)
         };
 
-        // Горна дясна четвърт
         figure.Segments.Add(new ArcSegment
         {
             Point = new Point(center + radius, center),
             Size = new Size(radius, radius),
             SweepDirection = SweepDirection.Clockwise
         });
-        // Долна дясна
         figure.Segments.Add(new ArcSegment
         {
             Point = new Point(center, center + radius),
             Size = new Size(radius, radius),
             SweepDirection = SweepDirection.Clockwise
         });
-        // Долна лява
         figure.Segments.Add(new ArcSegment
         {
             Point = new Point(center - radius, center),
             Size = new Size(radius, radius),
             SweepDirection = SweepDirection.Clockwise
         });
-        // Горна лява
         figure.Segments.Add(new ArcSegment
         {
             Point = new Point(center, center - radius),

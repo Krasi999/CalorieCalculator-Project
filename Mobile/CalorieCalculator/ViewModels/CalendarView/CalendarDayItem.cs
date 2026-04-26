@@ -12,7 +12,16 @@ public partial class CalendarDayItem : ObservableObject
     public bool IsToday
     {
         get => _isToday;
-        set => SetProperty(ref _isToday, value);
+        set
+        {
+            if (SetProperty(ref _isToday, value))
+            {
+                OnPropertyChanged(nameof(DayBackgroundColor));
+                OnPropertyChanged(nameof(TextColor));
+                OnPropertyChanged(nameof(ShowCalorieRing));
+                OnPropertyChanged(nameof(ShowGrayRing));
+            }
+        }
     }
 
     private bool _isSelected;
@@ -42,6 +51,8 @@ public partial class CalendarDayItem : ObservableObject
                 OnPropertyChanged(nameof(HasCalories));
                 OnPropertyChanged(nameof(ProgressForArc));
                 OnPropertyChanged(nameof(CalorieRingColor));
+                OnPropertyChanged(nameof(ShowCalorieRing));
+                OnPropertyChanged(nameof(ShowGrayRing));
             }
         }
     }
@@ -56,7 +67,9 @@ public partial class CalendarDayItem : ObservableObject
             {
                 OnPropertyChanged(nameof(HasCalories));
                 OnPropertyChanged(nameof(CalorieRingColor));
-                OnPropertyChanged(nameof(ProgressForArc)); // уведомява конвертора
+                OnPropertyChanged(nameof(ProgressForArc));
+                OnPropertyChanged(nameof(ShowCalorieRing));
+                OnPropertyChanged(nameof(ShowGrayRing));
             }
         }
     }
@@ -71,13 +84,15 @@ public partial class CalendarDayItem : ObservableObject
             {
                 OnPropertyChanged(nameof(CalorieRingColor));
                 OnPropertyChanged(nameof(ProgressForArc));
+                OnPropertyChanged(nameof(ShowCalorieRing));
+                OnPropertyChanged(nameof(ShowGrayRing));
             }
         }
     }
 
     public bool HasCalories => CaloriesProgress > 0;
-
-    // Това свойство подаваме на конвертора – при надвишаване връща 1.0
+    public bool ShowCalorieRing => HasCalories && IsCurrentMonth;
+    public bool ShowGrayRing => HasCalories && IsCurrentMonth && !IsToday;
     public double ProgressForArc => IsOverTarget ? 1.0 : CaloriesProgress;
 
     public Color DayBackgroundColor => IsToday
