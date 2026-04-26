@@ -348,6 +348,27 @@ public partial class ProfileViewModel : ObservableObject
 
         if (action == "Направи селфи")
         {
+            // Искаме разрешение ПРЕДИ всичко друго
+            try
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+                if (status != PermissionStatus.Granted)
+                {
+                    status = await Permissions.RequestAsync<Permissions.Camera>();
+                    if (status != PermissionStatus.Granted)
+                    {
+                        await Shell.Current.DisplayAlert(
+                            "Разрешение",
+                            "Моля, разрешете достъп до камерата от настройките.",
+                            "OK");
+                        return;
+                    }
+                    // Чакаме MAUI да се стабилизира
+                    await Task.Delay(1000);
+                }
+            }
+            catch { }
+
             await TakePhotoAsync();
         }
         else if (action == "Премахни снимката")
@@ -375,7 +396,7 @@ public partial class ProfileViewModel : ObservableObject
             var fileName = $"profile_{userId}_{timestamp}.jpg";
             var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
 
-            // Изтриваме старата снимка ако съществува
+            // Изтриваме старата снимка
             try
             {
                 var oldPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
@@ -384,19 +405,17 @@ public partial class ProfileViewModel : ObservableObject
                     File.Delete(oldPath);
                 }
             }
-            catch { /* игнорираме грешки при изтриване */ }
+            catch { }
 
-            // Копираме новата снимка
+            // Копираме новата
             using (var sourceStream = await photo.OpenReadAsync())
             using (var destStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                 await sourceStream.CopyToAsync(destStream);
             }
 
-            // Запазваме пътя
             Preferences.Set($"profile_photo_path_{userId}", filePath);
 
-            // Обновяваме UI на главния thread
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 profileImage = ImageSource.FromFile(filePath);
@@ -405,18 +424,10 @@ public partial class ProfileViewModel : ObservableObject
                 OnPropertyChanged(nameof(HasProfileImage));
             });
         }
-        catch (PermissionException)
-        {
-            await Shell.Current.DisplayAlert(
-                "Разрешение",
-                "Моля, разрешете достъп до камерата от настройките на телефона.",
-                "OK");
-        }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"!!! Camera error: {ex.Message}");
             System.Diagnostics.Debug.WriteLine($"!!! Stack: {ex.StackTrace}");
-            // НЕ показваме DisplayAlert тук — може да предизвика навигация
         }
     }
 
@@ -520,6 +531,22 @@ public partial class ProfileViewModel : ObservableObject
         await UpdateProfileFieldAsync("TargetWeightKg", newTarget);
         targetWeightText = $"{newTarget:F0} кг";
         OnPropertyChanged(nameof(TargetWeightText));
+    }
+
+    [RelayCommand]
+    private void ReloadPhoto()
+    {
+        var userId = Preferences.Get("user_id", string.Empty);
+        if (string.IsNullOrEmpty(userId)) return;
+
+        var photoPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
+        if (!string.IsNullOrEmpty(photoPath) && File.Exists(photoPath))
+        {
+            profileImage = ImageSource.FromFile(photoPath);
+            OnPropertyChanged(nameof(ProfileImage));
+            hasProfileImage = true;
+            OnPropertyChanged(nameof(HasProfileImage));
+        }
     }
 
     [RelayCommand]

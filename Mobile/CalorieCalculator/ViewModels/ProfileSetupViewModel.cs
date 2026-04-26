@@ -481,6 +481,17 @@ public partial class ProfileSetupViewModel : ObservableObject
             // Уверяваме се, че биометрията е изключена за нов потребител
             Preferences.Set("biometric_enabled", false);
 
+            try
+            {
+                var cameraStatus = await Permissions.CheckStatusAsync<Permissions.Camera>();
+                if (cameraStatus != PermissionStatus.Granted)
+                {
+                    await Permissions.RequestAsync<Permissions.Camera>();
+                    await Task.Delay(500);
+                }
+            }
+            catch { }
+
             if (isEditMode)
             {
                 await Shell.Current.DisplayAlert("Успех", "Профилът е обновен успешно!", "OK");
