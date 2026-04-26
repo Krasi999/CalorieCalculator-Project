@@ -90,30 +90,25 @@ public partial class CalendarDayItem : ObservableObject
         }
     }
 
-    // Калориен пръстен
     public bool HasCalories => CaloriesProgress > 0;
     public bool ShowCalorieRing => HasCalories && IsCurrentMonth;
     public bool ShowGrayRing => HasCalories && IsCurrentMonth && !IsToday;
     public double ProgressForArc => IsOverTarget ? 1.0 : CaloriesProgress;
 
-    // Фон на деня
     public Color DayBackgroundColor => IsToday
         ? Color.FromArgb("#3B82F6")
         : Colors.Transparent;
 
-    // Текст
     public Color TextColor => IsToday
         ? Colors.White
         : IsCurrentMonth
             ? Color.FromArgb("#1E293B")
             : Color.FromArgb("#CBD5E1");
 
-    // Калориен пръстен цвят
     public Color CalorieRingColor => IsOverTarget
         ? Color.FromArgb("#EF4444")
         : Color.FromArgb("#22C55E");
 
-    // Селекция
     public Color SelectionRingColor => IsSelected
         ? Color.FromArgb("#3B82F6")
         : Colors.Transparent;

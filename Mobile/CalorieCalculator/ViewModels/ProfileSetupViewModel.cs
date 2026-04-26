@@ -478,7 +478,6 @@ public partial class ProfileSetupViewModel : ObservableObject
                 OnPropertyChanged(nameof(ErrorMessage));
                 return;
             }
-            // Уверяваме се, че биометрията е изключена за нов потребител
             Preferences.Set("biometric_enabled", false);
             Preferences.Set("height_unit", isHeightInCm ? "cm" : "ft");
             Preferences.Set("weight_unit", isWeightInKg ? "kg" : "lbs");
@@ -540,7 +539,6 @@ public partial class ProfileSetupViewModel : ObservableObject
 
             if (response.ValueKind == System.Text.Json.JsonValueKind.Undefined) return;
 
-            // Попълваме полетата с текущите стойности
             nickname = response.GetProperty("nickname").GetString() ?? string.Empty;
             OnPropertyChanged(nameof(Nickname));
 
@@ -568,7 +566,7 @@ public partial class ProfileSetupViewModel : ObservableObject
             var activity = response.GetProperty("activityLevel").GetInt32();
             selectedActivityLevel = activity;
             OnPropertyChanged(nameof(SelectedActivityLevel));
-            // Обновяваме bool-овете за визуална селекция
+
             isSedentarySelected = activity == 1;
             isLightlyActiveSelected = activity == 2;
             isModerateActiveSelected = activity == 3;

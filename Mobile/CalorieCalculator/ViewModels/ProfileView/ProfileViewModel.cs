@@ -282,7 +282,6 @@ public partial class ProfileViewModel : ObservableObject
                 return;
             }
 
-            // Записваме локално ВЕДНАГА (за toggle бутона)
             isBiometricEnabled = true;
             var userId = Preferences.Get("user_id", string.Empty);
             Preferences.Set($"biometric_enabled_{userId}", true);
@@ -376,7 +375,6 @@ public partial class ProfileViewModel : ObservableObject
 
         if (action == "Направи селфи")
         {
-            // Искаме разрешение ПРЕДИ всичко друго
             try
             {
                 var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
@@ -391,7 +389,6 @@ public partial class ProfileViewModel : ObservableObject
                             "OK");
                         return;
                     }
-                    // Чакаме MAUI да се стабилизира
                     await Task.Delay(1000);
                 }
             }
@@ -424,7 +421,6 @@ public partial class ProfileViewModel : ObservableObject
             var fileName = $"profile_{userId}_{timestamp}.jpg";
             var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
 
-            // Изтриваме старата снимка
             try
             {
                 var oldPath = Preferences.Get($"profile_photo_path_{userId}", string.Empty);
@@ -435,7 +431,6 @@ public partial class ProfileViewModel : ObservableObject
             }
             catch { }
 
-            // Копираме новата
             using (var sourceStream = await photo.OpenReadAsync())
             using (var destStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
@@ -560,7 +555,6 @@ public partial class ProfileViewModel : ObservableObject
             return;
         }
 
-        // Валидация спрямо целта
         var currentTarget = decimal.Parse(targetWeightText.Replace(" кг", "").Replace(" lbs", ""));
         var currentWeightKg = weightUnit == "lbs" ? newWeight / 2.20462m : newWeight;
         var targetWeightKg = weightUnit == "lbs" ? currentTarget / 2.20462m : currentTarget;
@@ -607,7 +601,6 @@ public partial class ProfileViewModel : ObservableObject
             return;
         }
 
-        // Валидация спрямо целта
         var currentWeight = decimal.Parse(weightText.Replace(" кг", "").Replace(" lbs", ""));
         var currentWeightKg = weightUnit == "lbs" ? currentWeight / 2.20462m : currentWeight;
         var targetWeightKg = weightUnit == "lbs" ? newTarget / 2.20462m : newTarget;
@@ -692,7 +685,6 @@ public partial class ProfileViewModel : ObservableObject
             _ => 2
         };
 
-        // Проверка спрямо текущото и желаното тегло
         var currentWeight = decimal.Parse(weightText.Replace(" кг", ""));
         var targetWeight = decimal.Parse(targetWeightText.Replace(" кг", ""));
         var validationError = ValidateGoalVsWeights(goal, currentWeight, targetWeight);
@@ -709,7 +701,6 @@ public partial class ProfileViewModel : ObservableObject
 
     private string? ValidateWeightVsGoal(decimal currentWeight, decimal targetWeight)
     {
-        // Определяме текущата цел
         var goalCode = goalText switch
         {
             "Загуба на тегло" => 1,
@@ -722,40 +713,34 @@ public partial class ProfileViewModel : ObservableObject
         return ValidateGoalVsWeights(goalCode, currentWeight, targetWeight);
     }
 
-    /// <summary>
-    /// Проверява дали целта е съвместима с теглата.
-    /// </summary>
     private string? ValidateGoalVsWeights(int goalCode, decimal currentWeight, decimal targetWeight)
     {
         switch (goalCode)
         {
-            case 1: // Загуба на тегло
+            case 1: 
                 if (targetWeight >= currentWeight)
                     return $"При цел \"Загуба на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-малко от текущото ({currentWeight:F0} кг).";
                 break;
 
-            case 2: // Задържане на теглото
+            case 2: 
                 if (targetWeight != currentWeight)
                     return $"При цел \"Задържане на теглото\" желаното тегло трябва да е равно на текущото ({currentWeight:F0} кг).";
                 break;
 
-            case 3: // Качване на тегло
+            case 3: 
                 if (targetWeight <= currentWeight)
                     return $"При цел \"Качване на тегло\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
                 break;
 
-            case 4: // Качване на мускулна маса
+            case 4: 
                 if (targetWeight <= currentWeight)
                     return $"При цел \"Качване на мускулна маса\" желаното тегло ({targetWeight:F0} кг) трябва да е по-голямо от текущото ({currentWeight:F0} кг).";
                 break;
         }
 
-        return null; // Няма грешка
+        return null; 
     }
 
-    /// <summary>
-    /// Обновява едно поле в базата данни.
-    /// </summary>
     private async Task UpdateProfileFieldAsync(string fieldName, object value)
     {
         try

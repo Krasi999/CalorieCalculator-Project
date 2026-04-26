@@ -71,7 +71,6 @@ public partial class LoginViewModel : ObservableObject
             else
                 Preferences.Remove("saved_email");
 
-            // Проверяваме за двуфакторна автентикация
             var biometricEnabled = Preferences.Get($"biometric_enabled_{data.UserId}", false);
             var deviceSupports = await BiometricAuthenticator.IsAvailableAsync();
 
@@ -87,7 +86,6 @@ public partial class LoginViewModel : ObservableObject
                 }
             }
 
-            // Успешен вход
             Preferences.Set("auth_token", data.Token);
             Preferences.Set("user_id", data.UserId.ToString());
             Preferences.Set("last_password_login", DateTime.UtcNow.ToString("O"));

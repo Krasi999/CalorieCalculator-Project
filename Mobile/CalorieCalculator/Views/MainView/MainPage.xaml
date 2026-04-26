@@ -71,19 +71,16 @@
                              WidthRequest="130"
                              HeightRequest="130">
 
-                            <!-- Външен пръстен -->
                             <Ellipse Fill="#E8F5F0"
                             WidthRequest="130" HeightRequest="130"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center" />
 
-                            <!-- Вътрешен бял кръг -->
                             <Ellipse Fill="White"
                                  WidthRequest="100" HeightRequest="100"
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center" />
 
-                            <!-- Текст -->
                             <VerticalStackLayout HorizontalOptions="Center"
                                          VerticalOptions="Center">
                                 <Label Text="{Binding CaloriesEaten}"
