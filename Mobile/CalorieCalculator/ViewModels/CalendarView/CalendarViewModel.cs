@@ -1,4 +1,5 @@
-﻿using CalorieCalculator.Service;
+﻿using CalorieCalculator.Models;
+using CalorieCalculator.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -54,29 +55,32 @@ public partial class CalendarViewModel : ObservableObject
 
         if (day.Date > _today)
         {
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} все още няма записани данни!";
+            SelectedDayInfo = $"На {day.Date:dd.MM.yyyy} все още няма записани данни!";
         }
         else if (day.CaloriesEaten > 0)
         {
-            var status = day.IsOverTarget ? "Внимавай, превишил си дневния си лимит!" : "Поздравления, спазил си дневния силимит!";
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} си изял {day.CaloriesEaten} от {(int)_targetCalories} калории! {status}";
+            var goal = day.CaloriesProgress > 0
+                ? (int)Math.Round(day.CaloriesEaten / day.CaloriesProgress)
+                : (int)_targetCalories;
+
+            var status = day.IsOverTarget
+                ? "Внимавай, превишил си дневния си лимит!"
+                : "Поздравления, спазил си дневния си лимит!";
+            SelectedDayInfo = $"На {day.Date:dd.MM.yyyy} си изял {day.CaloriesEaten} от {goal} калории! {status}";
         }
         else
         {
-            selectedDayInfo = $"На {day.Date:dd.MM.yyyy} няма записани калории!";
+            SelectedDayInfo = $"На {day.Date:dd.MM.yyyy} няма записани калории!";
         }
 
-        OnPropertyChanged(nameof(SelectedDayInfo));
-        isDayInfoVisible = true;
-        OnPropertyChanged(nameof(IsDayInfoVisible));
+        IsDayInfoVisible = true;
     }
 
     private void BuildCalendar()
     {
         var bgCulture = new System.Globalization.CultureInfo("bg-BG");
         var monthName = _currentMonth.ToString("MMMM yyyy", bgCulture);
-        monthYearText = char.ToUpper(monthName[0]) + monthName[1..];
-        OnPropertyChanged(nameof(MonthYearText));
+        MonthYearText = char.ToUpper(monthName[0]) + monthName[1..];
 
         Days.Clear();
 
@@ -107,8 +111,7 @@ public partial class CalendarViewModel : ObservableObject
             Days.Add(CreateDayItem(date, false));
         }
 
-        isDayInfoVisible = false;
-        OnPropertyChanged(nameof(IsDayInfoVisible));
+        IsDayInfoVisible = false;
 
         _ = LoadMonthCaloriesAsync();
     }
@@ -135,123 +138,26 @@ public partial class CalendarViewModel : ObservableObject
             var userId = Preferences.Get("user_id", string.Empty);
             if (string.IsNullOrEmpty(userId)) return;
 
-            var response = await _api.GetSingleAsync<JsonElement>(
-                $"api/UserDetails/{userId}/monthly-calories/{_currentMonth.Year}/{_currentMonth.Month}");
+            var response = await _api.GetAsyncT<CalendarDataDTO>(
+                $"api/calendar/{userId}?year={_currentMonth.Year}&month={_currentMonth.Month}");
 
-            if (response.ValueKind != JsonValueKind.Undefined)
+            if (response == null) return;
+
+            foreach (var apiDay in response.Days)
             {
-                _targetCalories = response.GetProperty("targetCalories").GetDecimal();
-
-                if (response.TryGetProperty("dailyCalories", out var dailyProp) &&
-                    dailyProp.ValueKind == JsonValueKind.Object)
+                var day = Days.FirstOrDefault(d => d.Date.Date == apiDay.Date.Date);
+                if (day != null)
                 {
-                    foreach (var prop in dailyProp.EnumerateObject())
-                    {
-                        if (DateTime.TryParse(prop.Name, out var date))
-                        {
-                            var eaten = prop.Value.GetInt32();
-                            var day = Days.FirstOrDefault(d => d.Date.Date == date.Date);
-                            if (day != null)
-                            {
-                                day.CaloriesEaten = eaten;
-                                day.CaloriesProgress = Math.Min(eaten / (double)_targetCalories, 1.0);
-                                day.IsOverTarget = eaten > (int)_targetCalories;
-                            }
-                        }
-                    }
+                    _targetCalories = apiDay.CaloriesGoal > 0 ? apiDay.CaloriesGoal : _targetCalories;
+                    day.CaloriesEaten = apiDay.CaloriesEaten;
+                    day.CaloriesProgress = apiDay.CaloriesGoal > 0? Math.Min(apiDay.CaloriesEaten / (double)apiDay.CaloriesGoal, 1.0): 0;
+                    day.IsOverTarget = apiDay.CaloriesGoal > 0 && apiDay.CaloriesEaten > apiDay.CaloriesGoal;
                 }
             }
-            OnPropertyChanged(nameof(Days));
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Calendar load error: {ex.Message}");
         }
     }
-}
-
-public partial class CalendarDayItem : ObservableObject
-{
-    public DateTime Date { get; set; }
-    public string DayNumber { get; set; } = string.Empty;
-    public bool IsCurrentMonth { get; set; }
-
-    private bool _isToday;
-    public bool IsToday
-    {
-        get => _isToday;
-        set => SetProperty(ref _isToday, value);
-    }
-
-    private bool _isSelected;
-    public bool IsSelected
-    {
-        get => _isSelected;
-        set
-        {
-            if (SetProperty(ref _isSelected, value))
-            {
-                OnPropertyChanged(nameof(TextColor));
-                OnPropertyChanged(nameof(DayBackgroundColor));
-                OnPropertyChanged(nameof(SelectionRingColor));
-                OnPropertyChanged(nameof(SelectionRingThickness));
-            }
-        }
-    }
-
-    public int CaloriesEaten { get; set; }
-
-    private double _caloriesProgress;
-    public double CaloriesProgress
-    {
-        get => _caloriesProgress;
-        set
-        {
-            if (SetProperty(ref _caloriesProgress, value))
-            {
-                OnPropertyChanged(nameof(HasCalories));
-                OnPropertyChanged(nameof(CalorieRingColor));
-                OnPropertyChanged(nameof(ProgressForArc)); // уведомява конвертора
-            }
-        }
-    }
-
-    private bool _isOverTarget;
-    public bool IsOverTarget
-    {
-        get => _isOverTarget;
-        set
-        {
-            if (SetProperty(ref _isOverTarget, value))
-            {
-                OnPropertyChanged(nameof(CalorieRingColor));
-                OnPropertyChanged(nameof(ProgressForArc));
-            }
-        }
-    }
-
-    public bool HasCalories => CaloriesProgress > 0;
-
-    // Това свойство подаваме на конвертора – при надвишаване връща 1.0
-    public double ProgressForArc => IsOverTarget ? 1.0 : CaloriesProgress;
-
-    public Color DayBackgroundColor => IsToday
-        ? Color.FromArgb("#3B82F6")
-        : Colors.Transparent;
-
-    public Color TextColor => IsToday
-        ? Colors.White
-        : IsCurrentMonth
-            ? Color.FromArgb("#1E293B")
-            : Color.FromArgb("#CBD5E1");
-
-    public Color CalorieRingColor => IsOverTarget
-        ? Color.FromArgb("#EF4444")
-        : Color.FromArgb("#22C55E");
-
-    public Color SelectionRingColor => IsSelected
-        ? Color.FromArgb("#3B82F6")
-        : Colors.Transparent;
-
-    public double SelectionRingThickness => IsSelected ? 2 : 0;
 }

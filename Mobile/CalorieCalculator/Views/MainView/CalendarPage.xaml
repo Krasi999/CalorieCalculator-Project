@@ -32,7 +32,6 @@
                         Padding="16">
                     <VerticalStackLayout Spacing="12">
 
-                        <!-- Навигация месец -->
                         <Grid ColumnDefinitions="Auto,*,Auto">
                             <Label Grid.Column="0" Text="◀"
                                    FontSize="20" TextColor="#64748B"
@@ -58,7 +57,6 @@
                             </Label>
                         </Grid>
 
-                        <!-- Заглавия на дните -->
                         <Grid ColumnDefinitions="*,*,*,*,*,*,*" ColumnSpacing="2" Margin="0,30,0,0">
                             <Label Grid.Column="0" Text="Пн" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
                             <Label Grid.Column="1" Text="Вт" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
@@ -69,7 +67,6 @@
                             <Label Grid.Column="6" Text="Нд" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
                         </Grid>
 
-                        <!-- Дни -->
                         <CollectionView ItemsSource="{Binding Days}"
                                         ItemsLayout="VerticalGrid, 7"
                                         HeightRequest="300"
@@ -88,27 +85,23 @@
                                         <Grid WidthRequest="38" HeightRequest="38"
                                               HorizontalOptions="Center">
 
-                                            <!-- Фон за днешния ден -->
                                             <Ellipse Fill="{Binding DayBackgroundColor}"
                                                      WidthRequest="30" HeightRequest="30"
                                                      HorizontalOptions="Center" VerticalOptions="Center" />
 
-                                            <!-- Селекционен пръстен (син, вътрешен) -->
                                             <Ellipse WidthRequest="30" HeightRequest="30"
                                                      HorizontalOptions="Center" VerticalOptions="Center"
                                                      Fill="Transparent"
                                                      Stroke="{Binding SelectionRingColor}"
                                                      StrokeThickness="{Binding SelectionRingThickness}" />
 
-                                            <!-- Калориен пръстен (зелен/червен) чрез Path -->
-                                            <Path Data="{Binding ProgressForArc, Converter={StaticResource ProgressToArcPathConverter}, ConverterParameter='40,3'}"
-                                                  Stroke="{Binding CalorieRingColor}"
-                                                  StrokeThickness="2"
-                                                  Fill="Transparent"
-                                                  HorizontalOptions="Center" VerticalOptions="Center"
-                                                  IsVisible="{Binding HasCalories}" />
+                                            <Ellipse WidthRequest="36" HeightRequest="36"
+                                                     HorizontalOptions="Center" VerticalOptions="Center"
+                                                     Fill="Transparent"
+                                                     Stroke="{Binding CalorieRingColor}"
+                                                     StrokeThickness="2"
+                                                     IsVisible="{Binding HasCalories}" />
 
-                                            <!-- Цифрата -->
                                             <Label Text="{Binding DayNumber}"
                                                    FontSize="13"
                                                    FontAttributes="Bold"
@@ -123,7 +116,6 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Информация за избрания ден – с пренос на текста -->
                 <Border StrokeShape="RoundRectangle 16"
                         Stroke="#E2E8F0"
                         StrokeThickness="1"

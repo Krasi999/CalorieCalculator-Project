@@ -13,10 +13,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Добави това тук:
-        //builder.WebHost.UseUrls("http://192.168.115.136:5083");
-        //builder.WebHost.UseUrls("http://192.168.115.203:5083");
-
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddScoped<IRepository, Repository>();

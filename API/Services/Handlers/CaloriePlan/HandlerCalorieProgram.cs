@@ -8,7 +8,8 @@ namespace Services.Handlers.Users;
 
 public class HandlerCalorieProgram :
     IRequestHandler<CalorieProgramCommand, bool>,
-    IRequestHandler<DailyProgramQuery, DailyProgramResponse?>
+    IRequestHandler<DailyProgramQuery, DailyProgramResponse?>,
+    IRequestHandler<CalendarDataQuery, CalendarDataResponse>
 {
     private readonly IServices _services;
 
@@ -124,6 +125,47 @@ public class HandlerCalorieProgram :
         };
     }
 
+    public async Task<CalendarDataResponse> Handle(CalendarDataQuery request, CancellationToken cancellationToken)
+    {
+        var startDate = new DateTime(request.Year, request.Month, 1);
+        var endDate = startDate.AddMonths(1).AddDays(-1);
+
+        var programs = _services.Repository.SetNoTracking<CalorieProgram>().Where(p => p.UserID == request.UserID&& p.ProgramDate.Date >= startDate&& p.ProgramDate.Date <= endDate).ToList();
+
+        if (!programs.Any())
+        {
+            return new CalendarDataResponse { Days = new List<CalendarDayResponse>() };
+        }
+
+        var programIds = programs.Select(record => record.ProgramID).ToList();
+
+        var meals = _services.Repository.SetNoTracking<CalorieProgramMeal>().Where(m => programIds.Contains(m.CalorieProgramID)).ToList();
+
+        var mealIds = meals.Select(record => record.MealID).ToList();
+
+        var mealFoods = mealIds.Any() ? _services.Repository.SetNoTracking<MealFood>(nameof(MealFood.FoodProduct)).Where(mf => mealIds.Contains(mf.MealID)).ToList(): new List<MealFood>();
+
+        var days = programs.Select(program =>
+        {
+            var programMeals = meals.Where(m => m.CalorieProgramID == program.ProgramID).ToList();
+            var programMealIds = programMeals.Select(m => m.MealID).ToList();
+            var programFoods = mealFoods.Where(mf => programMealIds.Contains(mf.MealID)).ToList();
+
+            var caloriesEaten = programFoods.Sum(mf =>
+                (int)Math.Round((mf.FoodProduct?.Calories ?? 0) * mf.Weight / 100.0));
+
+            return new CalendarDayResponse
+            {
+                Date = program.ProgramDate,
+                CaloriesGoal = program.CaloriesPerDay,
+                CaloriesEaten = caloriesEaten,
+                HasProgram = true
+            };
+        }).ToList();
+
+        return new CalendarDataResponse { Days = days };
+    }
+
     public static int CalculateCaloriesPerDay(Gender gender, decimal weightKg, decimal heightCm, DateTime dateOfBirth, ActivityLevel activityLevel, GoalType goal)
     {
         var age = DateTime.Today.Year - dateOfBirth.Year;
@@ -211,7 +253,7 @@ public class HandlerCalorieProgram :
 
     public DateTime LastCalorieProgramDate(DateTime date, Guid userID)
     {
-        var caloriePrograms = _services.Repository.SetNoTracking<CalorieProgram>().Where(record => record.UserID == userID && record.ProgramDate.Date == date.Date).OrderByDescending(record => record.ProgramDate);
+        var caloriePrograms = _services.Repository.SetNoTracking<CalorieProgram>().Where(record => record.UserID == userID).OrderByDescending(record => record.ProgramDate).ToList();
 
         if (caloriePrograms.Any() == true)
         {

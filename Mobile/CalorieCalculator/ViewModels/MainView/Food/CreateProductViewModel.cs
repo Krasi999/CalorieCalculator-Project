@@ -8,7 +8,7 @@ using System.Windows.Input;
 namespace CalorieCalculator.ViewModels.MainView.Food;
 
 public record FoodProductRequest(int? ProductID, string? ProductName, string? Description, int Calories, 
-    int Weight, decimal Fats, decimal Protein, decimal Carbs, int CategoryID);
+    int Weight, decimal Fats, decimal Protein, decimal Carbs, int CategoryID, string? Barcode);
 
 public class CreateProductViewModel : INotifyPropertyChanged
 {
@@ -16,6 +16,13 @@ public class CreateProductViewModel : INotifyPropertyChanged
 
     public int? PreselectedCategoryID { get; set; }
     public int? EditProductID { get; set; }
+    public string? Barcode { get; set; }
+    public string? PrefilledName { get; set; }
+    public string? PrefilledDescription { get; set; }
+    public string? PrefilledCalories { get; set; }
+    public string? PrefilledProtein { get; set; }
+    public string? PrefilledCarbs { get; set; }
+    public string? PrefilledFats { get; set; }
 
     private string _pageTitle = "Нов продукт";
     public string PageTitle
@@ -97,12 +104,12 @@ public class CreateProductViewModel : INotifyPropertyChanged
     {
         _apiService = apiService;
 
-        LoadCommand = new Command(async () => await LoadCategoriesAsync());
+        LoadCommand = new Command(async () => await LoadAsync());
         SaveCommand = new Command(async () => await SaveProductAsync());
         GoBackCommand = new Command(GoBack);
     }
 
-    private async Task LoadCategoriesAsync()
+    private async Task LoadAsync()
     {
         try
         {
@@ -133,6 +140,17 @@ public class CreateProductViewModel : INotifyPropertyChanged
                     Weight = "100";
                     SelectedCategory = Categories.FirstOrDefault(c => c.CategoryID == product.CategoryID);
                 }
+            }
+            else if (!string.IsNullOrEmpty(PrefilledName) || !string.IsNullOrWhiteSpace(Barcode))
+            {
+                PageTitle = "Нов продукт";
+                SaveButtonText = "Запази продукт";
+                ProductName = PrefilledName;
+                Description = PrefilledDescription ?? "";
+                Calories = PrefilledCalories ?? "";
+                Protein = PrefilledProtein ?? "";
+                Carbs = PrefilledCarbs ?? "";
+                Fats = PrefilledFats ?? "";
             }
             else
             {
@@ -169,22 +187,17 @@ public class CreateProductViewModel : INotifyPropertyChanged
                 return;
             }
 
-            if (!int.TryParse(Calories, out var calories))
-            {
-                await Shell.Current.DisplayAlert("Грешка", "Въведете калории", "OK");
-                return;
-            }
-
             var request = new FoodProductRequest(
                 EditProductID, 
                 ProductName, 
-                Description, 
-                calories, 
+                Description,
+                int.TryParse(Calories, out var cal) ? cal : 0, 
                 100,
                 decimal.TryParse(Fats, out var f) ? f : 0,
                 decimal.TryParse(Protein, out var p) ? p : 0,
                 decimal.TryParse(Carbs, out var c) ? c : 0,
-                SelectedCategory.CategoryID
+                SelectedCategory.CategoryID,
+                Barcode
             );
 
             await _apiService.PostAsync<object>("api/food/create", request);
@@ -207,6 +220,13 @@ public class CreateProductViewModel : INotifyPropertyChanged
         Weight = "100";
         SelectedCategory = null;
         EditProductID = null;
+        Barcode = null;
+        PrefilledName = null;
+        PrefilledDescription = null;
+        PrefilledCalories = null;
+        PrefilledProtein = null;
+        PrefilledCarbs = null;
+        PrefilledFats = null;
     }
 
     private async void GoBack()

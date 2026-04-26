@@ -108,36 +108,6 @@ public class UserDetails
         DateTime.UtcNow.Year - DateOfBirth.Year -
         (DateTime.UtcNow.DayOfYear < DateOfBirth.DayOfYear ? 1 : 0);
 
-    public decimal? CalculateBMR()
-    {
-        if (!WeightKg.HasValue || !HeightCm.HasValue) return null;
-
-        return Gender switch
-        {
-            Gender.Male => 10 * WeightKg.Value + 6.25m * HeightCm.Value - 5 * GetAge() + 5,
-            Gender.Female => 10 * WeightKg.Value + 6.25m * HeightCm.Value - 5 * GetAge() - 161,
-            _ => null
-        };
-    }
-
-    public decimal? CalculateTDEE()
-    {
-        var bmr = CalculateBMR();
-        if (!bmr.HasValue) return null;
-
-        var multiplier = ActivityLevel switch
-        {
-            ActivityLevel.Sedentary => 1.2m,
-            ActivityLevel.LightlyActive => 1.375m,
-            ActivityLevel.ModerateActive => 1.55m,
-            ActivityLevel.VeryActive => 1.725m,
-            ActivityLevel.ExtraActive => 1.9m,
-            _ => 1.2m
-        };
-
-        return Math.Round(bmr.Value * multiplier, 2);
-    }
-
     public void UpdateNickname(string newNickname)
     {
         Nickname = newNickname.Trim();

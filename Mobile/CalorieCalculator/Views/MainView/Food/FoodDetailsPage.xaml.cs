@@ -12,12 +12,12 @@ public partial class FoodDetailsPage : ContentPage
 {
     private readonly FoodDetailViewModel _viewModel;
 
-    public string ProductID { set => _viewModel.ProductID = int.Parse(value); }
-    public string ProgramID { set => _viewModel.ProgramID = int.Parse(value); }
-    public string MealType { set => _viewModel.MealType = int.Parse(value); }
-    public string MealID { set => _viewModel.MealID = int.TryParse(value, out var id) ? id : null; }
-    public string MealFoodID { set => _viewModel.MealFoodID = int.TryParse(value, out var id) ? id : null; }
-    public string CurrentWeight { set => _viewModel.CurrentWeight = int.TryParse(value, out var w) ? w : null; }
+    public string ProductID { get; set; }
+    public string ProgramID { get; set; }
+    public string MealType { get; set; }
+    public string MealID { get; set; }
+    public string MealFoodID { get; set; }
+    public string CurrentWeight { get; set; }
 
     public FoodDetailsPage(FoodDetailViewModel viewModel)
     {
@@ -29,6 +29,14 @@ public partial class FoodDetailsPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        _viewModel.ProductID = int.Parse(ProductID);
+        _viewModel.ProgramID = int.Parse(ProgramID);
+        _viewModel.MealType = int.Parse(MealType);
+        _viewModel.MealID = int.TryParse(MealID, out var mid) ? mid : null;
+        _viewModel.MealFoodID = int.TryParse(MealFoodID, out var mfid) ? mfid : null;
+        _viewModel.CurrentWeight = int.TryParse(CurrentWeight, out var cw) ? cw : null;
+
         _viewModel.LoadCommand.Execute(null);
     }
 }
