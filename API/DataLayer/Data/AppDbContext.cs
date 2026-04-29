@@ -1,6 +1,5 @@
 ﻿using DataLayer.Models;
 using DataLayer.Models.Common;
-using DataLayer.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Data;
