@@ -11,7 +11,7 @@ public class ApiService
         _httpClient = new HttpClient
         {
             // for testing comment the row below DO NOT DELETE IT and make one for your IP address
-            BaseAddress = new Uri("http://10.92.197.181:5083")
+            BaseAddress = new Uri("http://172.27.112.1:5083")
             //BaseAddress = new Uri("http://192.168.115.136:5083")
 
         };
